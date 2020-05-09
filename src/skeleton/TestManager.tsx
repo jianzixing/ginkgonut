@@ -5,6 +5,7 @@ import Button from "../button/Button";
 import GridPanel from "../grid/GridPanel";
 import TestBuilder from "./TestBuilder";
 import CascaderField from "../form/CascaderField";
+import DataStore from "../store/DataStore";
 
 export interface TestManagerProps extends AppManagerProps {
 }
@@ -56,53 +57,7 @@ export default class TestManager extends AppManager<TestManagerProps> {
                                                this.forward(<TestBuilder/>)
                                            }}/>
                                    <CascaderField fieldLabel={"级联选择"} width={300}
-                                                  models={
-                                                      [
-                                                          {
-                                                              text: "北京市北京市北京市北京市北京市北京市北京市",
-                                                              children: [
-                                                                  {
-                                                                      text: "市辖区",
-                                                                      children: [
-                                                                          {
-                                                                              text: "朝阳区"
-                                                                          },
-                                                                          {
-                                                                              text: "朝阳区"
-                                                                          },
-                                                                          {
-                                                                              text: "朝阳区"
-                                                                          },
-                                                                          {
-                                                                              text: "朝阳区"
-                                                                          }
-                                                                      ]
-                                                                  },
-                                                                  {
-                                                                      text: "市辖区",
-                                                                      children: [
-                                                                          {
-                                                                              text: "朝阳区"
-                                                                          }
-                                                                      ]
-                                                                  }
-                                                              ]
-                                                          },
-                                                          {
-                                                              text: "北京市",
-                                                              children: [
-                                                                  {
-                                                                      text: "市辖区",
-                                                                      children: [
-                                                                          {
-                                                                              text: "朝阳区"
-                                                                          }
-                                                                      ]
-                                                                  }
-                                                              ]
-                                                          }
-                                                      ]
-                                                  }/>
+                                                  store={new DataStore({api: "http://localhost:3300/cascader_data.json"})}/>
                                </Toolbar>
                            ]
                        }>

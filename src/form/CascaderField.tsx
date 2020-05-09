@@ -62,7 +62,6 @@ export default class CascaderField<P extends CascaderFieldProps> extends Combobo
             );
             style.height = 80;
         } else {
-
             if (modelList && modelList.length > 0) {
                 let i = 0;
                 for (let models of modelList) {
@@ -111,6 +110,10 @@ export default class CascaderField<P extends CascaderFieldProps> extends Combobo
             }
         }
 
+        if (this.isAutoPickerWidth) {
+            style.float = "none";
+        }
+
         return (
             <div
                 ref={this.cascaderFieldPickerRef}
@@ -147,7 +150,9 @@ export default class CascaderField<P extends CascaderFieldProps> extends Combobo
             }
             return r;
         } else {
-            return [this.models];
+            if (this.models) {
+                return [this.models];
+            }
         }
     }
 
@@ -208,6 +213,16 @@ export default class CascaderField<P extends CascaderFieldProps> extends Combobo
 
     protected redrawingPickerBody() {
         super.redrawingPickerBody();
+        if (this.models) {
+            this.isAutoPickerWidth = false;
+        } else {
+            this.isAutoPickerWidth = true;
+        }
+        this.resizeFieldPicker(2);
+    }
+
+    protected resizeFieldPicker(from: number) {
+        super.resizeFieldPicker(from);
         this.resizePickerWidthByContent();
     }
 
@@ -231,7 +246,6 @@ export default class CascaderField<P extends CascaderFieldProps> extends Combobo
                     el.style.height = height + "px";
                 }
             }
-            this.resizeFieldPicker(2);
         }
     }
 
