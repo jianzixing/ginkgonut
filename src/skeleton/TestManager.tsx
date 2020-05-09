@@ -4,6 +4,7 @@ import Toolbar from "../toolbar/Toolbar";
 import Button from "../button/Button";
 import GridPanel from "../grid/GridPanel";
 import TestBuilder from "./TestBuilder";
+import CascaderField from "../form/CascaderField";
 
 export interface TestManagerProps extends AppManagerProps {
 }
@@ -54,6 +55,54 @@ export default class TestManager extends AppManager<TestManagerProps> {
                                            onClick={e => {
                                                this.forward(<TestBuilder/>)
                                            }}/>
+                                   <CascaderField fieldLabel={"级联选择"} width={300}
+                                                  models={
+                                                      [
+                                                          {
+                                                              text: "北京市北京市北京市北京市北京市北京市北京市",
+                                                              children: [
+                                                                  {
+                                                                      text: "市辖区",
+                                                                      children: [
+                                                                          {
+                                                                              text: "朝阳区"
+                                                                          },
+                                                                          {
+                                                                              text: "朝阳区"
+                                                                          },
+                                                                          {
+                                                                              text: "朝阳区"
+                                                                          },
+                                                                          {
+                                                                              text: "朝阳区"
+                                                                          }
+                                                                      ]
+                                                                  },
+                                                                  {
+                                                                      text: "市辖区",
+                                                                      children: [
+                                                                          {
+                                                                              text: "朝阳区"
+                                                                          }
+                                                                      ]
+                                                                  }
+                                                              ]
+                                                          },
+                                                          {
+                                                              text: "北京市",
+                                                              children: [
+                                                                  {
+                                                                      text: "市辖区",
+                                                                      children: [
+                                                                          {
+                                                                              text: "朝阳区"
+                                                                          }
+                                                                      ]
+                                                                  }
+                                                              ]
+                                                          }
+                                                      ]
+                                                  }/>
                                </Toolbar>
                            ]
                        }>

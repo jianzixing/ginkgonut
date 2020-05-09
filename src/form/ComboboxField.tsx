@@ -155,10 +155,14 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
         return models;
     }
 
+    protected redrawingPickerBody() {
+        this.pickerBindRef.instance.forceRender();
+    }
+
     storeBeforeLoad(): void {
         if (this.pickerBindRef && this.pickerBindRef.instance) {
             this.isLoading = true;
-            this.pickerBindRef.instance.forceRender();
+            this.redrawingPickerBody();
         }
     }
 
@@ -167,11 +171,11 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
         if (data && data instanceof Array) {
             this.models = this.data2Models(data);
             if (this.pickerBindRef && this.pickerBindRef.instance) {
-                this.pickerBindRef.instance.forceRender();
+                this.redrawingPickerBody();
             }
         } else {
             if (this.pickerBindRef && this.pickerBindRef.instance) {
-                this.pickerBindRef.instance.forceRender();
+                this.redrawingPickerBody();
             }
         }
     }

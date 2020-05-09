@@ -62,7 +62,9 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
     protected errorTooltipsManager: TooltipManager;
     protected errorText?: string;
 
-    protected pickerWidth = 0;
+    protected pickerWidth: number = 0;
+    protected isAutoPickerWidth: boolean = true;
+    protected pickerAlign: "right" | "left" = "right";
 
     constructor(props) {
         super(props);
@@ -279,7 +281,11 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
             }
 
             if (this.pickerWidth > 0) {
-                x = bounds.x + (bounds.w - this.pickerWidth);
+                if (this.pickerAlign == "right") {
+                    x = bounds.x + (bounds.w - this.pickerWidth);
+                } else {
+                    x = bounds.x;
+                }
             }
 
             let el = this.pickerRefObject.instance as HTMLComponent;
@@ -287,10 +293,12 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
             if (el) {
                 (el.dom as HTMLDivElement).style.left = x + "px";
                 (el.dom as HTMLDivElement).style.top = y + "px";
-                if (this.pickerWidth > 0) {
-                    (el.dom as HTMLDivElement).style.width = this.pickerWidth + "px";
-                } else {
-                    (el.dom as HTMLDivElement).style.width = bounds.w + "px";
+                if (this.isAutoPickerWidth != false) {
+                    if (this.pickerWidth > 0) {
+                        (el.dom as HTMLDivElement).style.width = this.pickerWidth + "px";
+                    } else {
+                        (el.dom as HTMLDivElement).style.width = bounds.w + "px";
+                    }
                 }
             }
             if (shadow) {
