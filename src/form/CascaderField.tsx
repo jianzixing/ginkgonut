@@ -14,6 +14,7 @@ export interface CascaderModel extends ComboboxModel {
 export interface CascaderFieldProps extends ComboboxFieldProps {
     models?: Array<CascaderModel>;
     onShowText?: (cms: Array<CascaderModel>) => string;
+    childrenField?: string;
 }
 
 /**
@@ -128,15 +129,7 @@ export default class CascaderField<P extends CascaderFieldProps> extends Combobo
             if (this.props.onShowText) {
                 text = this.props.onShowText(cms);
             } else {
-                if (cms) {
-                    text = "";
-                    let i = 0;
-                    for (let cmi of cms) {
-                        text += cmi.text;
-                        i++;
-                        if (i != cms.length) text += " / ";
-                    }
-                }
+                text = this.showCascaderModels(cms);
             }
             this.inputEl.value = text;
             this.triggerOnChangeEvents(this, this.getValue());
@@ -191,9 +184,15 @@ export default class CascaderField<P extends CascaderFieldProps> extends Combobo
                 selected: this.props.selectData ? this.props.selectData == dt : false,
                 data: dt
             };
+            if (!item.value) {
+                item.value = item.text;
+            }
             models.push(item);
 
             let children = dt.children;
+            if (this.props.childrenField) {
+                children = dt[this.props.childrenField];
+            }
             if (children) {
                 let child = this.data2Models(children);
                 if (child) {
@@ -249,15 +248,97 @@ export default class CascaderField<P extends CascaderFieldProps> extends Combobo
         }
     }
 
+    protected showCascaderModels(cms: Array<CascaderModel>): string {
+        if (cms) {
+            let text = "";
+            let i = 0;
+            for (let cmi of cms) {
+                text += cmi.text;
+                i++;
+                if (i != cms.length) text += " / ";
+            }
+            return text;
+        }
+    }
+
     setValue(value: any): void {
-        super.setValue(value);
+        if (!this.models || this.models.length == 0) {
+            if (this.props.data && !this.props.models) {
+                this.models = this.data2Models(this.props.data);
+            }
+            if (this.props.store && !this.props.models) {
+                this.cacheSetValue = value;
+                this.props.store.load();
+                return;
+            }
+        } else {
+            this.convertModels(this.models);
+        }
+
+        if (value instanceof Array) {
+            let arr = [];
+            for (let v of value) {
+                let m = this.getModelByCascaderValue(v, this.models, 1);
+                if (m) arr.push(m);
+            }
+            let text = this.showCascaderModels(arr);
+            this.inputEl.value = text;
+
+            this.value = arr[arr.length - 1];
+        } else if (typeof value == "object") {
+            let m = this.getModelByCascaderValue(value, this.models, 2);
+            let arr = this.model2Array(m);
+            let text = this.showCascaderModels(arr);
+            this.inputEl.value = text;
+
+            this.value = m;
+        } else {
+            let m = this.getModelByCascaderValue(value, this.models, 1);
+            let arr = this.model2Array(m);
+            let text = this.showCascaderModels(arr);
+            this.inputEl.value = text;
+
+            this.value = m;
+        }
+    }
+
+    protected getModelByCascaderValue(value: any, models: Array<CascaderModel>, type: number): CascaderModel {
+        for (let model of models) {
+            if (type == 1 && model.value == value) {
+                return model;
+            } else if (type == 2 && (model.data == value || model == value)) {
+                return model;
+            } else {
+                let m = this.getModelByCascaderValue(value, model.children, type);
+                if (m) return m;
+            }
+        }
     }
 
     getValue(): any {
-        return super.getValue();
+        let cms: Array<CascaderModel> = this.model2Array(this.value);
+
+        if (cms && cms.length > 0) {
+            let arr = [];
+            for (let cm of cms) {
+                arr.push(cm.value);
+            }
+
+            return arr;
+        }
     }
 
     getRowValue(): any {
-        return super.getRowValue();
+        let cms: Array<CascaderModel> = this.model2Array(this.value);
+
+        if (cms && cms.length > 0) {
+            let arr = [];
+            for (let cm of cms) {
+                arr.push(cm.data);
+            }
+
+            return arr;
+        }
+        return cms;
     }
 }

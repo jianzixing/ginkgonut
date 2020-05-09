@@ -42,6 +42,7 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
     protected static comboboxFieldEmpty;
 
     protected value: ComboboxModel;
+    protected cacheSetValue: any;
     protected models?: Array<ComboboxModel> = this.props.models;
     protected pickerBindRef: RefObject<BindComponent> = Ginkgo.createRef();
     protected isLoading?: boolean = false;
@@ -145,12 +146,16 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
     protected data2Models(data) {
         let models: Array<ComboboxModel> = [];
         for (let dt of data) {
-            models.push({
+            let item = {
                 value: dt[this.props.valueField || 'id'],
                 text: typeof dt == "object" ? dt[this.props.displayField || 'text'] : dt,
                 selected: this.props.selectData ? this.props.selectData == dt : false,
                 data: dt
-            })
+            };
+            if (!item.value) {
+                item.value = item.text;
+            }
+            models.push(item);
         }
         return models;
     }
@@ -178,11 +183,24 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
                 this.redrawingPickerBody();
             }
         }
+
+        if (this.cacheSetValue) {
+            let value = this.cacheSetValue;
+            this.cacheSetValue = undefined;
+            this.setValue(value);
+        }
     }
 
     setValue(value: any): void {
-        if (this.props.data && !this.props.models) {
-            this.models = this.data2Models(this.props.data);
+        if (!this.models || this.models.length == 0) {
+            if (this.props.data && !this.props.models) {
+                this.models = this.data2Models(this.props.data);
+            }
+            if (this.props.store && !this.props.models) {
+                this.cacheSetValue = value;
+                this.props.store.load();
+                return;
+            }
         }
 
         if (typeof value == "object") {
