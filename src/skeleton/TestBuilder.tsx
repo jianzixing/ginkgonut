@@ -79,6 +79,7 @@ export default class TestBuilder<P extends TestBuilderProps> extends AppManager<
                        }}>
                 <FormLayoutTitle text={"基本信息 - (属性模板关联SKU信息)"} iconType={IconTypes.boxOpen}/>
                 <HiddenField/>
+                <FileUploadField fieldLabel={"avatar"} uploadType={"preview"} uploadProps={{multi: true}}/>
                 <TextField name={"login_field"} fieldLabel={"Login Field"} placeholder={"user id"}/>
                 <TextField name={"password"} type={"password"} fieldLabel={"Password"} placeholder={"password"}/>
                 <NumberTextField name={"number_field"} fieldLabel={"Number Field"} placeholder={"password"}/>

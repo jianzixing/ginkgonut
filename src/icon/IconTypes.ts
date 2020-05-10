@@ -35,6 +35,9 @@ export const IconTypes = {
     powerOff: "power-off", // 齿轮
     questionCircle: "question-circle", // 圆圈问号
     save: "save", // 磁盘||保存
+    plus: "plus", // 加号
+    eye: "eye", // 眼睛
+    trash: "trash", // 垃圾桶
 
     _extSortAlphaAsc: "ext-sort-alpha-asc",
     _extSortAlphaDesc: "ext-sort-alpha-desc",
