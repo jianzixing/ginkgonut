@@ -16,6 +16,7 @@ export interface UploadModel {
 }
 
 export interface UploadProps extends ComponentProps {
+    models?: Array<UploadModel>;
     multi?: boolean;
     reupload?: boolean; // 是否可以重新上传图片,仅仅multi=false有效
     onLookClick?: (item: UploadModel) => void;
@@ -176,5 +177,9 @@ export default class Upload<P extends UploadProps> extends Component<P> {
                 };
             }
         }
+    }
+
+    getItems(): Array<UploadModel> {
+        return this.items;
     }
 }

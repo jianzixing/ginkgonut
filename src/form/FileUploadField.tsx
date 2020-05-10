@@ -2,7 +2,7 @@ import Ginkgo, {GinkgoElement, GinkgoNode, HTMLComponent, InputComponent, RefObj
 import TextField, {TextFieldProps} from "./TextField";
 import Button from "../button/Button";
 import "./FileUploadField.scss";
-import Upload, {UploadProps} from "../upload/Upload";
+import Upload, {UploadModel, UploadProps} from "../upload/Upload";
 
 export interface FileUploadFieldProps extends TextFieldProps {
     uploadType?: "default" | "preview";
@@ -21,6 +21,7 @@ export class FileUploadField<P extends FileUploadFieldProps> extends TextField<P
     protected rightElRef: RefObject<HTMLComponent> = Ginkgo.createRef();
     protected rightButtonRef: RefObject<Button<any>> = Ginkgo.createRef();
     protected fileInputRef: RefObject<InputComponent> = Ginkgo.createRef();
+    protected uploadRef: RefObject<Upload<any>> = Ginkgo.createRef();
 
     protected readonly = true;
     protected fieldBorder = true;
@@ -45,7 +46,7 @@ export class FileUploadField<P extends FileUploadFieldProps> extends TextField<P
         if (uploadType == null || uploadType == "default") {
             return super.drawingFieldBody();
         } else {
-            return (<Upload {...this.props.uploadProps || {}}/>);
+            return (<Upload {...this.props.uploadProps || {}} ref={this.uploadRef}/>);
         }
     }
 
@@ -92,26 +93,90 @@ export class FileUploadField<P extends FileUploadFieldProps> extends TextField<P
         this.triggerOnChangeEvents(this, this.value);
     }
 
-    setValue(value: string | FileList): void {
-        if (typeof value === "string") {
-            this.inputEl.value = value;
-        }
-        if (value instanceof FileList) {
-            if (value && value.length > 0) {
-                let file = value[0];
-                let name = file.name;
-                let size = file.size;
-                this.inputEl.value = name;
+    setValue(value: string | FileList | string[]): void {
+        let uploadType = this.props.uploadType;
+        if (uploadType == null || uploadType == "default") {
+            if (typeof value === "string") {
+                this.inputEl.value = value;
+            }
+            if (value instanceof FileList) {
+                if (value && value.length > 0) {
+                    let file = value[0];
+                    let name = file.name;
+                    let size = file.size;
+                    this.inputEl.value = name;
+                }
+            }
+        } else {
+            if (value instanceof Array) {
+                let models: Array<UploadModel> = [];
+                let key = 0;
+                for (let v of value) {
+                    models.push({
+                        key: key + "",
+                        src: v
+                    });
+                    key++;
+                }
+                if (this.uploadRef && this.uploadRef.instance) {
+                    this.uploadRef.instance.update("models", models);
+                }
+            } else if (typeof value == "string") {
+                let models: Array<UploadModel> = [];
+                models.push({
+                    key: "0",
+                    src: value
+                })
+                if (this.uploadRef && this.uploadRef.instance) {
+                    this.uploadRef.instance.update("models", models);
+                }
+            } else if (value instanceof FileList) {
+                let models: Array<UploadModel> = [];
+                let self = this;
+                for (let i = 0; i < value.length; i++) {
+                    let file = value.item(i);
+                    let reads = new FileReader();
+                    reads.readAsDataURL(file);
+                    reads.onload = function (e) {
+                        let src = this.result;
+                        models.push({
+                            key: models.length + "",
+                            src: src,
+                            name: file.name,
+                            size: file.size,
+                            file: file,
+                            status: "ready"
+                        });
+
+                        if (self.uploadRef && self.uploadRef.instance) {
+                            self.uploadRef.instance.update("models", models);
+                        }
+                    };
+                }
             }
         }
     }
 
-    getValue(): FileList {
-        return this.value;
+    getValue(): FileList | Array<File> {
+        let uploadType = this.props.uploadType;
+        if (uploadType == null || uploadType == "default") {
+            return this.value;
+        } else {
+            if (this.uploadRef && this.uploadRef.instance) {
+                let items = this.uploadRef.instance.getItems();
+                if (items && items.length > 0) {
+                    let arr = [];
+                    for (let item of items) {
+                        arr.push(item.file);
+                    }
+                    return arr;
+                }
+            }
+        }
     }
 
-    getRowValue(): FileList {
-        return this.value;
+    getRowValue(): FileList | Array<File> {
+        return this.getValue();
     }
 
     protected onAfterDrawing() {
