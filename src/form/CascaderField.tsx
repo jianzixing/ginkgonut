@@ -280,7 +280,7 @@ export default class CascaderField<P extends CascaderFieldProps> extends Combobo
             if (this.props.data && !this.props.models) {
                 this.models = this.data2Models(this.props.data);
             }
-            if (this.props.store && !this.props.models) {
+            if (this.props.store && !this.props.models && this.loadCount == 0) {
                 this.cacheSetValue = value;
                 this.props.store.load();
                 return;

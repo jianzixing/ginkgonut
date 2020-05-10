@@ -8,6 +8,7 @@ import Toolbar, {ToolbarProps} from "../toolbar/Toolbar";
 import Container from "../component/Container";
 
 export interface PanelToolModel {
+    key?: string;
     icon?: string;
     iconType?: string;
     data?: any;
@@ -166,7 +167,7 @@ export default class Panel<P extends PanelProps> extends Container<P> {
                 }
                 toolsEl.push(
                     <div
-                        key="abc"
+                        key="panel_header_icon_collapse"
                         className={Panel.panelClsHeaderIcon + " " + Panel.panelClsHeaderIconTool}
                         onClick={(e) => {
                             if (this.extOnCollapseClick && this.extOnCollapseClick(e, this)) {
@@ -185,9 +186,11 @@ export default class Panel<P extends PanelProps> extends Container<P> {
             if (this.extTools) this.extTools.map(value => tools.push(value));
             if (tools) {
                 tools.map((value, index) => {
+                    let key = value.key || index;
                     if (value.iconType) {
                         (value.lr == "left" ? preToolsEl : toolsEl).push(
                             <div
+                                key={"panel_header_icon_" + key}
                                 className={Panel.panelClsHeaderIcon + " " + Panel.panelClsHeaderIconTool}
                                 onClick={(e: any) => {
                                     if (value.onClick) value.onClick(e, value);
@@ -199,6 +202,7 @@ export default class Panel<P extends PanelProps> extends Container<P> {
                     if (value.icon) {
                         (value.lr == "left" ? preToolsEl : toolsEl).push(
                             <div
+                                key={"panel_header_icon_" + key}
                                 className={Panel.panelClsHeaderIcon + " " + Panel.panelClsHeaderIconTool + " " + Panel.panelClsHeaderImg}
                                 onClick={(e: any) => {
                                     if (value.onClick) value.onClick(e, value);
@@ -212,14 +216,15 @@ export default class Panel<P extends PanelProps> extends Container<P> {
 
             if (this.props.titleIconType) {
                 titleIcons.push(
-                    <div className={Panel.panelClsHeaderIcon + " " + Panel.panelClsTitleIcon}>
+                    <div key={"panel_header_icon_title"}
+                         className={Panel.panelClsHeaderIcon + " " + Panel.panelClsTitleIcon}>
                         <Icon icon={this.props.titleIconType}/>
                     </div>
                 )
-            }
-            if (this.props.titleIcon) {
+            } else if (this.props.titleIcon) {
                 titleIcons.push(
                     <div
+                        key={"panel_header_icon_title"}
                         className={Panel.panelClsHeaderIcon + " " + Panel.panelClsHeaderImg + " " + Panel.panelClsTitleIcon}>
                         <img src={this.props.titleIcon}/>
                     </div>
@@ -230,7 +235,8 @@ export default class Panel<P extends PanelProps> extends Container<P> {
             let iconsEl1;
             if (preToolsEl && preToolsEl.length > 0) {
                 iconsEl1 = (
-                    <div className={Panel.panelClsHeaderIconBody}>
+                    <div key={"panel_header_icon_body_1"}
+                         className={Panel.panelClsHeaderIconBody}>
                         {preToolsEl}
                     </div>
                 );
@@ -238,7 +244,8 @@ export default class Panel<P extends PanelProps> extends Container<P> {
             let iconsEl2;
             if (titleIcons && titleIcons.length > 0) {
                 iconsEl2 = (
-                    <div className={Panel.panelClsHeaderIconBody}>
+                    <div key={"panel_header_icon_body_2"}
+                         className={Panel.panelClsHeaderIconBody}>
                         {titleIcons}
                     </div>
                 );
@@ -246,7 +253,8 @@ export default class Panel<P extends PanelProps> extends Container<P> {
             let iconsEl3;
             if (toolsEl && toolsEl.length > 0) {
                 iconsEl3 = (
-                    <div className={Panel.panelClsHeaderIconBody}>
+                    <div key={"panel_header_icon_body_3"}
+                         className={Panel.panelClsHeaderIconBody}>
                         {toolsEl}
                     </div>
                 );
@@ -254,6 +262,7 @@ export default class Panel<P extends PanelProps> extends Container<P> {
 
             headerReactElement = (
                 <div
+                    key={"panel_header"}
                     ref={c => this.headerEl = c}
                     className={Panel.panelClsHeader}
                     style={this.headerStyle}
@@ -307,6 +316,7 @@ export default class Panel<P extends PanelProps> extends Container<P> {
 
         contentReactElement = (
             <div
+                key={"panel_wrapper"}
                 ref={c => this.wrapperEl = c}
                 className={Panel.panelClsWrapper}
                 style={this.wrapperStyle}

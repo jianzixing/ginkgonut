@@ -93,6 +93,7 @@ export default class FormLayout extends Container<FormLayoutProps> {
             }
 
             let bodys = [];
+            let i = 0;
             for (let children of childSplits) {
                 for (let c of children) {
                     if (c instanceof FormLayoutTitle) {
@@ -168,17 +169,23 @@ export default class FormLayout extends Container<FormLayoutProps> {
                 }
 
                 bodys.push(
-                    <div className={FormLayout.formLayoutBody} style={style}>
+                    <div key={"form_layout_body_" + i}
+                         className={FormLayout.formLayoutBody}
+                         style={style}>
                         {childrenEls}
                     </div>
                 );
+                i++;
             }
 
             if (hiddenChild && hiddenChild.length > 0) {
                 let childProps = [];
-                hiddenChild.map(value => childProps.push(value.props));
+                hiddenChild.map(value => {
+                    childProps.push(value.props)
+                });
                 bodys.push(
-                    <div className={FormLayout.formLayoutHiddenBody}>
+                    <div key={"form_layout_hidden_body"}
+                         className={FormLayout.formLayoutHiddenBody}>
                         {childProps}
                     </div>
                 )

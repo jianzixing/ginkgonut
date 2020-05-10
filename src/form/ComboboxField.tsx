@@ -46,6 +46,7 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
     protected models?: Array<ComboboxModel> = this.props.models;
     protected pickerBindRef: RefObject<BindComponent> = Ginkgo.createRef();
     protected isLoading?: boolean = false;
+    protected loadCount: number = 0;
 
     protected buildClassNames(themePrefix: string): void {
         super.buildClassNames(themePrefix);
@@ -173,6 +174,7 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
 
     storeLoaded(data: Object | Array<Object>, total?: number, originData?: any): void {
         this.isLoading = false;
+        this.loadCount++;
         if (data && data instanceof Array) {
             this.models = this.data2Models(data);
             if (this.pickerBindRef && this.pickerBindRef.instance) {
@@ -196,7 +198,7 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
             if (this.props.data && !this.props.models) {
                 this.models = this.data2Models(this.props.data);
             }
-            if (this.props.store && !this.props.models) {
+            if (this.props.store && !this.props.models && this.loadCount == 0) {
                 this.cacheSetValue = value;
                 this.props.store.load();
                 return;
