@@ -1,29 +1,37 @@
 {
   "records": [
     {
+      "id": 1,
       "text": "北京市北京市北京市北京市北京市北京市北京市",
       "children": [
         {
+          "id": 2,
           "text": "市辖区",
           "children": [
             {
+              "id": 3,
               "text": "朝阳区"
             },
             {
+              "id": 4,
               "text": "朝阳区"
             },
             {
+              "id": 5,
               "text": "朝阳区"
             },
             {
+              "id": 6,
               "text": "朝阳区"
             }
           ]
         },
         {
+          "id": 7,
           "text": "市辖区",
           "children": [
             {
+              "id": 8,
               "text": "朝阳区"
             }
           ]
@@ -31,12 +39,15 @@
       ]
     },
     {
+      "id": 9,
       "text": "北京市",
       "children": [
         {
+          "id": 10,
           "text": "市辖区",
           "children": [
             {
+              "id": 11,
               "text": "朝阳区"
             }
           ]

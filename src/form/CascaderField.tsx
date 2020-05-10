@@ -289,42 +289,48 @@ export default class CascaderField<P extends CascaderFieldProps> extends Combobo
             this.convertModels(this.models);
         }
 
-        if (value instanceof Array) {
-            let arr = [];
-            for (let v of value) {
-                let m = this.getModelByCascaderValue(v, this.models, 1);
-                if (m) arr.push(m);
+        if (this.models) {
+            if (value instanceof Array) {
+                let arr = [];
+                for (let v of value) {
+                    let m = this.getModelByCascaderValue(v, this.models, 1);
+                    if (m) arr.push(m);
+                }
+                let text = this.showCascaderModels(arr);
+                this.inputEl.value = text;
+
+                this.value = arr[arr.length - 1];
+            } else if (typeof value == "object") {
+                let m = this.getModelByCascaderValue(value, this.models, 2);
+                let arr = this.model2Array(m);
+                let text = this.showCascaderModels(arr);
+                this.inputEl.value = text;
+
+                this.value = m;
+            } else {
+                let m = this.getModelByCascaderValue(value, this.models, 1);
+                let arr = this.model2Array(m);
+                let text = this.showCascaderModels(arr);
+                this.inputEl.value = text;
+
+                this.value = m;
             }
-            let text = this.showCascaderModels(arr);
-            this.inputEl.value = text;
-
-            this.value = arr[arr.length - 1];
-        } else if (typeof value == "object") {
-            let m = this.getModelByCascaderValue(value, this.models, 2);
-            let arr = this.model2Array(m);
-            let text = this.showCascaderModels(arr);
-            this.inputEl.value = text;
-
-            this.value = m;
-        } else {
-            let m = this.getModelByCascaderValue(value, this.models, 1);
-            let arr = this.model2Array(m);
-            let text = this.showCascaderModels(arr);
-            this.inputEl.value = text;
-
-            this.value = m;
         }
     }
 
     protected getModelByCascaderValue(value: any, models: Array<CascaderModel>, type: number): CascaderModel {
-        for (let model of models) {
-            if (type == 1 && model.value == value) {
-                return model;
-            } else if (type == 2 && (model.data == value || model == value)) {
-                return model;
-            } else {
-                let m = this.getModelByCascaderValue(value, model.children, type);
-                if (m) return m;
+        if (models && models.length > 0) {
+            for (let model of models) {
+                if (model) {
+                    if (type == 1 && model.value == value) {
+                        return model;
+                    } else if (type == 2 && (model.data == value || model == value)) {
+                        return model;
+                    } else {
+                        let m = this.getModelByCascaderValue(value, model.children, type);
+                        if (m) return m;
+                    }
+                }
             }
         }
     }
