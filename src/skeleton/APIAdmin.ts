@@ -1,4 +1,4 @@
-import {Request, Required, Submit} from "../http/Request";
+import {Request, Submit} from "../http/Request";
 
 export default class APIAdmin {
     @Request

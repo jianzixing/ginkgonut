@@ -1,4 +1,5 @@
-import Ginkgo, {GinkgoComponent} from "ginkgoes";
+import Ginkgo from "ginkgoes";
+import {Submit} from "../http/Request";
 
 export interface StoreProcessor {
     storeBeforeLoad?(): void;
@@ -12,7 +13,7 @@ export interface DataStoreProps {
     // 是否自动加载
     autoLoad?: boolean;
     type?: "ajax" | "storage";
-    api: string;
+    api: string | Submit;
     method?: "post" | "get",
     dataType?: "json";
     params?: any,
@@ -93,39 +94,35 @@ export default class DataStore {
                     value && value.storeBeforeLoad && value.storeBeforeLoad()
                 });
                 this.status = 1;
-                if (this.props.method == "post") {
-                    Ginkgo.post(this.props.api, params)
-                        .then(value => {
-                            this.status = 0;
-                            this.setStoreData(value);
-                            this.processor && this.processor.map(value => {
-                                value && value.storeAfterLoad && value.storeAfterLoad()
-                            });
-                        })
-                        .catch(reason => {
-                            this.status = 0;
-                            this.setStoreData(null, reason);
-                            this.processor && this.processor.map(value => {
-                                value && value.storeAfterLoad && value.storeAfterLoad()
-                            });
-                        });
+                let promise;
+                if (this.props.api instanceof Submit) {
+                    let api = this.props.api;
+                    if (this.props.method == "post") {
+                        promise = Ginkgo.post(api.getUrl(), api.getParams());
+                    } else {
+                        promise = Ginkgo.get(api.getUrl(), api.getParams());
+                    }
                 } else {
-                    Ginkgo.get(this.props.api, params)
-                        .then(value => {
-                            this.status = 0;
-                            this.setStoreData(value);
-                            this.processor && this.processor.map(value => {
-                                value && value.storeAfterLoad && value.storeAfterLoad()
-                            });
-                        })
-                        .catch(reason => {
-                            this.status = 0;
-                            this.setStoreData(null, reason);
-                            this.processor && this.processor.map(value => {
-                                value && value.storeAfterLoad && value.storeAfterLoad()
-                            });
-                        });
+                    if (this.props.method == "post") {
+                        promise = Ginkgo.post(this.props.api, params);
+                    } else {
+                        promise = Ginkgo.get(this.props.api, params);
+                    }
                 }
+
+                promise.then(value => {
+                    this.status = 0;
+                    this.setStoreData(value);
+                    this.processor && this.processor.map(value => {
+                        value && value.storeAfterLoad && value.storeAfterLoad()
+                    });
+                }).catch(reason => {
+                    this.status = 0;
+                    this.setStoreData(null, reason);
+                    this.processor && this.processor.map(value => {
+                        value && value.storeAfterLoad && value.storeAfterLoad()
+                    });
+                });
             } else {
                 console.error("miss api config");
             }
@@ -134,11 +131,14 @@ export default class DataStore {
             this.processor && this.processor.map(value => {
                 value && value.storeBeforeLoad && value.storeBeforeLoad()
             });
-            let value = localStorage.getItem(this.props.api);
-            this.setStoreData(value);
-            this.processor && this.processor.map(value => {
-                value && value.storeAfterLoad && value.storeAfterLoad()
-            });
+            let api = this.props.api;
+            if (typeof api == "string") {
+                let value = localStorage.getItem(api);
+                this.setStoreData(value);
+                this.processor && this.processor.map(value => {
+                    value && value.storeAfterLoad && value.storeAfterLoad()
+                });
+            }
         }
     }
 

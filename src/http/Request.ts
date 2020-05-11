@@ -1,58 +1,19 @@
 import Ginkgo from "ginkgoes";
 import MessageBox from "../window/MessageBox";
 
-export const server = process.env.NODE_ENV == 'development' ? "http://localhost:8080" : 'https://www.jianzixing.com.cn';
-export const run_env = process.env.NODE_ENV;
-export const ext = "jhtml";
-
-console.log(server)
-
-interface Parameter {
-    name: string;
-    index: number;
-}
-
-const MethodMappingParams: { [key: string]: Array<Parameter> } = {};
-
-/**
- * type == 1 : 返回域名+url地址
- * type == 2 : 返回域名+admin+地址+页面后缀
- *
- * @param url
- * @param type
- */
-export const getRequestMapping = function (url?: string, type?: number): string {
-    if (type == 1) {
-        return server + url;
+let getServerFunction: (params: { className?: string, methodName?: string, url?: string }) => string = (params => {
+    if (params.url) {
+        return params.url;
     }
-    if (type == 2) {
-        return server + "/admin" + url + "." + ext;
-    }
-    return server + url + "." + ext;
-};
-
-export const getFileMapping = function (fileName: string, suffix?: string): string {
-    if (typeof fileName === "string") {
-        suffix = suffix || "";
-        fileName = fileName.trim();
-        if (fileName.toLowerCase().indexOf("http://") == 0
-            || fileName.toLowerCase().indexOf("https://") == 0) {
-            return fileName;
-        } else if (fileName.toLowerCase().indexOf("local://") == 0) {
-            return server + fileName.substring(7, fileName.length);
-        } else if (fileName.indexOf("/") >= 0) {
-            if (fileName.startsWith("/")) {
-                return `${server}/${suffix}${fileName}`;
-            } else {
-                return `${server}/${suffix}/${fileName}`;
-            }
-        } else {
-            // return `${server}/web/file/load.html?f=${fileName}`;
-            return `${server}/web/loadfile/${fileName}`;
-        }
+    if (params.className && params.methodName) {
+        return "/" + params.className.toLowerCase() + "/" + params.methodName.toLowerCase();
     }
     return "";
-};
+});
+
+export function setRequestServer(callback: (params: { className?: string, methodName?: string, url?: string }) => string) {
+    getServerFunction = callback;
+}
 
 /**
  * 声明一个装饰器，第三个参数是 "成员的属性描述符"，如果代码输出目标版本(target)小于 ES5 返回值会被忽略。
@@ -68,64 +29,69 @@ export const Request = function (target: any, propertyKey: string, descriptor: P
     }
 
     descriptor.value = (...obj: any) => {
-        const reqs = new Submit(apiName, methodName, method);
-        let arrParams: Array<Parameter> = MethodMappingParams[originalApiName + '.' + methodName];
-        if (arrParams && arrParams.length > 0) {
-            let paramObj: { [key: string]: Object } = {};
-
-            for (let param of arrParams) {
-                let name = param.name;
-                let index: number = param.index;
-                paramObj[name] = obj[index];
-            }
-            reqs.setParams(paramObj);
+        let methodStr = method.toString();
+        let s1 = methodStr.match(/\(.*?\)/g);
+        let m1 = s1[0].substring(1, s1[0].length - 1).split(",");
+        let params: { [key: string]: Object } = {};
+        for (let i = 0; i < m1.length; i++) {
+            let m2 = m1[i];
+            params[m2] = obj[i];
         }
+        const reqs = new Submit(apiName, methodName, method);
+        reqs.setParams(params);
+
         return reqs;
     }
 };
 
-export const RequestMapping = function (url: string) {
+export interface RequestDecoratorConfig {
+    url?: string;
+    module?: string; // className
+    action?: string; // methodName
+    keys?: string[]; // 方法参数字段名称
+}
+
+export const Requests = function (config: RequestDecoratorConfig) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         let originalApiName = target.name;
         let methodName = propertyKey;
         let method = descriptor.value;
-        let myUrl = url;
+        let myUrl = config.url;
 
         let apiName = "";
-        if (originalApiName.indexOf('API') === 0) {
-            apiName = originalApiName.substring(3, originalApiName.length);
+        if (config.module) {
+            apiName = config.module;
+        } else {
+            if (originalApiName.indexOf('API') === 0) {
+                apiName = originalApiName.substring(3, originalApiName.length);
+            }
+        }
+        if (config.action) {
+            methodName = config.action;
         }
 
         descriptor.value = (...obj: any) => {
             const reqs = new Submit(apiName, methodName, method);
-            if (myUrl) reqs.setUrl(myUrl);
-            let arrParams: Array<Parameter> = MethodMappingParams[originalApiName + '.' + methodName];
-            if (arrParams && arrParams.length > 0) {
-                let paramObj: { [key: string]: Object } = {};
-
-                for (let param of arrParams) {
-                    let name = param.name;
-                    let index: number = param.index;
-                    paramObj[name] = obj[index];
-                }
-                reqs.setParams(paramObj);
+            if (myUrl) {
+                reqs.setUrl(myUrl);
             }
+            let keys;
+            if (config.keys) {
+                keys = config.keys;
+            } else {
+                let methodStr = method.toString();
+                let s1 = methodStr.match(/\(.*?\)/g);
+                keys = s1[0].substring(1, s1[0].length - 1).split(",");
+            }
+            let params: { [key: string]: Object } = {};
+            for (let i = 0; i < keys.length; i++) {
+                let m2 = keys[i];
+                params[m2] = obj[i];
+            }
+            reqs.setParams(params);
+
             return reqs;
         }
-    }
-};
-
-/**
- * 声明一个装饰器，用来放在参数上标识参数的名称
- */
-export const Required = function (name: string) {
-    return function (target: any, propertyKey: string, parameterIndex: number) {
-        let apiName = target.name;
-        let methodName = propertyKey;
-        let arr: Array<Parameter> = MethodMappingParams[apiName + '.' + methodName];
-        if (!arr) arr = [];
-        arr.push({name, index: parameterIndex});
-        MethodMappingParams[apiName + '.' + methodName] = arr;
     }
 };
 
@@ -165,9 +131,9 @@ export class Submit {
     fetch = (module?: string | undefined, succ?: (data: any) => void, fail?: (message: any) => any, keepStruct?: boolean) => {
         let url = "", self = this;
         if (this.url) {
-            url = server + this.url;
+            url = getServerFunction({url: this.url});
         } else {
-            url = server + '/admin/' + this.apiName + "/" + this.methodName + "." + ext;
+            url = getServerFunction({className: this.apiName, methodName: this.methodName});
         }
         Ginkgo.post(url, this.getParamEncoding(module))
             .then(function (response) {
@@ -270,9 +236,9 @@ export class Submit {
     getUrl(): string {
         let url = "";
         if (this.url) {
-            url = server + this.url;
+            url = getServerFunction({url: this.url});
         } else {
-            url = server + '/admin/' + this.apiName + "/" + this.methodName + "." + ext;
+            url = getServerFunction({className: this.apiName, methodName: this.methodName});
         }
         return url;
     }
@@ -338,7 +304,9 @@ export class Submit {
             }
         }
         if (type == 2) {
-            MessageBox.showAlert("请求数据出错", error.message)
+            let msg = error.message || "";
+            msg += "响应码 " + error['statusCode'] + ""
+            MessageBox.showAlert("请求数据出错", msg)
         }
     }
 }
