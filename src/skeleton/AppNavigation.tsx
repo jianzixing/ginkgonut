@@ -11,7 +11,6 @@ import pic5 from "../assests/ms/shop.png";
 import pic6 from "../assests/ms/wechat.png";
 import BorderLayout, {BorderLayoutItem} from "../layout/BorderLayout";
 import Component, {ComponentProps} from "../component/Component";
-import {IconTypes} from "../icon/IconTypes";
 
 export interface NavModuleModel {
     key?: string;

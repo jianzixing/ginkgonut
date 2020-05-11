@@ -1,5 +1,4 @@
 import Ginkgo from "ginkgoes";
-import MessageBox from "../window/MessageBox";
 
 let getServerFunction: (params: { className?: string, methodName?: string, url?: string }) => string = (params => {
     if (params.url) {
@@ -300,13 +299,19 @@ export class Submit {
     private showAjaxError(error: any, type: number): void {
         if (type == 1) {
             if (error && ("" + error['code']) != "100") {
-                MessageBox.showAlert("请求数据出错", error['msg'])
+                import("../window/MessageBox")
+                    .then(value => {
+                        value.default.showAlert("请求数据出错", error['msg']);
+                    });
             }
         }
         if (type == 2) {
             let msg = error.message || "";
-            msg += "响应码 " + error['statusCode'] + ""
-            MessageBox.showAlert("请求数据出错", msg)
+            msg += "响应码 " + error['statusCode'] + "";
+            import("../window/MessageBox")
+                .then(value => {
+                    value.default.showAlert("请求数据出错", msg);
+                });
         }
     }
 }

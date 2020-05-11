@@ -7,7 +7,6 @@ import TestBuilder from "./TestBuilder";
 import CascaderField from "../form/CascaderField";
 import DataStore from "../store/DataStore";
 import APIAdmin from "./APIAdmin";
-import {Submit} from "../http/Request";
 
 export interface TestManagerProps extends AppManagerProps {
 }
