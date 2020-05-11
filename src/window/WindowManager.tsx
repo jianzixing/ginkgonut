@@ -1,48 +1,41 @@
 import {WindowPanel} from "./Window";
 
 export default class WindowManager {
-    private static windows: Array<{ win: WindowPanel<any>, zIndex: number }> = [];
-    private static containers: Array<{ dom: HTMLElement, windows: Array<WindowPanel<any>> }> = [];
+    private static windows: Array<{ dom: HTMLElement, win: WindowPanel<any>, zIndex: number }> = [];
     private static masks: Array<{ dom: HTMLElement, mask: HTMLElement }> = [];
 
     addWindow(win: WindowPanel<any>) {
         if (win instanceof WindowPanel) {
-            WindowManager.windows.push({win: win, zIndex: 0});
-
             let parent = win.getParentElement();
-            if (parent) {
-                let cnts = WindowManager.containers.filter(value => value.dom === parent);
-                let cnt;
-                if (cnts && cnts.length > 0) {
-                    cnt = cnts[0];
-                    let wins = cnt.windows;
-                    if (!wins) wins = [];
-                    wins.push(win);
-                    cnt.windows = wins;
-                } else {
-                    cnt = {dom: parent, windows: [win]};
-                    WindowManager.containers.push(cnt);
+            let isShow = WindowManager.windows.filter(value => {
+                if (value.win == win && value.dom == parent) {
+                    return value;
                 }
+            })
+            if (!isShow || isShow.length == 0) {
+                WindowManager.windows.push({dom: parent, win: win, zIndex: 0});
 
-                if (win.isMask()) {
-                    let maskArr = WindowManager.masks.filter(value => value.dom === parent);
-                    let mask;
-                    if (!maskArr || maskArr.length == 0) {
-                        mask = {};
-                        mask.dom = parent;
-                        mask.mask = document.createElement("div");
-                        parent.append(mask.mask);
-                        WindowManager.masks.push(mask);
-                    } else {
-                        mask = maskArr[0];
+                if (parent) {
+                    if (win.isMask()) {
+                        let maskArr = WindowManager.masks.filter(value => value.dom === parent);
+                        let mask;
+                        if (!maskArr || maskArr.length == 0) {
+                            mask = {};
+                            mask.dom = parent;
+                            mask.mask = document.createElement("div");
+                            parent.append(mask.mask);
+                            WindowManager.masks.push(mask);
+                        } else {
+                            mask = maskArr[0];
+                        }
+
+                        mask.mask.className = win.getMaskClassNames();
+                        mask.mask.style.display = "none";
                     }
-
-                    mask.mask.className = win.getMaskClassNames();
-                    mask.mask.style.display = "none";
                 }
-            }
 
-            console.log("添加窗口: ", WindowManager.containers.length, WindowManager.windows.length);
+                console.log("添加窗口: ", WindowManager.windows.length);
+            }
         }
     }
 
@@ -83,30 +76,36 @@ export default class WindowManager {
 
     removeWindow(win: WindowPanel<any>) {
         if (win instanceof WindowPanel) {
-            WindowManager.windows = WindowManager.windows.filter(value => value.win != win);
             let parent = win.getParentElement();
-            if (parent) {
-                let cnts = WindowManager.containers.filter(value => value.dom === parent);
-                if (cnts && cnts.length > 0) {
-                    let wins = cnts[0].windows;
-                    if (wins) {
-                        wins = wins.filter(value => value != win);
-                        cnts[0].windows = wins;
-                        if (!wins || wins.length == 0) {
-                            this.removeMasks(cnts, parent);
+            let i = 0;
+            let lastWin: { win: WindowPanel<any>, zIndex: number };
+            WindowManager.windows.map((value, index) => {
+                if (value.win == win) {
+                    i = index;
+                } else {
+                    if (value.dom == parent) {
+                        if (!lastWin) {
+                            lastWin = value;
+                        } else if (lastWin.zIndex < value.zIndex) {
+                            lastWin = value;
                         }
-                    } else {
-                        this.removeMasks(cnts, parent);
                     }
                 }
+            })
+            WindowManager.windows.splice(i, 1);
+            if (parent) {
+                if (lastWin) {
+                    this.activeWindow(lastWin.win);
+                } else {
+                    this.removeMasks(parent);
+                }
+
             }
-            console.log("移除窗口: ", WindowManager.containers.length, WindowManager.windows.length);
+            console.log("移除窗口: ", WindowManager.windows.length);
         }
     }
 
-    removeMasks(cnts: Array<{ dom: HTMLElement, windows: Array<WindowPanel<any>> }>, parent) {
-        WindowManager.containers = WindowManager.containers.filter(value => value != cnts[0]);
-
+    removeMasks(parent) {
         let i = 0;
         for (let mask of [...WindowManager.masks]) {
             let pp = mask.dom;

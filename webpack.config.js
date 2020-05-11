@@ -83,7 +83,9 @@ module.exports = function (webpackEnv) {
                         options: {
                             presets: ['@babel/env', '@babel/typescript'], //转码规则
                             plugins: [
-                                "@babel/proposal-class-properties",
+                                ["@babel/proposal-class-properties", {"loose": true}],
+                                // 开启typescript的注解/装饰器
+                                ["@babel/plugin-proposal-decorators", {"legacy": true}],
                                 "@babel/proposal-object-rest-spread",
                                 "transform-class-properties",
                                 [

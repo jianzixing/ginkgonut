@@ -46,6 +46,10 @@ export default class MessageBox<P extends MessageBoxProps> extends WindowPanel<P
         return WindowPanel.open(props);
     }
 
+    public static showAlert(title: string, content: string) {
+        return MessageBox.show(<MessageBox title={title} content={content}/>);
+    }
+
     public static close(props: MessageBoxProps) {
         Ginkgo.unmountByElement(props, document.body);
     }
