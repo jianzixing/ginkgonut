@@ -21,6 +21,8 @@ export interface UploadProps extends ComponentProps {
     reupload?: boolean; // 是否可以重新上传图片,仅仅multi=false有效
     onLookClick?: (item: UploadModel) => void;
     onDelClick?: (item: UploadModel) => void;
+    onChange?: (items?: Array<UploadModel>, news?: Array<UploadModel>) => void;
+    onAsyncFile?: (item: UploadModel, type: "del" | "add") => Promise<{}>;
 }
 
 export default class Upload<P extends UploadProps> extends Component<P> {
@@ -93,10 +95,28 @@ export default class Upload<P extends UploadProps> extends Component<P> {
                                           }}/>
                                     <Icon icon={IconTypes.trash}
                                           onClick={e => {
-                                              this.items.splice(this.items.indexOf(item), 1);
-                                              this.redrawing();
+                                              this.props.onChange && this.props.onChange(this.items);
+                                              let promise: Promise<{}>, rsv;
+                                              if (this.props.onAsyncFile) {
+                                                  promise = this.props.onAsyncFile(item, "del");
+                                              }
+                                              if (!promise) {
+                                                  promise = new Promise((resolve, reject) => {
+                                                      rsv = resolve;
+                                                  });
+                                              }
 
-                                              this.props.onDelClick && this.props.onDelClick(item);
+                                              promise.then(value => {
+                                                  this.props.onDelClick && this.props.onDelClick(item);
+                                                  this.items.splice(this.items.indexOf(item), 1);
+                                                  this.redrawing();
+                                              }).catch(reason => {
+
+                                              });
+
+                                              if (!this.props.onAsyncFile) {
+                                                  rsv(item);
+                                              }
                                           }}/>
                                 </div>
                             </div>
@@ -154,28 +174,56 @@ export default class Upload<P extends UploadProps> extends Component<P> {
         if (this.props.reupload) {
             this.items = [];
         }
+
+        let newFiles = [];
         if (fileList && fileList.length > 0) {
             let self = this;
             for (let i = 0; i < fileList.length; i++) {
                 let file = fileList.item(i);
                 let name = file.name;
                 let size = file.size;
-                let reads = new FileReader();
-                reads.readAsDataURL(file);
-                reads.onload = function (e) {
-                    let src = this.result;
-                    self.items.push({
-                        key: self.items.length + "",
-                        src: src,
-                        name: name,
-                        size: size,
-                        file: file,
-                        status: "ready"
-                    });
 
-                    self.redrawing();
-                };
+                let item: UploadModel = {
+                    key: self.items.length + "",
+                    name: name,
+                    size: size,
+                    file: file,
+                    status: "ready"
+                }
+
+                let promise: Promise<{}>;
+                let rsl;
+                if (this.props.onAsyncFile) {
+                    promise = this.props.onAsyncFile(file, "add");
+                }
+                if (!promise) {
+                    promise = new Promise<{}>((resolve, reject) => {
+                        rsl = resolve;
+                    });
+                }
+
+                this.items.push(item);
+                promise.then(value => {
+                    let reads = new FileReader();
+                    reads.readAsDataURL(file);
+                    reads.onload = function (e) {
+                        let src = this.result;
+                        item.src = src;
+                        item.status = "uploaded";
+                        self.redrawing();
+                    };
+                }).catch(reason => {
+                    item.status = "error";
+                })
+
+                if (!this.props.onAsyncFile && rsl) {
+                    rsl(item);
+                }
+
+                newFiles.push(file);
             }
+
+            this.props.onChange && this.props.onChange(this.items, newFiles);
         }
     }
 

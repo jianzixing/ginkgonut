@@ -58,7 +58,9 @@ export default class TestBuilder<P extends TestBuilderProps> extends AppManager<
                                        iconColor={"#30c461"}
                                        text={"保存"}
                                        onClick={e => {
-                                           this.formPanelRef.instance.validate();
+                                           if (this.formPanelRef.instance.validate()) {
+                                               console.log(this.formPanelRef.instance.getValues());
+                                           }
                                        }}/>
                            </Toolbar>
                        ]}

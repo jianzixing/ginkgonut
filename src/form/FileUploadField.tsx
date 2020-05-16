@@ -46,7 +46,9 @@ export class FileUploadField<P extends FileUploadFieldProps> extends TextField<P
         if (uploadType == null || uploadType == "default") {
             return super.drawingFieldBody();
         } else {
-            return (<Upload {...this.props.uploadProps || {}} ref={this.uploadRef}/>);
+            return (<Upload {...this.props.uploadProps || {}}
+                            ref={this.uploadRef}
+                            onAsyncFile={this.onUploadAsyncFile.bind(this)}/>);
         }
     }
 
@@ -73,6 +75,24 @@ export class FileUploadField<P extends FileUploadFieldProps> extends TextField<P
                 </div>
             )
         }
+    }
+
+    protected onUploadAsyncFile(item: UploadModel, type: "del" | "add"): Promise<{}> {
+        let promise = new Promise((resolve, reject) => {
+            let file = item.file;
+            let name = file.name;
+            let formData = new FormData();
+            formData.append(name, file);
+            Ginkgo.post("", formData)
+                .then(value => {
+
+                })
+                .catch(reason => {
+
+                });
+        });
+
+        return undefined;
     }
 
     protected onUploadButtonClick(e) {

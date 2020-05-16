@@ -69,7 +69,6 @@ export default class TestManager extends AppManager<TestManagerProps> {
     }
 
     componentDidMount() {
-        APIAdmin.getAdmins("abc").load();
-        APIAdmin.getAdmins("abc").load();
+        // APIAdmin.getAdmins("abc").load();
     }
 }
