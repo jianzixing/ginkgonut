@@ -3,6 +3,7 @@ import "./Upload.scss";
 import Component, {ComponentProps} from "../component/Component";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
+import Button from "../button/Button";
 
 export interface UploadModel {
     key?: string;
@@ -10,12 +11,15 @@ export interface UploadModel {
     name?: string;
     size?: number;
     file?: File;
-    status?: "ready" | "error" | "uploaded";
+    status?: "ready" | "uploading" | "error" | "finish";
+    plan?: number; // 上传进度,比如 90%
+    error?: string; // 错误消息
     showMask?: boolean;
     data?: any;
 }
 
 export interface UploadProps extends ComponentProps {
+    type?: "avatar" | "preview" | "button";
     models?: Array<UploadModel>;
     multi?: boolean;
     reupload?: boolean; // 是否可以重新上传图片,仅仅multi=false有效
@@ -23,6 +27,10 @@ export interface UploadProps extends ComponentProps {
     onDelClick?: (item: UploadModel) => void;
     onChange?: (items?: Array<UploadModel>, news?: Array<UploadModel>) => void;
     onAsyncFile?: (item: UploadModel, type: "del" | "add") => Promise<{}>;
+
+    buttonText?: string;
+    buttonIcon?: string;
+    buttonIconType?: string;
 }
 
 export default class Upload<P extends UploadProps> extends Component<P> {
@@ -39,8 +47,15 @@ export default class Upload<P extends UploadProps> extends Component<P> {
     protected static uploadItemMaskBodyCls;
     protected static uploadItemMaskInnerCls;
     protected static uploadAddItemInputCls;
+    protected static uploadErrorCls;
+    protected static uploadErrorTextCls;
+    protected static uploadErrorBtnsCls;
+
+    protected static uploadButtonCls;
+    protected static uploadButtonInputCls;
 
     protected fileInputRef?: RefObject<InputComponent> = Ginkgo.createRef();
+    protected buttonRef: RefObject<Button<any>> = Ginkgo.createRef();
     protected items?: Array<UploadModel> = [];
 
     protected buildClassNames(themePrefix: string) {
@@ -59,119 +74,177 @@ export default class Upload<P extends UploadProps> extends Component<P> {
         Upload.uploadItemMaskShowCls = this.getThemeClass("upload-item-mask-show");
         Upload.uploadItemMaskBodyCls = this.getThemeClass("upload-item-mask-body");
         Upload.uploadItemMaskInnerCls = this.getThemeClass("upload-item-mask-inner");
+        Upload.uploadErrorCls = this.getThemeClass("upload-error");
+        Upload.uploadErrorTextCls = this.getThemeClass("upload-error-text");
+        Upload.uploadErrorBtnsCls = this.getThemeClass("upload-error-btns");
+
+        Upload.uploadButtonCls = this.getThemeClass("upload-button");
+        Upload.uploadButtonInputCls = this.getThemeClass("upload-input");
     }
 
     protected drawing(): GinkgoNode | GinkgoElement[] {
         let items = [];
-        if (this.items) {
-            let cls = [Upload.uploadItemCls];
-            if (this.props.reupload) {
-                cls.push(Upload.uploadItemReuploadCls);
+        let type = this.props.type;
+        let multi = this.props.multi;
+        let reupload = this.props.reupload;
+        if (type == "avatar") {
+            multi = false;
+            reupload = true;
+        }
+
+        if (this.props.type == "button") {
+            return (
+                <div className={Upload.uploadButtonCls}>
+                    <Button ref={this.buttonRef}
+                            text={this.props.buttonText || "Browse..."}
+                            icon={this.props.buttonIcon}
+                            iconType={this.props.buttonIconType}/>
+                    <input ref={this.fileInputRef} type={"file"}
+                           className={Upload.uploadButtonInputCls}
+                           onChange={this.onUploadFileChange.bind(this)}/>
+                </div>
+            )
+        } else {
+            if (this.items) {
+                let cls = [Upload.uploadItemCls];
+                if (reupload) {
+                    cls.push(Upload.uploadItemReuploadCls);
+                }
+                for (let item of this.items) {
+                    let input;
+                    if (reupload) {
+                        input = (
+                            <input
+                                ref={this.fileInputRef}
+                                className={Upload.uploadAddItemInputCls}
+                                type={"file"}
+                                onChange={this.onUploadFileChange.bind(this)}/>
+                        );
+                    }
+                    let mangerEl;
+                    if (multi && item.status == "finish") {
+                        let cls = [Upload.uploadItemMaskCls];
+                        if (item.showMask) {
+                            cls.push(Upload.uploadItemMaskShowCls);
+                        }
+                        mangerEl = (
+                            <div className={cls}>
+                                <div className={Upload.uploadItemMaskBodyCls}>
+                                    <div className={Upload.uploadItemMaskInnerCls}>
+                                        <Icon icon={IconTypes.eye}
+                                              onClick={e => {
+                                                  this.props.onLookClick && this.props.onLookClick(item);
+                                              }}/>
+                                        <Icon icon={IconTypes.trash}
+                                              onClick={e => {
+                                                  this.props.onChange && this.props.onChange(this.items);
+                                                  let promise: Promise<{}>, rsv;
+                                                  if (this.props.onAsyncFile) {
+                                                      promise = this.props.onAsyncFile(item, "del");
+                                                  }
+                                                  if (!promise) {
+                                                      promise = new Promise((resolve, reject) => {
+                                                          rsv = resolve;
+                                                      });
+                                                  }
+
+                                                  promise.then(value => {
+                                                      this.props.onDelClick && this.props.onDelClick(item);
+                                                      this.items.splice(this.items.indexOf(item), 1);
+                                                      this.redrawing();
+                                                  }).catch(reason => {
+
+                                                  });
+
+                                                  if (!this.props.onAsyncFile) {
+                                                      rsv(item);
+                                                  }
+                                              }}/>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    }
+
+                    let errorEl;
+                    if (item.status == "error") {
+                        let errorCls = [Upload.uploadItemMaskCls];
+                        errorEl = (
+                            <div className={errorCls}>
+                                <div className={Upload.uploadItemMaskBodyCls}>
+                                    <div className={Upload.uploadItemMaskInnerCls}>
+                                        <div className={Upload.uploadErrorTextCls}>{item.error}</div>
+                                        <div className={Upload.uploadErrorBtnsCls}>
+                                            <Icon icon={IconTypes.trash}
+                                                  onClick={e => {
+                                                      this.props.onChange && this.props.onChange(this.items);
+                                                      this.props.onDelClick && this.props.onDelClick(item);
+                                                      this.items.splice(this.items.indexOf(item), 1);
+                                                      this.redrawing();
+                                                  }}/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                        cls.push(Upload.uploadErrorCls);
+                    }
+
+                    items.push(
+                        <div key={item.key} className={cls}
+                             onMouseEnter={e => {
+                                 for (let item of this.items) item.showMask = false;
+                                 item.showMask = true;
+                                 this.redrawing();
+                             }}
+                             onMouseLeave={e => {
+                                 for (let item of this.items) item.showMask = false;
+                                 this.redrawing();
+                             }}>
+                            <div className={Upload.uploadItemImgCls}>
+                                <img src={item.src}/>
+                                {mangerEl}
+                                {errorEl}
+                            </div>
+                            {input}
+                        </div>
+                    );
+                }
             }
-            for (let item of this.items) {
-                let input;
-                if (this.props.reupload) {
-                    input = (
+            if (multi || items.length == 0) {
+                let attr: any = {};
+                if (multi) attr.multiple = true;
+                items.push(
+                    <div key={"upload_add"} className={[Upload.uploadItemCls, Upload.uploadAddItemCls]}>
+                        <div className={Upload.uploadAddItemBodyCls}>
+                            <Icon className={Upload.uploadAddItemIconCls} icon={IconTypes.plus}/>
+                            <span className={Upload.uploadAddItemTextCls}>
+                                {this.props.buttonText || "Upload"}
+                            </span>
+                        </div>
                         <input
                             ref={this.fileInputRef}
                             className={Upload.uploadAddItemInputCls}
                             type={"file"}
+                            {...attr}
                             onChange={this.onUploadFileChange.bind(this)}/>
-                    );
-                }
-                let mangerEl;
-                if (this.props.multi) {
-                    let cls = [Upload.uploadItemMaskCls];
-                    if (item.showMask) {
-                        cls.push(Upload.uploadItemMaskShowCls);
-                    }
-                    mangerEl = (
-                        <div className={cls}>
-                            <div className={Upload.uploadItemMaskBodyCls}>
-                                <div className={Upload.uploadItemMaskInnerCls}>
-                                    <Icon icon={IconTypes.eye}
-                                          onClick={e => {
-                                              this.props.onLookClick && this.props.onLookClick(item);
-                                          }}/>
-                                    <Icon icon={IconTypes.trash}
-                                          onClick={e => {
-                                              this.props.onChange && this.props.onChange(this.items);
-                                              let promise: Promise<{}>, rsv;
-                                              if (this.props.onAsyncFile) {
-                                                  promise = this.props.onAsyncFile(item, "del");
-                                              }
-                                              if (!promise) {
-                                                  promise = new Promise((resolve, reject) => {
-                                                      rsv = resolve;
-                                                  });
-                                              }
-
-                                              promise.then(value => {
-                                                  this.props.onDelClick && this.props.onDelClick(item);
-                                                  this.items.splice(this.items.indexOf(item), 1);
-                                                  this.redrawing();
-                                              }).catch(reason => {
-
-                                              });
-
-                                              if (!this.props.onAsyncFile) {
-                                                  rsv(item);
-                                              }
-                                          }}/>
-                                </div>
-                            </div>
-                        </div>
-                    );
-                }
-                items.push(
-                    <div key={item.key} className={cls}
-                         onMouseEnter={e => {
-                             for (let item of this.items) item.showMask = false;
-                             item.showMask = true;
-                             this.redrawing();
-                         }}
-                         onMouseLeave={e => {
-                             for (let item of this.items) item.showMask = false;
-                             this.redrawing();
-                         }}>
-                        <div className={Upload.uploadItemImgCls}>
-                            <img src={item.src}/>
-                            {mangerEl}
-                        </div>
-                        {input}
                     </div>
-                );
+                )
             }
-        }
-        if (this.props.multi || items.length == 0) {
-            let attr: any = {};
-            if (this.props.multi) attr.multiple = true;
-            items.push(
-                <div key={"upload_add"} className={[Upload.uploadItemCls, Upload.uploadAddItemCls]}>
-                    <div className={Upload.uploadAddItemBodyCls}>
-                        <Icon className={Upload.uploadAddItemIconCls} icon={IconTypes.plus}/>
-                        <span className={Upload.uploadAddItemTextCls}>Upload</span>
-                    </div>
-                    <input
-                        ref={this.fileInputRef}
-                        className={Upload.uploadAddItemInputCls}
-                        type={"file"}
-                        {...attr}
-                        onChange={this.onUploadFileChange.bind(this)}/>
+            return (
+                <div className={Upload.uploadBodyCls}>
+                    {items}
                 </div>
-            )
+            );
         }
-        return (
-            <div className={Upload.uploadBodyCls}>
-                {items}
-            </div>
-        );
     }
 
     protected onUploadFileChange(e) {
         let input = this.fileInputRef.instance.dom as HTMLInputElement;
         let fileList = input.files;
-        if (this.props.reupload) {
+        let reupload = this.props.reupload;
+        if (this.props.type == "avatar") reupload = true;
+        if (reupload) {
             this.items = [];
         }
 
@@ -192,9 +265,10 @@ export default class Upload<P extends UploadProps> extends Component<P> {
                 }
 
                 let promise: Promise<{}>;
-                let rsl;
+                let rsl, isNotAsync = true;
                 if (this.props.onAsyncFile) {
-                    promise = this.props.onAsyncFile(file, "add");
+                    promise = this.props.onAsyncFile(item, "add");
+                    if (promise) isNotAsync = false;
                 }
                 if (!promise) {
                     promise = new Promise<{}>((resolve, reject) => {
@@ -209,14 +283,20 @@ export default class Upload<P extends UploadProps> extends Component<P> {
                     reads.onload = function (e) {
                         let src = this.result;
                         item.src = src;
-                        item.status = "uploaded";
+                        item.status = "finish";
                         self.redrawing();
                     };
                 }).catch(reason => {
-                    item.status = "error";
+                    let reads = new FileReader();
+                    reads.readAsDataURL(file);
+                    reads.onload = function (e) {
+                        let src = this.result;
+                        item.src = src;
+                        self.redrawing();
+                    };
                 })
 
-                if (!this.props.onAsyncFile && rsl) {
+                if (isNotAsync && rsl) {
                     rsl(item);
                 }
 

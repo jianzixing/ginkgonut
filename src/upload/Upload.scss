@@ -81,6 +81,28 @@
     &.x-upload-item-reupload {
       cursor: pointer;
     }
+
+    &.x-upload-error {
+      border: 1px solid #cf4c35;
+
+      .x-upload-item-mask {
+        display: block;
+        color: #cf4c35;
+        font-weight: 500;
+
+        .x-upload-item-mask-inner {
+
+          .x-upload-error-text {
+
+          }
+
+          .x-upload-error-btns {
+            margin-top: 3px;
+            color: rgba(255, 255, 255, .7);
+          }
+        }
+      }
+    }
   }
 
   .x-upload-add-item {
@@ -104,5 +126,20 @@
         font-size: 14px;
       }
     }
+  }
+}
+
+.x-upload-button {
+  .x-upload-input {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 4px;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    text-indent: -10000px;
   }
 }

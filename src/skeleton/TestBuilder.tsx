@@ -21,6 +21,7 @@ import Toolbar from "../toolbar/Toolbar";
 import Button from "../button/Button";
 import {IconTypes} from "../icon/IconTypes";
 import HiddenField from "../form/HiddenField";
+import {SelectField} from "../form/SelectField";
 
 export interface TestBuilderProps extends AppManagerProps {
 
@@ -81,7 +82,7 @@ export default class TestBuilder<P extends TestBuilderProps> extends AppManager<
                        }}>
                 <FormLayoutTitle text={"基本信息 - (属性模板关联SKU信息)"} iconType={IconTypes.boxOpen}/>
                 <HiddenField/>
-                <FileUploadField fieldLabel={"avatar"} uploadType={"preview"} uploadProps={{multi: true}}/>
+                <FileUploadField fieldLabel={"avatar"} uploadType={"preview"} uploadProps={{multi: true}} isSyncUpload={true}/>
                 <TextField name={"login_field"} fieldLabel={"Login Field"} placeholder={"user id"}/>
                 <TextField name={"password"} type={"password"} fieldLabel={"Password"} placeholder={"password"}/>
                 <NumberTextField name={"number_field"} fieldLabel={"Number Field"} placeholder={"password"}/>
@@ -92,6 +93,7 @@ export default class TestBuilder<P extends TestBuilderProps> extends AppManager<
                 <FormLayoutTitle text={"其它信息 - (信息参数自定义)"} iconType={IconTypes.cog}/>
                 <DateTimeField name={"date_field"} fieldLabel={"Date Field"} showTime={true}/>
                 <FileUploadField name={"field_upload"} fieldLabel={"File Upload"}/>
+                <SelectField name={"select_field"} fieldLabel={"Select Field"}/>
                 <CheckboxField name={"check"} fieldLabel={"Check Field"} text={"Check"}/>
                 <RadioField name={"radio"} fieldLabel={"Radio Field"} text={"Radio"}/>
                 <CheckboxGroupField name={"check_field_group"} fieldLabel={"Check Field Group"}

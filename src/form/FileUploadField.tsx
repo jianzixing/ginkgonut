@@ -3,6 +3,16 @@ import TextField, {TextFieldProps} from "./TextField";
 import Button from "../button/Button";
 import "./FileUploadField.scss";
 import Upload, {UploadModel, UploadProps} from "../upload/Upload";
+import {Submit} from "../http/Request";
+import ObjectTools from "../tools/ObjectTools";
+
+type FileUploadResponse = {
+    resolve: (...args: any) => void,
+    reject: (...args: any) => void,
+    item: UploadModel,
+    response?: any;
+    status?: "ok" | "fail"
+};
 
 export interface FileUploadFieldProps extends TextFieldProps {
     uploadType?: "default" | "preview";
@@ -11,16 +21,20 @@ export interface FileUploadFieldProps extends TextFieldProps {
     buttonIcon?: string;
     buttonIconType?: string;
     buttonIconAlign?: "left" | "right";
-    onButtonClick?: (e) => void;
+
+    isSyncUpload?: boolean; // true之后组件选择文件后自动上传并获取当前返回值作为value
+    uploadUrl?: string | Submit;
+    deleteUrl?: string | Submit;
+    previewUrl?: (name: string) => void | string | Submit;
+    valueField?: string;
+    onUploadResponse?: (params: FileUploadResponse) => void;
+    onDeleteResponse?: (params: FileUploadResponse) => void;
 }
 
 export class FileUploadField<P extends FileUploadFieldProps> extends TextField<P> {
     protected static fileUploadFieldRightCls;
-    protected static fileUploadFieldInputCls;
 
     protected rightElRef: RefObject<HTMLComponent> = Ginkgo.createRef();
-    protected rightButtonRef: RefObject<Button<any>> = Ginkgo.createRef();
-    protected fileInputRef: RefObject<InputComponent> = Ginkgo.createRef();
     protected uploadRef: RefObject<Upload<any>> = Ginkgo.createRef();
 
     protected readonly = true;
@@ -31,7 +45,6 @@ export class FileUploadField<P extends FileUploadFieldProps> extends TextField<P
         super.buildClassNames(themePrefix);
 
         FileUploadField.fileUploadFieldRightCls = this.getThemeClass("fileupload-right");
-        FileUploadField.fileUploadFieldInputCls = this.getThemeClass("fileupload-input");
     }
 
     protected drawing(): GinkgoElement<any> | string | GinkgoElement[] | undefined | null {
@@ -53,64 +66,115 @@ export class FileUploadField<P extends FileUploadFieldProps> extends TextField<P
     }
 
     protected drawingFieldRight(): GinkgoNode {
-        let text = this.props.buttonText;
         let uploadType = this.props.uploadType;
 
         if (uploadType == null || uploadType == "default") {
-            if (!this.props.buttonIcon && !this.props.buttonIconType
-                && (!this.props.buttonText || this.props.buttonText.trim() == '')) {
-                text = "Browse..."
-            }
             return (
                 <div ref={this.rightElRef}
                      className={FileUploadField.fileUploadFieldRightCls}>
-                    <Button ref={this.rightButtonRef}
-                            text={text}
-                            icon={this.props.buttonIcon}
-                            iconType={this.props.buttonIconType}
-                            onClick={this.onUploadButtonClick.bind(this)}/>
-                    <input ref={this.fileInputRef} type={"file"}
-                           className={FileUploadField.fileUploadFieldInputCls}
-                           onChange={this.onUploadFileChange.bind(this)}/>
+                    <Upload type={"button"}
+                            ref={this.uploadRef}
+                            buttonText={this.props.buttonText}
+                            buttonIcon={this.props.buttonIcon}
+                            buttonIconType={this.props.buttonIconType}
+                            onAsyncFile={this.onUploadAsyncFile.bind(this)}/>
                 </div>
             )
         }
     }
 
     protected onUploadAsyncFile(item: UploadModel, type: "del" | "add"): Promise<{}> {
-        let promise = new Promise((resolve, reject) => {
+        if (this.props.uploadType == null || this.props.uploadType == "default") {
             let file = item.file;
-            let name = file.name;
-            let formData = new FormData();
-            formData.append(name, file);
-            Ginkgo.post("", formData)
-                .then(value => {
-
-                })
-                .catch(reason => {
-
-                });
-        });
-
-        return undefined;
-    }
-
-    protected onUploadButtonClick(e) {
-        this.props.onButtonClick && this.props.onButtonClick(e);
-    }
-
-    protected onUploadFileChange(e) {
-        let input = this.fileInputRef.instance.dom as HTMLInputElement;
-        let fileList = input.files;
-        this.value = fileList;
-        if (fileList && fileList.length > 0) {
-            let file = fileList[0];
             let name = file.name;
             let size = file.size;
             this.inputEl.value = name;
+
+            this.triggerOnChangeEvents(this, this.value);
         }
 
-        this.triggerOnChangeEvents(this, this.value);
+        if (this.props.isSyncUpload) {
+            if (type == "add") {
+                let url = this.props.uploadUrl;
+                if (url instanceof Submit) {
+                    url = url.getParamUrl();
+                }
+                let promise = new Promise((resolve, reject) => {
+                    let file = item.file;
+                    let name = file.name;
+                    let formData = new FormData();
+                    formData.append(name, file);
+                    Ginkgo.post(url as string, formData)
+                        .then(value => {
+                            if (this.props.valueField) {
+                                let obj = ObjectTools.valueFromTemplate(value, this.props.valueField);
+                                if (obj instanceof Array) {
+                                    if (obj.length > 0) item.data = obj[0];
+                                } else {
+                                    item.data = obj;
+                                }
+                            }
+
+                            if (this.props.onUploadResponse) {
+                                this.props.onUploadResponse({resolve, reject, item, response: value, status: "ok"});
+                            } else {
+                                resolve(value);
+                            }
+                        })
+                        .catch(reason => {
+                            if (this.props.onUploadResponse) {
+                                this.props.onUploadResponse({resolve, reject, item, response: reason, status: "fail"});
+                            } else {
+                                item.status = "error";
+                                item.error = reason && reason.statusCode ? "Upload Fail" + reason.statusCode : "Upload Fail";
+                                reject(reason);
+                            }
+                        });
+                });
+
+                return promise;
+            }
+            if (type == "del") {
+                let url = this.props.deleteUrl;
+                if (url instanceof Submit) {
+                    url = url.getParamUrl();
+                }
+                if (item.data) {
+                    url = (url as string).replace("{value}", item.data);
+
+                    let promise = new Promise((resolve, reject) => {
+                        Ginkgo.get(url as string)
+                            .then(value => {
+                                if (this.props.onDeleteResponse) {
+                                    this.props.onDeleteResponse({resolve, reject, item, response: value, status: "ok"});
+                                } else {
+                                    resolve(value);
+                                }
+                            })
+                            .catch(reason => {
+                                if (this.props.onDeleteResponse) {
+                                    this.props.onDeleteResponse({
+                                        resolve,
+                                        reject,
+                                        item,
+                                        response: reason,
+                                        status: "fail"
+                                    });
+                                } else {
+                                    item.status = "error";
+                                    item.error = reason && reason.statusCode ? "Upload Fail" + reason.statusCode : "Upload Fail";
+                                    reject(reason);
+                                }
+                            })
+                    });
+                    return promise;
+                } else {
+                    console.error("missing delete file data");
+                }
+            }
+        }
+
+        return undefined;
     }
 
     setValue(value: string | FileList | string[]): void {
@@ -134,7 +198,9 @@ export class FileUploadField<P extends FileUploadFieldProps> extends TextField<P
                 for (let v of value) {
                     models.push({
                         key: key + "",
-                        src: v
+                        src: v,
+                        data: v,
+                        status: "finish"
                     });
                     key++;
                 }
@@ -145,7 +211,9 @@ export class FileUploadField<P extends FileUploadFieldProps> extends TextField<P
                 let models: Array<UploadModel> = [];
                 models.push({
                     key: "0",
-                    src: value
+                    src: value,
+                    data: value,
+                    status: "finish"
                 })
                 if (this.uploadRef && this.uploadRef.instance) {
                     this.uploadRef.instance.update("models", models);
@@ -177,7 +245,7 @@ export class FileUploadField<P extends FileUploadFieldProps> extends TextField<P
         }
     }
 
-    getValue(): FileList | Array<File> {
+    getValue(): FileList | Array<File> | Array<string> | string {
         let uploadType = this.props.uploadType;
         if (uploadType == null || uploadType == "default") {
             return this.value;
@@ -187,7 +255,11 @@ export class FileUploadField<P extends FileUploadFieldProps> extends TextField<P
                 if (items && items.length > 0) {
                     let arr = [];
                     for (let item of items) {
-                        arr.push(item.file);
+                        if (this.props.isSyncUpload) {
+                            arr.push(item.data);
+                        } else {
+                            arr.push(item.file);
+                        }
                     }
                     return arr;
                 }
@@ -195,7 +267,7 @@ export class FileUploadField<P extends FileUploadFieldProps> extends TextField<P
         }
     }
 
-    getRowValue(): FileList | Array<File> {
+    getRowValue(): FileList | Array<File> | Array<string> | string {
         return this.getValue();
     }
 
@@ -203,8 +275,10 @@ export class FileUploadField<P extends FileUploadFieldProps> extends TextField<P
         super.onAfterDrawing();
 
         if (this.rightElRef && this.rightElRef.instance
-            && this.rightButtonRef && this.rightButtonRef.instance) {
-            let width = this.rightButtonRef.instance.getWidth();
+            && this.uploadRef && this.uploadRef.instance
+            && (this.props.uploadType == "default"
+                || this.props.uploadType == null)) {
+            let width = this.uploadRef.instance.getWidth();
             let el = this.rightElRef.instance.dom as HTMLElement;
             el.style.width = width + "px";
         }
