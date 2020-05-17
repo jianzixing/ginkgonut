@@ -1,18 +1,18 @@
 export default class ObjectTools {
     public static valueFromTemplate(obj: any, template: string) {
-        let str1 = template.split("\\.");
+        let str1 = template.split(".");
         let str3 = [];
         for (let str2 of str1) {
             let str4 = "";
             for (let i = 0; i < str2.length; i++) {
                 let str5 = str2.charAt(i);
                 if (str5 == '[') {
-                    if (str4 && str4 == "") {
+                    if (str4 && str4 != "") {
                         str3.push({type: 0, str: str4});
                     }
                     str4 = "";
                 } else if (str5 == ']') {
-                    if (str4 && str4 == "") {
+                    if (str4 && str4 != "") {
                         str3.push({type: 1, str: str4});
                     }
                     str4 = "";
@@ -20,7 +20,7 @@ export default class ObjectTools {
                     str4 += str5;
                 }
             }
-            if (str4 && str4 == "") {
+            if (str4 && str4 != "") {
                 str3.push({type: 0, str: str4});
             }
         }
@@ -33,11 +33,14 @@ export default class ObjectTools {
                     if (str6.str == "*") {
                         let arr = [];
                         for (let k = 0; k < lastObj.length; k++) {
-                            let r = getValue(lastObj, strArr.splice(0, strArr.indexOf(str6) + 1));
+                            strArr.splice(0, strArr.indexOf(str6) + 1);
+                            let r = getValue(lastObj[k], strArr);
                             if (r instanceof Array) {
-                                r.map(value => arr.push(value));
+                                r.map(value => {
+                                    if (value) arr.push(value)
+                                });
                             } else {
-                                arr.push(r);
+                                if (r) arr.push(r);
                             }
                         }
                         return arr;
@@ -47,8 +50,12 @@ export default class ObjectTools {
                 }
                 if (!lastObj) break;
             }
+            return lastObj;
         }
 
         return getValue(obj, str3);
     }
 }
+
+window['ObjectTools'] = ObjectTools;
+console.log(ObjectTools.valueFromTemplate({a: [{b: {c: 1}}, {b: "3", d: ["2"]}]}, "a[*].b"));
