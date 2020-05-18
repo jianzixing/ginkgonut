@@ -1,8 +1,8 @@
 import Ginkgo from "ginkgoes";
-import "./NumberTextField.scss";
 import TextField, {TextFieldProps} from "./TextField";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
+import "./NumberTextField.scss";
 
 export interface NumberTextFieldProps extends TextFieldProps {
 

@@ -1,7 +1,7 @@
 import Ginkgo, {GinkgoTools, HTMLComponent} from "ginkgoes";
 import Component from "../component/Component";
-import "./ViewPort.scss";
 import Container from "../component/Container";
+import "./ViewPort.scss";
 
 export interface ViewPortProps {
 

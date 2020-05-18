@@ -1,10 +1,10 @@
 import Table, {TableItemModel, TableProps} from "./Table";
 import Ginkgo, {GinkgoNode} from "ginkgoes";
 import TableRow from "./TableRow";
-import "./TableFeatureGroup.scss";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
 import {TableColumnModel} from "./TableColumn";
+import "./TableFeatureGroup.scss";
 
 
 export interface TableFeatureGroupModel {

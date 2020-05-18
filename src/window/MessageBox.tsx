@@ -1,12 +1,12 @@
 import Ginkgo, {CSSProperties, GinkgoElement, GinkgoNode, RefObject} from "ginkgoes";
 import {WindowPanel, WindowProps} from "./Window";
-import "./MessageBox.scss";
 import Button, {ButtonProps} from "../button/Button";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
 import TextField from "../form/TextField";
 import TextAreaField from "../form/TextAreaField";
 import Progress, {ProgressProps} from "../progress/Progress";
+import "./MessageBox.scss";
 
 export interface MessageBoxProps extends WindowProps, ProgressProps {
     type?: "alert" | "confirm" | "prompt" | "progress" | "wait" | "custom";

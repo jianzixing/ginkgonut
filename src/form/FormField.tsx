@@ -1,11 +1,10 @@
 import Ginkgo, {BindComponent, GinkgoElement, GinkgoNode, HTMLComponent, RefObject} from "ginkgoes";
-
 import Component from "../component/Component";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
-import "./FormField.scss";
 import {AbstractFormField, AbstractFormFieldProps} from "./AbstractFormField";
 import Tooltip, {TooltipManager} from "../tooltips/Tooltip";
+import "./FormField.scss";
 
 
 export interface FormFieldProps extends AbstractFormFieldProps {

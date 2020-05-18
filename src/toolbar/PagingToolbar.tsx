@@ -1,10 +1,10 @@
 import Ginkgo, {GinkgoElement} from "ginkgoes";
 import Toolbar, {ToolbarProps, ToolbarSplit} from "./Toolbar";
-import "./PagingToolbar.scss";
 import Button from "../button/Button";
 import {IconTypes} from "../icon/IconTypes";
 import TextField from "../form/TextField";
 import {StoreProcessor} from "../store/DataStore";
+import "./PagingToolbar.scss";
 
 export interface PagingToolbarProps extends ToolbarProps {
     pageCount?: number;

@@ -17,16 +17,16 @@ export default class TreeGrid<P extends TreeGridProps> extends Tree<P> {
             <Grid
                 {...this.buildGridProps()}
                 onSelected={(e, data) => {
-                    if (this.props && this.props.onItemClick) {
-                        this.props.onItemClick(e, {
+                    if (this.props && this.props.onTreeItemClick) {
+                        this.props.onTreeItemClick(e, {
                             data: data.data,
                             type: "selected"
                         });
                     }
                 }}
                 onDeselected={(e, data) => {
-                    if (this.props && this.props.onItemClick) {
-                        this.props.onItemClick(e, {
+                    if (this.props && this.props.onTreeItemClick) {
+                        this.props.onTreeItemClick(e, {
                             data: data.data,
                             type: "deselected"
                         });
@@ -37,7 +37,7 @@ export default class TreeGrid<P extends TreeGridProps> extends Tree<P> {
     }
 
     protected buildGridProps(): GridProps {
-        let cell = {};
+        let cell: any = {};
         if (this.props.treeDataIndex) {
             cell[this.props.treeDataIndex] = this;
         } else {

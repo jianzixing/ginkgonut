@@ -1,9 +1,9 @@
 import Ginkgo, {CSSProperties, GinkgoComponent, GinkgoElement, GinkgoNode, HTMLComponent} from "ginkgoes";
-import "./Toolbar.scss";
 import Component, {ComponentProps} from "../component/Component";
 import Button from "../button/Button";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
+import "./Toolbar.scss";
 
 export interface ToolbarProps extends ComponentProps {
     border?: boolean | 'top' | 'left' | 'bottom' | 'right';

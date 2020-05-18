@@ -1,13 +1,11 @@
 import Ginkgo, {CSSProperties, GinkgoElement, RefObject} from "ginkgoes";
 import Component, {ComponentProps} from "../component/Component";
-import "./TableCell.scss";
 import {TableColumnModel} from "./TableColumn";
 import {AbstractFormField} from "../form/AbstractFormField";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
 import {TableRecord} from "./TableRow";
-import TextField from "../form/TextField";
-import ComboboxField from "../form/ComboboxField";
+import "./TableCell.scss";
 
 export type tableCellTypes = "gridcolumn" | "rownumber" | "checkbox" | "actioncolumn";
 export const RowNumberWidth = 32;

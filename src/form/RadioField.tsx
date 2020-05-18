@@ -1,8 +1,8 @@
 import Ginkgo, {InputComponent} from "ginkgoes";
 import FormField, {FormFieldProps} from "./FormField";
-import "./RadioField.scss";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
+import "./RadioField.scss";
 
 export interface RadioFieldProps extends FormFieldProps {
     text?: string;

@@ -1,9 +1,9 @@
 import Ginkgo, {GinkgoElement, GinkgoNode, HTMLComponent, RefObject} from "ginkgoes";
 import Panel, {PanelProps} from "../panel/Panel";
 import Grid, {GridProps} from "./Grid";
-import "./GridPanel.scss";
 import PagingToolbar, {PagingToolbarProps} from "../toolbar/PagingToolbar";
 import {ToolbarProps} from "../toolbar/Toolbar";
+import "./GridPanel.scss";
 
 export interface GridPanelProps extends PanelProps, GridProps {
     paging?: boolean | PagingToolbarProps;

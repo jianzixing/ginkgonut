@@ -1,9 +1,9 @@
 import Ginkgo, {GinkgoElement, GinkgoNode, HTMLComponent, InputComponent, RefObject} from "ginkgoes";
 import FormField, {FormFieldProps} from "./FormField";
 import Icon from "../icon/Icon";
-import "./SliderField.scss";
 import {IconTypes} from "../icon/IconTypes";
 import Moving from "../dragdrop/Moving";
+import "./SliderField.scss";
 
 export interface SliderFieldProps extends FormFieldProps {
 

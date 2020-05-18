@@ -2,9 +2,9 @@ import Ginkgo, {CSSProperties, GinkgoElement, HTMLComponent} from "ginkgoes";
 import Panel, {PanelProps} from "../panel/Panel";
 import Component, {ComponentProps} from "../component/Component";
 import {IconTypes} from "../icon/IconTypes";
-import "./Window.scss";
 import WindowManager from "./WindowManager";
 import Button from "../button/Button";
+import "./Window.scss";
 
 export class WindowWrapper {
     private wins: { component: Component<any>, props: WindowProps };

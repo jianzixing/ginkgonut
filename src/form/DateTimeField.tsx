@@ -1,10 +1,9 @@
 import Ginkgo, {GinkgoNode, RefObject} from "ginkgoes";
-import "./DateTimeField.scss";
-
 import TextField, {TextFieldProps} from "./TextField";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
 import DatePicker from "../datepicker/DatePicker";
+import "./DateTimeField.scss";
 
 export interface DateFieldProps extends TextFieldProps {
     format?: string;

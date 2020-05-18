@@ -1,9 +1,9 @@
 import Ginkgo, {GinkgoElement, GinkgoNode, InputComponent, RefObject} from "ginkgoes";
-import "./Upload.scss";
 import Component, {ComponentProps} from "../component/Component";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
 import Button from "../button/Button";
+import "./Upload.scss";
 
 export interface UploadModel {
     key?: string;

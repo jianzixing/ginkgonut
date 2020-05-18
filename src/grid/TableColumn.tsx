@@ -5,8 +5,8 @@ import {tableCellTypes} from "./TableCell";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
 import Menu, {MenuModel, MenuProps, MenuShowing} from "../menu/Menu";
-import "./TableColumn.scss";
 import {ActionColumnItem, CellEditing} from "./TableRow";
+import "./TableColumn.scss";
 
 export interface TableColumnModel {
     type?: tableCellTypes;
@@ -19,6 +19,8 @@ export interface TableColumnModel {
     textAlign?: "left" | "center";
     /*宽度占比*/
     flex?: number;
+    // 由于width会根据fit值改变所以保存最原始的width值
+    originWidth?: number;
     style?: CSSProperties;
     className?: string;
     children?: Array<TableColumnModel>;

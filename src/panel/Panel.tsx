@@ -1,11 +1,11 @@
 import Ginkgo, {CSSProperties, GinkgoElement, GinkgoNode, HTMLComponent} from "ginkgoes";
-import "./Panel.scss";
 import Component, {ComponentProps} from "../component/Component";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
 import Loading from "../loading/Loading";
 import Toolbar, {ToolbarProps} from "../toolbar/Toolbar";
 import Container from "../component/Container";
+import "./Panel.scss";
 
 export interface PanelToolModel {
     key?: string;

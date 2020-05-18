@@ -16,7 +16,7 @@ export default class TestManager extends AppManager<TestManagerProps> {
         return (
             <GridPanel key={"ddd"}
                        paging={true}
-                       fillParent={true}
+                       fit={true}
                        columns={[
                            {type: "checkbox"},
                            {title: "Text Grid Column", width: 200, dataIndex: 'text'},

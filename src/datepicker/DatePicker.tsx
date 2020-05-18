@@ -1,11 +1,11 @@
 import Ginkgo, {GinkgoElement, HTMLComponent, RefObject} from "ginkgoes";
-import "./DatePicker.scss";
 import Component, {ComponentProps} from "../component/Component";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
 import Button from "../button/Button";
 import MonthPicker from "./MonthPicker";
 import NumberTextField from "../form/NumberTextField";
+import "./DatePicker.scss";
 
 export interface DatePickerProps extends ComponentProps {
     border?: boolean;

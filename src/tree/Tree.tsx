@@ -4,8 +4,8 @@ import Component, {ComponentProps} from "../component/Component";
 import TableRow, {TableRowProps} from "../grid/TableRow";
 import TreeCell from "./TreeCell";
 import {TableColumnModel} from "../grid/TableColumn";
-import "./Tree.scss";
 import DataEmpty from "../empty/DataEmpty";
+import "./Tree.scss";
 
 export interface TreeListModel {
     /*树组件时表示当前的层级*/
@@ -26,7 +26,7 @@ export interface TreeItemClickModel {
 export interface TreeProps extends ComponentProps {
     data?: Array<any>;
     childrenField?: string;
-    onItemClick?: (e: Event, model: TreeItemClickModel) => void;
+    onTreeItemClick?: (e: Event, model: TreeItemClickModel) => void;
 
     iconTypeKey?: string;
     iconKey?: string;
@@ -107,16 +107,16 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
                 <Table
                     {...this.buildTableProps()}
                     onSelected={(e, data) => {
-                        if (this.props && this.props.onItemClick) {
-                            this.props.onItemClick(e, {
+                        if (this.props && this.props.onTreeItemClick) {
+                            this.props.onTreeItemClick(e, {
                                 data: data.data,
                                 type: "selected"
                             });
                         }
                     }}
                     onDeselected={(e, data) => {
-                        if (this.props && this.props.onItemClick) {
-                            this.props.onItemClick(e, {
+                        if (this.props && this.props.onTreeItemClick) {
+                            this.props.onTreeItemClick(e, {
                                 data: data.data,
                                 type: "deselected"
                             });

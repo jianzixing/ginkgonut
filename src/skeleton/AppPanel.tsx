@@ -1,7 +1,7 @@
 import Ginkgo, {GinkgoElement, GinkgoNode, HTMLComponent, RefObject} from "ginkgoes";
-import "./AppPanel.scss";
 import {NavModuleModel} from "./AppNavigation";
 import Container from "../component/Container";
+import "./AppPanel.scss";
 
 export interface AppPanelProps {
 

@@ -1,9 +1,9 @@
 import Ginkgo, {GinkgoElement} from "ginkgoes";
-import "./MonthPicker.scss";
 import Component, {ComponentProps} from "../component/Component";
 import Button from "../button/Button";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
+import "./MonthPicker.scss";
 
 export interface MonthPickerProps extends ComponentProps {
     onCancelClick?: () => void;

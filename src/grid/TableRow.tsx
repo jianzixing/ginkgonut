@@ -4,8 +4,8 @@ import TableCell, {getCellWidth} from "./TableCell";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
 import {TableCellPlugin, TableItemModel, TableRowPlugin} from "./Table";
-import "./TableRow.scss";
 import {TableColumnModel} from "./TableColumn";
+import "./TableRow.scss";
 
 export interface ActionColumnItem {
     icon?: string;

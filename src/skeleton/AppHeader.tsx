@@ -1,7 +1,6 @@
 import Ginkgo, {GinkgoNode, HTMLComponent, RefObject} from "ginkgoes";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
-import "./AppHeader.scss";
 import Tooltip, {TooltipManager} from "../tooltips/Tooltip";
 import Component, {ComponentProps} from "../component/Component";
 import MessageBox from "../window/MessageBox";
@@ -10,6 +9,7 @@ import FormPanel from "../panel/FormPanel";
 import TextField from "../form/TextField";
 import Toolbar, {ToolbarSplit} from "../toolbar/Toolbar";
 import Button from "../button/Button";
+import "./AppHeader.scss";
 
 export interface AppHeaderProps extends ComponentProps {
 

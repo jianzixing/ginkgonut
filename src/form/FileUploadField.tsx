@@ -1,10 +1,9 @@
 import Ginkgo, {GinkgoElement, GinkgoNode, HTMLComponent, InputComponent, RefObject} from "ginkgoes";
 import TextField, {TextFieldProps} from "./TextField";
-import Button from "../button/Button";
-import "./FileUploadField.scss";
 import Upload, {UploadModel, UploadProps} from "../upload/Upload";
 import {Submit} from "../http/Request";
 import ObjectTools from "../tools/ObjectTools";
+import "./FileUploadField.scss";
 
 type FileUploadResponse = {
     resolve: (...args: any) => void,

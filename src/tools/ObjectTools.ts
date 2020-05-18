@@ -56,6 +56,3 @@ export default class ObjectTools {
         return getValue(obj, str3);
     }
 }
-
-window['ObjectTools'] = ObjectTools;
-console.log(ObjectTools.valueFromTemplate({a: [{b: {c: 1}}, {b: "3", d: ["2"]}]}, "a[*].b"));

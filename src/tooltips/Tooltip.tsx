@@ -6,8 +6,8 @@ import Ginkgo, {
     HTMLComponent,
     RefObject
 } from "ginkgoes";
-import "./Tooltip.scss";
 import Component, {ComponentProps} from "../component/Component";
+import "./Tooltip.scss";
 
 export interface TooltipProps extends ComponentProps {
     align?: "bottom" | "left" | "top" | "right";

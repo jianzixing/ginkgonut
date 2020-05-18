@@ -6,13 +6,13 @@ import Ginkgo, {
     InputComponent,
     RefObject
 } from "ginkgoes";
-import "./ComboboxField.scss";
 import TextField, {TextFieldProps} from "./TextField";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
 import {StoreProcessor} from "../store/DataStore";
 import Loading from "../loading/Loading";
 import DataEmpty from "../empty/DataEmpty";
+import "./ComboboxField.scss";
 
 export interface ComboboxModel {
     value?: number | string;

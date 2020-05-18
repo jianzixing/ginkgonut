@@ -6,13 +6,13 @@ import Ginkgo, {
     HTMLComponent,
     RefObject
 } from "ginkgoes";
-import "./BorderLayout.scss";
 import Component, {ComponentProps} from "../component/Component";
 import Panel from "../panel/Panel";
 import Moving, {MovingProps} from "../dragdrop/Moving";
 import {IconTypes} from "../icon/IconTypes";
 import Icon from "../icon/Icon";
 import Container from "../component/Container";
+import "./BorderLayout.scss";
 
 export interface BorderLayoutProps extends ComponentProps {
 

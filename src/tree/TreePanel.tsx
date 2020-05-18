@@ -1,7 +1,7 @@
 import Ginkgo, {GinkgoElement} from "ginkgoes";
-import "./TreePanel.scss";
 import Panel, {PanelProps} from "../panel/Panel";
 import Tree, {TreeProps} from "./Tree";
+import "./TreePanel.scss";
 
 export interface TreePanelProps extends PanelProps, TreeProps {
 

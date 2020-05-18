@@ -1,8 +1,8 @@
 import Ginkgo, {GinkgoElement, GinkgoNode} from "ginkgoes";
-import "./TagField.scss";
 import ComboboxField, {ComboboxFieldProps, ComboboxModel} from "./ComboboxField";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
+import "./TagField.scss";
 
 export interface TagFieldProps extends ComboboxFieldProps {
 

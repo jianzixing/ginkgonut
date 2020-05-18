@@ -1,8 +1,8 @@
 import Ginkgo, {CSSProperties, InputComponent} from "ginkgoes";
 import FormField, {FormFieldProps} from "./FormField";
-import "./CheckboxField.scss";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
+import "./CheckboxField.scss";
 
 export interface CheckboxFieldProps extends FormFieldProps {
     text?: string;

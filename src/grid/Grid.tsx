@@ -1,5 +1,4 @@
 import Ginkgo, {CSSProperties, GinkgoElement, HTMLComponent, RefObject} from "ginkgoes";
-import './Grid.scss';
 import Table, {
     TableBodyPlugin,
     TableCellPlugin,
@@ -12,6 +11,7 @@ import TableColumnGroup, {TableColumnGroupProps} from "./TableColumnGroup";
 import {StoreProcessor} from "../store/DataStore";
 import Loading from "../loading/Loading";
 import {getCellWidth, getFixCellWidth, isFixCellWidth} from "./TableCell";
+import './Grid.scss';
 
 export interface GridBodyPlugin extends TableBodyPlugin {
 
@@ -200,6 +200,11 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
 
     protected calTableWidth() {
         if (this.columnsRef && this.props.fit) {
+            for (let c of this.columns) {
+                if (c.originWidth == null) {
+                    c.originWidth = c.width;
+                }
+            }
             this.columnsRef.calGroupColumnWidth();
         }
 

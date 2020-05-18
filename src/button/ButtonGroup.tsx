@@ -1,7 +1,7 @@
 import Ginkgo, {GinkgoElement} from "ginkgoes";
-import "./ButtonGroup.scss";
 import Component, {ComponentProps} from "../component/Component";
 import Button, {ButtonProps} from "./Button";
+import "./ButtonGroup.scss";
 
 export interface ButtonModel extends ButtonProps {
     data?: any;

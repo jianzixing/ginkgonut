@@ -5,11 +5,11 @@ import Ginkgo, {
     HTMLComponent,
     RefObject
 } from "ginkgoes";
-import "./TabPanel.scss";
 import Component, {ComponentProps} from "../component/Component";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
 import Container from "../component/Container";
+import "./TabPanel.scss";
 
 export interface TabModel {
     key?: any;

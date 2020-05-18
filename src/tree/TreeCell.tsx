@@ -1,10 +1,9 @@
 import Ginkgo, {CSSProperties, GinkgoElement} from "ginkgoes";
-import "./TreeCell.scss";
 import TableCell, {TableCellProps} from "../grid/TableCell";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
 import {TreeListModel} from "./Tree";
-
+import "./TreeCell.scss";
 
 export interface TreeCellProps extends TableCellProps {
     text: string;

@@ -1,9 +1,9 @@
 import Ginkgo, {GinkgoElement, GinkgoNode, HTMLComponent, RefObject} from "ginkgoes";
-import "./TableColumnGroup.scss";
 import TableColumn, {TableColumnModel} from "./TableColumn";
 import Component, {ComponentProps,} from "../component/Component";
 import {MovingPoint} from "../dragdrop/Moving";
 import {getCellWidth, getFixCellWidth, isFixCellWidth} from "./TableCell";
+import "./TableColumnGroup.scss";
 
 export interface TableColumnGroupProps extends ComponentProps {
     columns: Array<TableColumnModel>;
@@ -108,7 +108,7 @@ export default class TableColumnGroup<P extends TableColumnGroupProps> extends C
                             flexTotal += c.flex;
                         } else {
                             if (!isFixCellWidth(c.type)) {
-                                totalWidth += c.width;
+                                totalWidth += c.originWidth;
                             } else {
                                 width -= getFixCellWidth(c.type);
                             }
@@ -118,13 +118,13 @@ export default class TableColumnGroup<P extends TableColumnGroupProps> extends C
                         let diff = width - totalWidth;
                         for (let c of columns) {
                             if (c.flex > 0) {
-                                c.width = Math.round(diff / flexTotal * c.flex);
+                                c.width = Math.floor(diff / flexTotal * c.flex);
                             }
                         }
                     } else {
                         for (let c of columns) {
                             if (!isFixCellWidth(c.type)) {
-                                c.width = Math.round(width / totalWidth * c.width);
+                                c.width = Math.floor(width / totalWidth * c.originWidth);
                             }
                         }
                     }

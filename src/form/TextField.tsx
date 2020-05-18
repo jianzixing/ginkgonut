@@ -1,6 +1,6 @@
 import Ginkgo, {GinkgoElement, GinkgoNode, InputComponent} from "ginkgoes";
-import "./TextField.scss";
 import FormField, {FormFieldProps} from "./FormField";
+import "./TextField.scss";
 
 export interface TextFieldProps extends FormFieldProps {
     placeholder?: string;

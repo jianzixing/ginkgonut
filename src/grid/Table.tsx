@@ -1,10 +1,9 @@
 import Ginkgo, {CSSProperties, GinkgoElement, GinkgoNode, HTMLComponent, RefObject} from "ginkgoes";
-import "./Table.scss";
 import TableRow, {ActionColumnItem, TableRecord, TableRowProps} from "./TableRow";
 import Component, {ComponentProps} from "../component/Component";
 import TableFeatureGroup, {TableFeatureGroupModel} from "./TableFeatureGroup";
 import {TableColumnModel} from "./TableColumn";
-import {getCellWidth} from "./TableCell";
+import "./Table.scss";
 
 export type FeatureTypes = { grouping: TableFeatureGroupModel };
 

@@ -1,10 +1,10 @@
 import Ginkgo, {CSSProperties, GinkgoNode, HTMLComponent, RefObject} from "ginkgoes";
-import "./CascaderField.scss";
 import ComboboxField, {ComboboxFieldProps, ComboboxModel} from "./ComboboxField";
 import Loading from "../loading/Loading";
 import DataEmpty from "../empty/DataEmpty";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
+import "./CascaderField.scss";
 
 export interface CascaderModel extends ComboboxModel {
     parent?: CascaderModel;
