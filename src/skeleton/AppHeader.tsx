@@ -12,7 +12,7 @@ import Button from "../button/Button";
 import "./AppHeader.scss";
 
 export interface AppHeaderProps extends ComponentProps {
-
+    onLoginOut?: () => void;
 }
 
 export default class AppHeader extends Component<AppHeaderProps> {
@@ -131,7 +131,7 @@ export default class AppHeader extends Component<AppHeaderProps> {
                                     title={"退出登录"}
                                     content={"确定退出登录吗？"}
                                     onOkClick={(e1, value) => {
-                                        console.log(value)
+                                        this.props.onLoginOut && this.props.onLoginOut();
                                     }}/>);
     }
 
