@@ -1,15 +1,18 @@
-import Ginkgo, {GinkgoNode, GinkgoTools, HTMLComponent, RefObject} from "ginkgoes";
+import Ginkgo, {GinkgoNode, GinkgoTools, HTMLComponent, InputComponent, RefObject} from "ginkgoes";
 import Icon from "../icon/Icon";
 import "./Login.scss";
+import CookieTools from "../tools/CookieTools";
 
 export interface LoginProps {
-    onLoginSuccess?: () => void;
+    onLoginClick?: (info: { userName: string, password: string }) => void;
 }
 
 export default class Login<P extends LoginProps> extends Ginkgo.Component<P> {
     protected remember = false;
     protected checkboxRef: RefObject<HTMLComponent> = Ginkgo.createRef();
     protected loginCntRef: RefObject<HTMLComponent> = Ginkgo.createRef();
+    protected userNameRef: RefObject<InputComponent> = Ginkgo.createRef();
+    protected passwordRef: RefObject<InputComponent> = Ginkgo.createRef();
 
     render(): GinkgoNode {
         return (
@@ -20,11 +23,11 @@ export default class Login<P extends LoginProps> extends Ginkgo.Component<P> {
                     </div>
                     <div className={"app-login-form"}>
                         <div className={"app-user-name"}>
-                            <input className={"app-login-input"} placeholder={"请输入用户名"}/>
+                            <input ref={this.userNameRef} className={"app-login-input"} placeholder={"请输入用户名"}/>
                             <Icon className={"app-login-icon"} icon={"user"}/>
                         </div>
                         <div className={"app-user-pwd"}>
-                            <input className={"app-login-input"} placeholder={"请输入密码"}/>
+                            <input ref={this.passwordRef} className={"app-login-input"} placeholder={"请输入密码"}/>
                             <Icon className={"app-login-icon"} icon={"lock"}/>
                         </div>
                         <div className={"app-remember"}>
@@ -56,8 +59,17 @@ export default class Login<P extends LoginProps> extends Ginkgo.Component<P> {
                         </div>
                         <div className={"app-submit"}
                              onClick={e => {
-                                 if (this.props.onLoginSuccess) {
-                                     this.props.onLoginSuccess();
+                                 if (this.userNameRef.instance && this.passwordRef.instance) {
+                                     let userName = this.userNameRef.instance.value;
+                                     let password = this.passwordRef.instance.value;
+
+                                     if (this.remember && userName && userName != '') {
+                                         CookieTools.setCookie("jianzixing_username", userName);
+                                     }
+
+                                     if (this.props.onLoginClick) {
+                                         this.props.onLoginClick({userName: "" + userName, password: "" + password});
+                                     }
                                  }
                              }}>
                             <span>登录</span>
@@ -70,7 +82,10 @@ export default class Login<P extends LoginProps> extends Ginkgo.Component<P> {
 
     onRememberChange() {
         if (this.remember) {
-
+            CookieTools.setCookie("jianzixing_remember", "1");
+        } else {
+            CookieTools.delCookie("jianzixing_username");
+            CookieTools.delCookie("jianzixing_remember");
         }
     }
 
@@ -81,6 +96,20 @@ export default class Login<P extends LoginProps> extends Ginkgo.Component<P> {
 
     componentDidMount() {
         this.onResize();
+
+        if (this.userNameRef.instance) {
+            let useName = CookieTools.getCookie("jianzixing_username");
+            let remember = CookieTools.getCookie("jianzixing_remember");
+            if (useName) {
+                this.userNameRef.instance.value = "" + useName;
+            }
+            if (remember == "1") {
+                let input = this.checkboxRef.instance.dom;
+                if (input && input instanceof HTMLInputElement) {
+                    input.checked = true;
+                }
+            }
+        }
     }
 
     componentWillUnmount() {

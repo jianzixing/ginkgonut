@@ -27,7 +27,7 @@ export default class App extends Ginkgo.Component {
 
     render() {
         if (!this.isUserLogin) {
-            return <Login onLoginSuccess={() => {
+            return <Login onLoginClick={(info) => {
                 this.isUserLogin = true;
                 this.forceRender();
             }}/>
