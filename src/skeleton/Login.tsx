@@ -1,20 +1,27 @@
 import Ginkgo, {GinkgoNode, GinkgoTools, HTMLComponent, InputComponent, RefObject} from "ginkgoes";
 import Icon from "../icon/Icon";
-import "./Login.scss";
 import CookieTools from "../tools/CookieTools";
+import "./Login.scss";
 
 export interface LoginProps {
+    enableValidCode?: boolean;
     onLoginClick?: (info: { userName: string, password: string }) => void;
+    codeUrl?: string;
 }
 
 export default class Login<P extends LoginProps> extends Ginkgo.Component<P> {
     protected remember = false;
+    protected codeUrl = this.props.codeUrl;
+    protected currCodeUrl = this.props.codeUrl;
+
     protected checkboxRef: RefObject<HTMLComponent> = Ginkgo.createRef();
     protected loginCntRef: RefObject<HTMLComponent> = Ginkgo.createRef();
     protected userNameRef: RefObject<InputComponent> = Ginkgo.createRef();
     protected passwordRef: RefObject<InputComponent> = Ginkgo.createRef();
+    protected codeRef: RefObject<InputComponent> = Ginkgo.createRef();
 
     render(): GinkgoNode {
+        let hasCode = this.props.enableValidCode;
         return (
             <div className={"app-login"}>
                 <div ref={this.loginCntRef} className={"app-login-cnt"}>
@@ -26,10 +33,23 @@ export default class Login<P extends LoginProps> extends Ginkgo.Component<P> {
                             <input ref={this.userNameRef} className={"app-login-input"} placeholder={"请输入用户名"}/>
                             <Icon className={"app-login-icon"} icon={"user"}/>
                         </div>
-                        <div className={"app-user-pwd"}>
+                        <div className={"app-user-pwd " + (hasCode ? "" : "app-user-pwd-last")}>
                             <input ref={this.passwordRef} className={"app-login-input"} placeholder={"请输入密码"}/>
                             <Icon className={"app-login-icon"} icon={"lock"}/>
                         </div>
+                        {hasCode ?
+                            <div className={"app-user-code"}>
+                                <div className={"app-login-input app-login-code"}>
+                                    <input ref={this.codeRef} placeholder={"验证码"}/>
+                                    <img src={this.currCodeUrl}
+                                         onClick={e => {
+                                             this.currCodeUrl = this.codeUrl + "&t=" + (new Date()).getTime();
+                                             this.forceRender();
+                                         }}/>
+                                </div>
+                                <Icon className={"app-login-icon"} icon={"user-shield"}/>
+                            </div> : undefined
+                        }
                         <div className={"app-remember"}>
                             <div className={"app-remember-ck"}
                                  onClick={e => {

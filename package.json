@@ -38,6 +38,6 @@
     "webpack-dev-server": "^3.10.1"
   },
   "dependencies": {
-    "ginkgoes": "^0.0.7"
+    "ginkgoes": "^0.0.8"
   }
 }

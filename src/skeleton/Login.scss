@@ -14,7 +14,7 @@ input::placeholder {
   height: 100%;
   background-color: #f1f1f1;
   text-align: center;
-  font-size: 14px;
+  font-size: 15px;
   font-family: -apple-system, SF UI Text, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
 
   .app-login-cnt {
@@ -45,11 +45,12 @@ input::placeholder {
         margin-bottom: 0;
         padding: 4px 12px 4px 35px;
         border: 1px solid #c8c8c8;
-        border-radius: 0 0 4px 4px;
         background-color: hsla(0, 0%, 71%, .1);
         vertical-align: middle;
         box-sizing: border-box;
         font-weight: normal;
+        font-size: 15px;
+        font-family: -apple-system, SF UI Text, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
       }
 
       .app-login-icon {
@@ -75,7 +76,44 @@ input::placeholder {
         width: 100%;
 
         input {
+          border-radius: 0 0 0 0;
+          border-bottom-width: 0px;
+        }
 
+        &.app-user-pwd-last {
+          input {
+            border-radius: 0 0 4px 4px;
+            border-bottom-width: 1px;
+          }
+        }
+      }
+
+      .app-user-code {
+        position: relative;
+        width: 100%;
+
+        .app-login-code {
+          border-radius: 0 0 4px 4px;
+
+          input {
+            display: block;
+            float: left;
+            width: 130px;
+            height: 40px;
+            box-sizing: border-box;
+            background-color: transparent;
+            border: 0px;
+            font-size: 15px;
+            font-family: -apple-system, SF UI Text, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
+          }
+
+          img {
+            display: block;
+            float: right;
+            width: 110px;
+            height: 40px;
+            border: 0px;
+          }
         }
       }
 
