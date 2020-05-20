@@ -149,4 +149,19 @@ input::placeholder {
       }
     }
   }
+
+  .app-login-error {
+    display: none;
+    position: absolute;
+    top: 0px;
+    border: 1px solid #cf4c35;
+    color: #cf4c35;
+    padding: 6px 20px;
+    background-color: #ffffff;
+    border-radius: 5px;
+
+    &.app-login-error-show {
+      display: block;
+    }
+  }
 }

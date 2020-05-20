@@ -1,11 +1,11 @@
-import Ginkgo, {GinkgoNode, GinkgoTools, HTMLComponent, InputComponent, RefObject} from "ginkgoes";
+import Ginkgo, {GinkgoNode, GinkgoTools, HTMLComponent, InputComponent, QueryObject, RefObject} from "ginkgoes";
 import Icon from "../icon/Icon";
 import CookieTools from "../tools/CookieTools";
 import "./Login.scss";
 
 export interface LoginProps {
     enableValidCode?: boolean;
-    onLoginClick?: (info: { userName: string, password: string }, login: Login<any>) => void;
+    onLoginClick?: (info: { userName: string, password: string, code: string }, login: Login<any>) => void;
     codeUrl?: string;
 }
 
@@ -13,6 +13,8 @@ export default class Login<P extends LoginProps> extends Ginkgo.Component<P> {
     protected remember = false;
     protected status = 0;
     protected loginText = "登录";
+    protected error = false;
+    protected errorText;
 
     protected codeUrl = this.props.codeUrl;
     protected currCodeUrl = this.props.codeUrl;
@@ -22,9 +24,15 @@ export default class Login<P extends LoginProps> extends Ginkgo.Component<P> {
     protected userNameRef: RefObject<InputComponent> = Ginkgo.createRef();
     protected passwordRef: RefObject<InputComponent> = Ginkgo.createRef();
     protected codeRef: RefObject<InputComponent> = Ginkgo.createRef();
+    protected errorRef: QueryObject<HTMLComponent> = Ginkgo.createQuery(this, ".app-login-error");
 
     render(): GinkgoNode {
         let hasCode = this.props.enableValidCode;
+        let errCls = ["app-login-error"];
+        if (this.error) {
+            errCls.push("app-login-error-show");
+        }
+
         return (
             <div className={"app-login"}>
                 <div ref={this.loginCntRef} className={"app-login-cnt"}>
@@ -85,13 +93,32 @@ export default class Login<P extends LoginProps> extends Ginkgo.Component<P> {
                                  if (this.userNameRef.instance && this.passwordRef.instance && this.status == 0) {
                                      let userName = this.userNameRef.instance.value;
                                      let password = this.passwordRef.instance.value;
+                                     let code = this.codeRef.instance.value;
+
+                                     if (!userName || userName == "") {
+                                         this.showErrorTips();
+                                         return;
+                                     }
+                                     if (!password || password == "") {
+                                         this.showErrorTips();
+                                         return;
+                                     }
+                                     if (this.props.enableValidCode && (!code || code == "")) {
+                                         this.showErrorTips("验证码不能为空");
+                                         return;
+                                     }
 
                                      if (this.remember && userName && userName != '') {
                                          CookieTools.setCookie("jianzixing_username", userName);
                                      }
 
                                      if (this.props.onLoginClick) {
-                                         this.props.onLoginClick({userName: "" + userName, password: "" + password},
+                                         this.props.onLoginClick(
+                                             {
+                                                 userName: "" + userName,
+                                                 password: "" + password,
+                                                 code: "" + code
+                                             },
                                              this);
                                      }
                                  }
@@ -100,8 +127,30 @@ export default class Login<P extends LoginProps> extends Ginkgo.Component<P> {
                         </div>
                     </div>
                 </div>
+                <div className={errCls}>
+                    <span>{this.errorText ? this.errorText : "用户名或密码不能为空"}</span>
+                </div>
             </div>
         );
+    }
+
+    showErrorTips(text?: string) {
+        this.error = true;
+        this.errorText = text;
+        let ins = this.errorRef.instance;
+        if (ins) {
+            let el = ins.dom as HTMLElement;
+            let size = GinkgoTools.getWindowSize();
+            this.forceRender();
+            el.style.left = (size.width - el.offsetWidth) / 2 + "px";
+            ins.animation({
+                top: 30
+            })
+            setTimeout(() => {
+                this.error = false;
+                this.forceRender();
+            }, 3000);
+        }
     }
 
     onRememberChange() {

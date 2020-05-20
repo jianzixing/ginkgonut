@@ -10,6 +10,17 @@ import AppContent, {TabContentModel} from "./AppContent";
 import TestManager from "./TestManager";
 import Login from "./Login";
 import "./App.scss";
+import APIAdmin from "./APIAdmin";
+import {setRequestServer} from "../http/Request";
+
+setRequestServer(params => {
+    if (params.url) {
+        return params.url;
+    }
+    if (params.className && params.methodName) {
+        return "http://localhost:8080/admin/" + params.className.toLowerCase() + "/" + params.methodName.toLowerCase() + ".jhtml";
+    }
+})
 
 export default class App extends Ginkgo.Component {
     protected appContentRef: RefObject<AppContent<any>> = Ginkgo.createRef();
@@ -31,13 +42,19 @@ export default class App extends Ginkgo.Component {
                 enableValidCode={true}
                 onLoginClick={(info, login) => {
                     login.setStatus("正在登录", 1);
-                    setTimeout(() => {
-                        login.setStatus("正在加载权限", 1);
-                        setTimeout(() => {
-                            this.isUserLogin = true;
-                            this.forceRender();
-                        }, 1000);
-                    }, 1000);
+                    APIAdmin.login(info.userName, info.password)
+                        .load(data => {
+                            console.log(data)
+                        }, message => {
+                            login.setStatus("登录", 0);
+                        })
+                    // setTimeout(() => {
+                    //     login.setStatus("正在加载权限", 1);
+                    //     setTimeout(() => {
+                    //         this.isUserLogin = true;
+                    //         this.forceRender();
+                    //     }, 1000);
+                    // }, 1000);
                 }}/>
         } else {
             return (

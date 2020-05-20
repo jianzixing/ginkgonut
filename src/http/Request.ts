@@ -33,7 +33,7 @@ export const Request = function (target: any, propertyKey: string, descriptor: P
         let m1 = s1[0].substring(1, s1[0].length - 1).split(",");
         let params: { [key: string]: Object } = {};
         for (let i = 0; i < m1.length; i++) {
-            let m2 = m1[i];
+            let m2 = m1[i].trim();
             params[m2] = obj[i];
         }
         const reqs = new Submit(apiName, methodName, method);
@@ -84,7 +84,7 @@ export const Requests = function (config: RequestDecoratorConfig) {
             }
             let params: { [key: string]: Object } = {};
             for (let i = 0; i < keys.length; i++) {
-                let m2 = keys[i];
+                let m2 = keys[i].trim();
                 params[m2] = obj[i];
             }
             reqs.setParams(params);
