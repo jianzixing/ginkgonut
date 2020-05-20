@@ -29,19 +29,27 @@ export default class App extends Ginkgo.Component {
         if (!this.isUserLogin) {
             return <Login
                 enableValidCode={true}
-                onLoginClick={(info) => {
-                    this.isUserLogin = true;
-                    this.forceRender();
+                onLoginClick={(info, login) => {
+                    login.setStatus("正在登录", 1);
+                    setTimeout(() => {
+                        login.setStatus("正在加载权限", 1);
+                        setTimeout(() => {
+                            this.isUserLogin = true;
+                            this.forceRender();
+                        }, 1000);
+                    }, 1000);
                 }}/>
         } else {
             return (
                 <ViewPort>
                     <BorderLayout>
                         <BorderLayoutItem type={"north"} height={52}>
-                            <AppHeader onLoginOut={() => {
-                                this.isUserLogin = false;
-                                this.forceRender();
-                            }}/>
+                            <AppHeader
+                                title={"简子行建站平台"}
+                                onLoginOut={() => {
+                                    this.isUserLogin = false;
+                                    this.forceRender();
+                                }}/>
                         </BorderLayoutItem>
                         <BorderLayoutItem type={"west"} split={true} width={215}>
                             <Panel title={"工作台"} collapse={true} collapseType={"left"}>

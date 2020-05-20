@@ -5,12 +5,15 @@ import "./Login.scss";
 
 export interface LoginProps {
     enableValidCode?: boolean;
-    onLoginClick?: (info: { userName: string, password: string }) => void;
+    onLoginClick?: (info: { userName: string, password: string }, login: Login<any>) => void;
     codeUrl?: string;
 }
 
 export default class Login<P extends LoginProps> extends Ginkgo.Component<P> {
     protected remember = false;
+    protected status = 0;
+    protected loginText = "登录";
+
     protected codeUrl = this.props.codeUrl;
     protected currCodeUrl = this.props.codeUrl;
 
@@ -79,7 +82,7 @@ export default class Login<P extends LoginProps> extends Ginkgo.Component<P> {
                         </div>
                         <div className={"app-submit"}
                              onClick={e => {
-                                 if (this.userNameRef.instance && this.passwordRef.instance) {
+                                 if (this.userNameRef.instance && this.passwordRef.instance && this.status == 0) {
                                      let userName = this.userNameRef.instance.value;
                                      let password = this.passwordRef.instance.value;
 
@@ -88,11 +91,12 @@ export default class Login<P extends LoginProps> extends Ginkgo.Component<P> {
                                      }
 
                                      if (this.props.onLoginClick) {
-                                         this.props.onLoginClick({userName: "" + userName, password: "" + password});
+                                         this.props.onLoginClick({userName: "" + userName, password: "" + password},
+                                             this);
                                      }
                                  }
                              }}>
-                            <span>登录</span>
+                            <span>{this.loginText}</span>
                         </div>
                     </div>
                 </div>
@@ -144,5 +148,11 @@ export default class Login<P extends LoginProps> extends Ginkgo.Component<P> {
             let el = this.loginCntRef.instance.dom as HTMLElement;
             el.style.marginTop = (size.height - el.offsetHeight - 80) / 2 + "px";
         }
+    }
+
+    setStatus(text: string, status: number) {
+        this.loginText = text;
+        this.status = status;
+        this.forceRender();
     }
 }

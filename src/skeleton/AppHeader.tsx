@@ -1,4 +1,4 @@
-import Ginkgo, {GinkgoNode, HTMLComponent, RefObject} from "ginkgoes";
+import Ginkgo, {GinkgoElement, GinkgoNode, HTMLComponent, RefObject} from "ginkgoes";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
 import Tooltip, {TooltipManager} from "../tooltips/Tooltip";
@@ -12,6 +12,7 @@ import Button from "../button/Button";
 import "./AppHeader.scss";
 
 export interface AppHeaderProps extends ComponentProps {
+    title?: string;
     onLoginOut?: () => void;
 }
 
@@ -20,8 +21,9 @@ export default class AppHeader extends Component<AppHeaderProps> {
     protected tooltipManager: TooltipManager;
     protected closeTooltipHandler;
 
-    drawing(): GinkgoNode {
-        return (
+    drawing(): GinkgoNode | GinkgoElement[] {
+        return [
+            <div className={"app-header-title"}><span>{this.props.title || ""}</span></div>,
             <div className={"app-header-toolbars"}>
                 <div ref={this.headerMessageRef}
                      className={["app-header-toolbar-item", "light"]}
@@ -46,7 +48,7 @@ export default class AppHeader extends Component<AppHeaderProps> {
                     <img src={""}/>
                 </div>
             </div>
-        );
+        ];
     }
 
     protected onMessageEnter(e) {
