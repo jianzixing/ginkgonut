@@ -30,6 +30,8 @@ export interface AppNavigationProps extends ComponentProps {
     onModuleItemClick?: (value: NavModuleModel) => void;
 }
 
+const GlobalAuthorizes = {};
+
 export default class AppNavigation extends Component<AppNavigationProps> {
     protected treePanelRef: RefObject<TreePanel<any>> = Ginkgo.createRef();
     protected modules: Array<NavModuleModel> = [];
@@ -97,7 +99,7 @@ export default class AppNavigation extends Component<AppNavigationProps> {
                 if (m.selected) hasSelected = true;
             }
             if (!hasSelected) {
-                this.onButtonClick(this.modules[0])
+                this.onButtonClick(this.modules[0]);
             }
         }
     }
@@ -133,6 +135,16 @@ export default class AppNavigation extends Component<AppNavigationProps> {
         let name = module.name;
         APIModule.getTreeModules(name)
             .load(data => {
+                let auths = data['auths'];
+                GlobalAuthorizes[module] = auths;
+                if (auths && auths instanceof Array && auths.length > 0) {
+                    for (let auth of auths) {
+                        if (!Ginkgo.TakeParts) Ginkgo.TakeParts = [];
+                        if (Ginkgo.TakeParts.indexOf(auth) == -1) {
+                            Ginkgo.TakeParts.push(auth['key']);
+                        }
+                    }
+                }
                 if (this.treePanelRef && this.treePanelRef.instance) {
                     this.treePanelRef.instance.update({data: data, title: module['text']});
                 }

@@ -133,7 +133,12 @@ export class Submit {
             .then(function (response) {
                 let data: any = response;
                 if (typeof data != "object") {
-                    data = JSON.parse(response);
+                    try {
+                        data = JSON.parse(response);
+                    } catch (e) {
+                        succ(data);
+                        return;
+                    }
                 }
                 if (self.callAnyway) {
                     try {

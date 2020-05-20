@@ -11,4 +11,14 @@ export default class APIAdmin {
     public static getAdmins(name: string): Submit | any {
 
     }
+
+    @Request
+    public static isLogin(): Submit | any {
+
+    }
+
+    @Request
+    public static loginOut(): Submit | any {
+
+    }
 }

@@ -18,6 +18,7 @@ input::placeholder {
   font-family: -apple-system, SF UI Text, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
 
   .app-login-cnt {
+    position: relative;
     width: 400px;
     margin: 60px auto 0;
     padding: 50px 50px 50px;
@@ -147,6 +148,23 @@ input::placeholder {
         clear: both;
         background: #3194d0;
         box-sizing: border-box;
+      }
+    }
+
+    .app-login-mask {
+      position: absolute;
+      display: table;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.78);
+      left: 0;
+      top: 0;
+      color: #ffffff;
+      text-align: center;
+
+      .app-login-mask-text {
+        display: table-cell;
+        vertical-align: middle;
       }
     }
   }

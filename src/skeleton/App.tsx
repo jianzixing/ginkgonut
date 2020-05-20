@@ -26,6 +26,7 @@ setRequestServer(params => {
 export default class App extends Ginkgo.Component {
     protected appContentRef: RefObject<AppContent<any>> = Ginkgo.createRef();
     protected isUserLogin = false;
+    protected isCheckLogin = true;
     protected moduleList;
     protected contents: Array<TabContentModel> = [
         {
@@ -42,6 +43,7 @@ export default class App extends Ginkgo.Component {
         if (!this.isUserLogin) {
             return <Login
                 enableValidCode={true}
+                checkLogin={this.isCheckLogin}
                 codeUrl={"http://localhost:8080/valcode/image.jhtml"}
                 onLoginClick={(info, login) => {
                     login.setStatus("正在登录", 1);
@@ -51,6 +53,7 @@ export default class App extends Ginkgo.Component {
                             APIModule.getModules()
                                 .load(data => {
                                     this.moduleList = data;
+                                    localStorage.setItem("$jianzixing_modules", JSON.stringify(data));
                                     this.isUserLogin = true;
                                     this.forceRender();
                                 })
@@ -66,8 +69,11 @@ export default class App extends Ginkgo.Component {
                             <AppHeader
                                 title={"简子行建站平台"}
                                 onLoginOut={() => {
-                                    this.isUserLogin = false;
-                                    this.forceRender();
+                                    APIAdmin.loginOut()
+                                        .load(data => {
+                                            this.isUserLogin = false;
+                                            this.forceRender();
+                                        });
                                 }}/>
                         </BorderLayoutItem>
                         <BorderLayoutItem type={"west"} split={true} width={215}>
@@ -103,5 +109,28 @@ export default class App extends Ginkgo.Component {
                 </ViewPort>
             )
         }
+    }
+
+    componentDidMount() {
+        this.isCheckLogin = true;
+        APIAdmin.isLogin()
+            .load(data => {
+                try {
+                    let modules = localStorage.getItem("$jianzixing_modules");
+                    modules = JSON.parse(modules);
+                    if (data == "1" && modules && modules.length > 0) {
+                        this.isUserLogin = true;
+                        this.isCheckLogin = false;
+                        this.moduleList = modules;
+                        this.forceRender();
+                    } else {
+                        this.isCheckLogin = false;
+                        this.forceRender();
+                    }
+                } catch (e) {
+                    this.isCheckLogin = false;
+                    this.forceRender();
+                }
+            })
     }
 }

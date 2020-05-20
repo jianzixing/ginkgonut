@@ -7,6 +7,7 @@ export interface LoginProps {
     enableValidCode?: boolean;
     onLoginClick?: (info: { userName: string, password: string, code: string }, login: Login<any>) => void;
     codeUrl?: string;
+    checkLogin?: boolean;
 }
 
 export default class Login<P extends LoginProps> extends Ginkgo.Component<P> {
@@ -15,6 +16,7 @@ export default class Login<P extends LoginProps> extends Ginkgo.Component<P> {
     protected loginText = "登录";
     protected error = false;
     protected errorText;
+    protected checkLogin = this.props.checkLogin;
 
     protected codeUrl = this.props.codeUrl;
     protected currCodeUrl = this.props.codeUrl;
@@ -130,12 +132,24 @@ export default class Login<P extends LoginProps> extends Ginkgo.Component<P> {
                             <span>{this.loginText}</span>
                         </div>
                     </div>
+
+                    {this.checkLogin ?
+                        <div className={"app-login-mask"}>
+                            <div className={"app-login-mask-text"}>正在检查是否登录,请稍后</div>
+                        </div> : undefined}
                 </div>
                 <div className={errCls}>
                     <span>{this.errorText ? this.errorText : "用户名或密码不能为空"}</span>
                 </div>
             </div>
         );
+    }
+
+    componentReceiveProps(props: P, context?: { oldProps: P; type: "new" | "mounted" }) {
+        if (this.checkLogin != props.checkLogin) {
+            this.checkLogin = props.checkLogin;
+            this.forceRender();
+        }
     }
 
     showErrorTips(text?: string) {
