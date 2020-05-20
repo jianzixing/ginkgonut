@@ -11,6 +11,7 @@ import pic5 from "../assests/ms/shop.png";
 import pic6 from "../assests/ms/wechat.png";
 import BorderLayout, {BorderLayoutItem} from "../layout/BorderLayout";
 import Component, {ComponentProps} from "../component/Component";
+import APIModule from "./APIModule";
 
 export interface NavModuleModel {
     key?: string;
@@ -20,14 +21,18 @@ export interface NavModuleModel {
     name?: string;
     module?: any;
     props?: any;
+    selected?: boolean;
+    data?: any;
 }
 
 export interface AppNavigationProps extends ComponentProps {
+    data: Array<any>;
     onModuleItemClick?: (value: NavModuleModel) => void;
 }
 
 export default class AppNavigation extends Component<AppNavigationProps> {
     protected treePanelRef: RefObject<TreePanel<any>> = Ginkgo.createRef();
+    protected modules: Array<NavModuleModel> = [];
 
     drawing(): GinkgoNode {
         let buttonStyle = {
@@ -37,7 +42,7 @@ export default class AppNavigation extends Component<AppNavigationProps> {
         }
 
         let buttons = [];
-        for (let b of modules) {
+        for (let b of this.modules) {
             buttons.push(<Button style={buttonStyle}
                                  action={"none"}
                                  text={b.text}
@@ -45,7 +50,7 @@ export default class AppNavigation extends Component<AppNavigationProps> {
                                  pressing={b.selected}
                                  outerStyle={{border: 0, color: "#000000"}}
                                  onClick={e => {
-                                     for (let m of modules) {
+                                     for (let m of this.modules) {
                                          m.selected = false;
                                      }
                                      b.selected = true;
@@ -72,7 +77,6 @@ export default class AppNavigation extends Component<AppNavigationProps> {
                         ref={this.treePanelRef}
                         title={"Examples"}
                         titleIconType={"university"}
-                        data={moduleTreeData['Components']}
                         onItemClick={(e, model) => {
                             if (this.props.onModuleItemClick) {
                                 let data = model.data;
@@ -92,12 +96,31 @@ export default class AppNavigation extends Component<AppNavigationProps> {
         );
     }
 
+    protected compareUpdate(key: string, newValue: any, oldValue: any): boolean {
+        if (key == "data" && newValue != oldValue) {
+            this.modules = [];
+            for (let v of newValue) {
+                this.modules.push({
+                    text: v['text'],
+                    name: v['module'],
+                    icon: v['tabIcon'],
+                    iconType: v['icon'],
+                    module: v['module'],
+                    data: v
+                })
+            }
+        }
+        return false;
+    }
+
     onModuleButtonClick(module) {
         let name = module.name;
-        let data = moduleTreeData[name];
-        if (this.treePanelRef && this.treePanelRef.instance) {
-            this.treePanelRef.instance.update({data: data, title: module['text']});
-        }
+        APIModule.getTreeModules(name)
+            .load(data => {
+                if (this.treePanelRef && this.treePanelRef.instance) {
+                    this.treePanelRef.instance.update({data: data, title: module['text']});
+                }
+            });
     }
 
     protected getRootStyle(): CSSProperties {
@@ -107,176 +130,3 @@ export default class AppNavigation extends Component<AppNavigationProps> {
         return style;
     }
 }
-
-let modules = [
-    {text: "会员", name: "Components", icon: pic1, selected: false},
-    {text: "微信", name: "Grids", icon: pic2, selected: false},
-    {text: "商城", name: "Trees", icon: pic3, selected: false},
-    {text: "配置", name: "", icon: pic4, selected: false},
-    {text: "统计", name: "", icon: pic5, selected: false},
-    {text: "系统", name: "", icon: pic6, selected: false}
-]
-
-let moduleTreeData =
-    {
-        Components: [{
-            text: 'Components',
-            iconType: 'book',
-            children: [
-                {
-                    text: 'Buttons',
-                    iconType: 'bug',
-                    leaf: true
-                },
-                {
-                    text: 'Form Fields',
-                    iconType: 'calculator',
-                    leaf: true
-                },
-                {
-                    text: 'Forms',
-                    iconType: 'cloud',
-                    leaf: true
-                },
-                {
-                    text: 'Date Picker',
-                    iconType: 'cloud',
-                    leaf: true
-                },
-                {
-                    text: 'Layouts',
-                    iconType: 'certificate',
-                    leaf: true
-                },
-                {
-                    text: 'Panels',
-                    iconType: 'cog',
-                    leaf: true
-                },
-                {
-                    text: 'Tabs',
-                    iconType: 'car-crash',
-                    leaf: true
-                },
-                {
-                    text: 'Tooltips',
-                    iconType: 'award',
-                    leaf: true
-                },
-                {
-                    text: 'Toolbars',
-                    iconType: 'blind',
-                    leaf: true
-                },
-                {
-                    text: 'Windows',
-                    iconType: 'calendar-alt',
-                    leaf: true
-                }
-            ]
-        }],
-        Grids: [
-            {
-                text: 'Core Features',
-                iconType: 'carrot',
-                children: [
-                    {
-                        text: 'Basic Grid',
-                        iconType: 'chalkboard',
-                        leaf: true
-                    },
-                    {
-                        text: 'Paging Grid',
-                        iconType: 'church',
-                        leaf: true
-                    },
-                    {
-                        text: 'Grouped Grid',
-                        iconType: 'church',
-                        leaf: true
-                    },
-                    {
-                        text: 'Checkbox Selection Model',
-                        iconType: 'circle',
-                        leaf: true
-                    },
-                    {
-                        text: 'Row Number',
-                        iconType: 'desktop',
-                        leaf: true
-                    },
-                    {
-                        text: 'Grouped Header Grid',
-                        iconType: 'file-excel',
-                        leaf: true
-                    },
-                    {
-                        text: 'Multiple Sort Grid',
-                        iconType: 'comment',
-                        leaf: true
-                    },
-                    {
-                        text: 'Locking Grid',
-                        iconType: 'dolly',
-                        leaf: true
-                    },
-                    {
-                        text: 'Cell Editing',
-                        iconType: 'comment-alt',
-                        leaf: true
-                    },
-                    {
-                        text: 'Row Editing',
-                        iconType: 'copyright',
-                        leaf: true
-                    },
-                    {
-                        text: 'Row Expander',
-                        iconType: 'crosshairs',
-                        leaf: true
-                    },
-                    {
-                        text: 'Property Grid',
-                        iconType: 'deaf',
-                        leaf: true
-                    }
-                ]
-            }
-        ],
-        Trees: [{
-            text: 'Trees',
-            iconType: 'file-word',
-            children: [
-                {
-                    text: 'Basic Trees',
-                    iconType: 'flag',
-                    leaf: true
-                },
-                {
-                    text: 'Tree Reorder',
-                    iconType: 'adjust',
-                    leaf: true
-                },
-                {
-                    text: 'Tree Grid',
-                    iconType: 'angry',
-                    leaf: true
-                },
-                {
-                    text: 'Two Trees',
-                    iconType: 'backward',
-                    leaf: true
-                },
-                {
-                    text: 'Check Tree',
-                    iconType: 'bell',
-                    leaf: true
-                },
-                {
-                    text: 'Filtered Tree',
-                    iconType: 'grimace',
-                    leaf: true
-                }
-            ]
-        }]
-    };

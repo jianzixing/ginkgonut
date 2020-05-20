@@ -128,17 +128,12 @@ export class Submit {
      * @param keepStruct 保持succ函数的参数是返回的值
      */
     fetch = (module?: string | undefined, succ?: (data: any) => void, fail?: (message: any) => any, keepStruct?: boolean) => {
-        let url = "", self = this;
-        if (this.url) {
-            url = getServerFunction({url: this.url});
-        } else {
-            url = getServerFunction({className: this.apiName, methodName: this.methodName});
-        }
-        Ginkgo.post(url, this.getParamEncoding(module))
+        let self = this;
+        Ginkgo.post(this.getParamUrl(), undefined, {url: null, withCredentials: true})
             .then(function (response) {
-                let data: any = response.data;
+                let data: any = response;
                 if (typeof data != "object") {
-                    data = JSON.parse(response.data);
+                    data = JSON.parse(response);
                 }
                 if (self.callAnyway) {
                     try {
@@ -246,7 +241,16 @@ export class Submit {
         let url = this.getUrl();
         let params = this.getParamEncoding();
         if (params) {
-            url = url + "?" + params;
+            if (url.indexOf("?") >= 0) {
+                let last = url.substring(url.indexOf("?"), url.length);
+                if (last && last.length > 0) {
+                    url = url + "&" + params;
+                } else {
+                    url = url + params;
+                }
+            } else {
+                url = url + "?" + params;
+            }
         }
         return url;
     }

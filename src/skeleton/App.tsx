@@ -12,6 +12,7 @@ import Login from "./Login";
 import "./App.scss";
 import APIAdmin from "./APIAdmin";
 import {setRequestServer} from "../http/Request";
+import APIModule from "./APIModule";
 
 setRequestServer(params => {
     if (params.url) {
@@ -25,6 +26,7 @@ setRequestServer(params => {
 export default class App extends Ginkgo.Component {
     protected appContentRef: RefObject<AppContent<any>> = Ginkgo.createRef();
     protected isUserLogin = false;
+    protected moduleList;
     protected contents: Array<TabContentModel> = [
         {
             key: "home",
@@ -44,17 +46,16 @@ export default class App extends Ginkgo.Component {
                     login.setStatus("正在登录", 1);
                     APIAdmin.login(info.userName, info.password)
                         .load(data => {
-                            console.log(data)
+                            login.setStatus("正在加载权限", 1);
+                            APIModule.getModules()
+                                .load(data => {
+                                    this.moduleList = data;
+                                    this.isUserLogin = true;
+                                    this.forceRender();
+                                })
                         }, message => {
                             login.setStatus("登录", 0);
                         })
-                    // setTimeout(() => {
-                    //     login.setStatus("正在加载权限", 1);
-                    //     setTimeout(() => {
-                    //         this.isUserLogin = true;
-                    //         this.forceRender();
-                    //     }, 1000);
-                    // }, 1000);
                 }}/>
         } else {
             return (
@@ -70,26 +71,28 @@ export default class App extends Ginkgo.Component {
                         </BorderLayoutItem>
                         <BorderLayoutItem type={"west"} split={true} width={215}>
                             <Panel title={"工作台"} collapse={true} collapseType={"left"}>
-                                <AppNavigation onModuleItemClick={model => {
-                                    let key = model.key;
-                                    for (let content of this.contents) {
-                                        if (content.key == key) {
-                                            return;
+                                <AppNavigation
+                                    data={this.moduleList}
+                                    onModuleItemClick={model => {
+                                        let key = model.key;
+                                        for (let content of this.contents) {
+                                            if (content.key == key) {
+                                                return;
+                                            }
                                         }
-                                    }
-                                    this.contents.map(value => value.action = false);
-                                    this.contents.push({
-                                        key: model.text,
-                                        title: model.text,
-                                        action: true,
-                                        module: model,
-                                        icon: model.icon,
-                                        iconType: model.iconType
-                                    });
-                                    if (this.appContentRef.instance) {
-                                        this.appContentRef.instance.setItemsAndRedrawing(this.contents);
-                                    }
-                                }}/>
+                                        this.contents.map(value => value.action = false);
+                                        this.contents.push({
+                                            key: model.text,
+                                            title: model.text,
+                                            action: true,
+                                            module: model,
+                                            icon: model.icon,
+                                            iconType: model.iconType
+                                        });
+                                        if (this.appContentRef.instance) {
+                                            this.appContentRef.instance.setItemsAndRedrawing(this.contents);
+                                        }
+                                    }}/>
                             </Panel>
                         </BorderLayoutItem>
                         <BorderLayoutItem type={"center"}>
