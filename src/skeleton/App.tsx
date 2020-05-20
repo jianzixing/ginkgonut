@@ -42,6 +42,7 @@ export default class App extends Ginkgo.Component {
         if (!this.isUserLogin) {
             return <Login
                 enableValidCode={true}
+                codeUrl={"http://localhost:8080/valcode/image.jhtml"}
                 onLoginClick={(info, login) => {
                     login.setStatus("正在登录", 1);
                     APIAdmin.login(info.userName, info.password)

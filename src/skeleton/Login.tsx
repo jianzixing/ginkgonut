@@ -54,7 +54,11 @@ export default class Login<P extends LoginProps> extends Ginkgo.Component<P> {
                                     <input ref={this.codeRef} placeholder={"验证码"}/>
                                     <img src={this.currCodeUrl}
                                          onClick={e => {
-                                             this.currCodeUrl = this.codeUrl + "&t=" + (new Date()).getTime();
+                                             if (this.codeUrl.indexOf("?") >= 0) {
+                                                 this.currCodeUrl = this.codeUrl + "&t=" + (new Date()).getTime();
+                                             } else {
+                                                 this.currCodeUrl = this.codeUrl + "?t=" + (new Date()).getTime();
+                                             }
                                              this.forceRender();
                                          }}/>
                                 </div>

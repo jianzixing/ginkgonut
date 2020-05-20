@@ -70,7 +70,8 @@ module.exports = function (webpackEnv) {
                             loader: 'url-loader',
                             options: {
                                 limit: 0,
-                                outputPath: "assests"
+                                outputPath: "assests",
+                                name: "/[name].[ext]" // [hash-8]
                             }
                         }
                     ]

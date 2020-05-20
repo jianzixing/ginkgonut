@@ -50,13 +50,7 @@ export default class AppNavigation extends Component<AppNavigationProps> {
                                  pressing={b.selected}
                                  outerStyle={{border: 0, color: "#000000"}}
                                  onClick={e => {
-                                     for (let m of this.modules) {
-                                         m.selected = false;
-                                     }
-                                     b.selected = true;
-                                     this.redrawing();
-
-                                     this.onModuleButtonClick(b);
+                                     this.onButtonClick(b);
                                  }}/>)
         }
 
@@ -77,7 +71,7 @@ export default class AppNavigation extends Component<AppNavigationProps> {
                         ref={this.treePanelRef}
                         title={"Examples"}
                         titleIconType={"university"}
-                        onItemClick={(e, model) => {
+                        onTreeItemClick={(e, model) => {
                             if (this.props.onModuleItemClick) {
                                 let data = model.data;
                                 this.props.onModuleItemClick({
@@ -94,6 +88,28 @@ export default class AppNavigation extends Component<AppNavigationProps> {
                 </BorderLayoutItem>
             </BorderLayout>
         );
+    }
+
+    protected onAfterDrawing() {
+        if (this.modules && this.modules.length > 0) {
+            let hasSelected = false;
+            for (let m of this.modules) {
+                if (m.selected) hasSelected = true;
+            }
+            if (!hasSelected) {
+                this.onButtonClick(this.modules[0])
+            }
+        }
+    }
+
+    protected onButtonClick(module: NavModuleModel) {
+        for (let m of this.modules) {
+            m.selected = false;
+        }
+        module.selected = true;
+        this.redrawing();
+
+        this.onModuleButtonClick(module);
     }
 
     protected compareUpdate(key: string, newValue: any, oldValue: any): boolean {
