@@ -40,7 +40,7 @@ module.exports = function (webpackEnv) {
                 {
                     test: /\.css$/,
                     use: [
-                        //注意：这里的顺序很重要，不要乱了顺序
+                        //注意：这里的顺序很重要，不要乱了顺序，css->style (css变为style使用)
                         'style-loader',
                         'css-loader'
                     ]
@@ -48,7 +48,7 @@ module.exports = function (webpackEnv) {
                 {
                     test: /\.scss$/,
                     use: [
-                        //注意：这里的顺序很重要，不要乱了顺序
+                        //注意：这里的顺序很重要，不要乱了顺序，sass->css->style (sass先变为css再变为style使用)
                         'style-loader',
                         'css-loader',
                         'sass-loader'
@@ -57,7 +57,7 @@ module.exports = function (webpackEnv) {
                 {
                     test: /\.less$/,
                     use: [
-                        //注意：这里的顺序很重要，不要乱了顺序
+                        //注意：这里的顺序很重要，不要乱了顺序，less->css->style (less先变为css变为style使用)
                         'style-loader',
                         'css-loader',
                         'less-loader'

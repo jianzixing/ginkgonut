@@ -166,7 +166,7 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
             if (this.doubleClickCount == 1) {
                 this.doubleTimeoutHandler = setTimeout(() => {
                     this.doubleClickCount = 0;
-                    clearImmediate(this.doubleTimeoutHandler);
+                    clearTimeout(this.doubleTimeoutHandler);
                 }, 300);
             }
             if (this.doubleClickCount > 1) {

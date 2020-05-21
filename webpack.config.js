@@ -1,12 +1,15 @@
 const path = require('path');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = function (webpackEnv) {
     return {
         mode: 'development',
-        entry: './src/ginkgonut.tsx',
+        entry: {
+            ginkgonut: './src/ginkgonut.tsx'
+        },
         output: {
             path: path.resolve(__dirname, "dist"),
-            filename: "ginkgonut.js",
+            filename: "[name].js",
             library: "ginkgonut",
             libraryTarget: "umd"
         },
@@ -16,7 +19,7 @@ module.exports = function (webpackEnv) {
                     test: /\.css$/,
                     use: [
                         //注意：这里的顺序很重要，不要乱了顺序
-                        'style-loader',
+                        MiniCssExtractPlugin.loader,
                         'css-loader'
                     ]
                 },
@@ -24,7 +27,7 @@ module.exports = function (webpackEnv) {
                     test: /\.scss$/,
                     use: [
                         //注意：这里的顺序很重要，不要乱了顺序
-                        'style-loader',
+                        MiniCssExtractPlugin.loader,
                         'css-loader',
                         'sass-loader'
                     ]
@@ -33,7 +36,7 @@ module.exports = function (webpackEnv) {
                     test: /\.less$/,
                     use: [
                         //注意：这里的顺序很重要，不要乱了顺序
-                        'style-loader',
+                        MiniCssExtractPlugin.loader,
                         'css-loader',
                         'less-loader'
                     ]
@@ -78,6 +81,13 @@ module.exports = function (webpackEnv) {
                 }
             ]
         },
+        plugins: [
+            new MiniCssExtractPlugin({
+                // 类似 webpackOptions.output里面的配置 可以忽略
+                filename: '[name].css',
+                chunkFilename: '[id].css',
+            }),
+        ],
         resolve: {
             // 必须填写后缀名称,否则会 Module not found: Error: Can't resolve 错误
             // 后缀名称必须是 .xxx 否则会报各种 Module not found
