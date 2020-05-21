@@ -12,7 +12,9 @@
     "declaration": true,
     "noEmit": true,
     "removeComments": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "jsxFactory": "Ginkgo",
+    "reactNamespace": "Ginkgo"
   },
   "exclude": [
     "node_modules"

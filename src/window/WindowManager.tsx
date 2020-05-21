@@ -1,4 +1,4 @@
-import {WindowPanel} from "./Window";
+import WindowPanel from "./Window";
 
 export default class WindowManager {
     private static windows: Array<{ dom: HTMLElement, win: WindowPanel<any>, zIndex: number }> = [];
