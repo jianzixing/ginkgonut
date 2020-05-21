@@ -27,11 +27,17 @@ function readFileList(dir, filesList = []) {
 
 let filesList = [];
 readFileList("./src", filesList);
+
+let scssImports = [];
+let scssExports = [];
+
 for (let file of filesList) {
     let path = file.toString();
     if (path.endsWith(".scss") &&
         !(path.startsWith("src/icon") && path.indexOf("_") >= 0)) {
+        scssImports.push("@import \"" + path + "\";");
         let outPath = path.substring(3, path.length - 5);
+        scssExports.push("@import \"./lib" + path.substring(3) + "\";");
         let outFile = __dirname + "/" + "dist/lib" + outPath + ".css";
         let result = sass.renderSync({
             file: __dirname + "/" + path,
@@ -55,3 +61,17 @@ for (let file of filesList) {
         }
     }
 }
+
+let result = sass.renderSync({
+    data: scssImports.join("\n"),
+});
+fs.writeFileSync(__dirname + "/" + "dist/ginkgonut.scss", scssExports.join("\n"), function (err) {
+
+})
+fs.writeFileSync(__dirname + "/" + "dist/ginkgonut.css", result.css, function (err) {
+
+})
+fs.writeFileSync(__dirname + "/" + "dist/package.json",
+    fs.readFileSync(__dirname + "/package.dist.json"), function (err) {
+
+    })
