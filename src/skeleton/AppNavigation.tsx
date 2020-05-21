@@ -146,7 +146,7 @@ export default class AppNavigation extends Component<AppNavigationProps> {
                     }
                 }
                 if (this.treePanelRef && this.treePanelRef.instance) {
-                    this.treePanelRef.instance.update({data: data, title: module['text']});
+                    this.treePanelRef.instance.update({data: data['modules'], title: module['text']});
                 }
             });
     }

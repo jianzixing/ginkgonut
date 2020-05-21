@@ -10,6 +10,7 @@ import TextField from "../form/TextField";
 import Toolbar, {ToolbarSplit} from "../toolbar/Toolbar";
 import Button from "../button/Button";
 import "./AppHeader.scss";
+import APIAdmin from "./APIAdmin";
 
 export interface AppHeaderProps extends ComponentProps {
     title?: string;
@@ -119,7 +120,20 @@ export default class AppHeader extends Component<AppHeaderProps> {
                         </Toolbar>
                     ]}
                     onSubmit={(values, formData) => {
-                        console.log(values);
+                        if (values['password'] != values['repeatPassword']) {
+                            MessageBox.showAlert('输入错误', '两次输入的密码不一致');
+                            return;
+                        }
+                        APIAdmin.editSelfPassword(values["oldPassword"], values['password'])
+                            .load(data => {
+                                MessageBox.show(<MessageBox title={"修改密码"}
+                                                            content={"密码修改成功"}
+                                                            onOkClick={e => {
+                                                                APIAdmin.loginOut().load(data => {
+                                                                    window.location.reload();
+                                                                });
+                                                            }}/>);
+                            });
                     }}>
                     <TextField name={"oldPassword"} allowBlank={false} type={"password"} fieldLabel={"旧密码"}/>
                     <TextField name={"password"} allowBlank={false} type={"password"} fieldLabel={"新密码"}/>

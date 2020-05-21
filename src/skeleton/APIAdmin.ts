@@ -21,4 +21,9 @@ export default class APIAdmin {
     public static loginOut(): Submit | any {
 
     }
+
+    @Request
+    public static editSelfPassword(oldPassword: string, newPassword: string): Submit | any {
+        
+    }
 }
