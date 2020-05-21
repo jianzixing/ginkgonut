@@ -7,7 +7,7 @@ import NumberTextField from "../form/NumberTextField";
 import ComboboxField, {ComboboxModel} from "../form/ComboboxField";
 import DataStore from "../store/DataStore";
 import DateTimeField from "../form/DateTimeField";
-import {FileUploadField} from "../form/FileUploadField";
+import FileUploadField from "../form/FileUploadField";
 import CheckboxField from "../form/CheckboxField";
 import RadioField from "../form/RadioField";
 import CheckboxGroupField from "../form/CheckboxGroupField";
@@ -21,7 +21,7 @@ import Toolbar from "../toolbar/Toolbar";
 import Button from "../button/Button";
 import {IconTypes} from "../icon/IconTypes";
 import HiddenField from "../form/HiddenField";
-import {SelectField} from "../form/SelectField";
+import SelectField from "../form/SelectField";
 
 export interface TestBuilderProps extends AppManagerProps {
 
@@ -82,7 +82,8 @@ export default class TestBuilder<P extends TestBuilderProps> extends AppManager<
                        }}>
                 <FormLayoutTitle text={"基本信息 - (属性模板关联SKU信息)"} iconType={IconTypes.boxOpen}/>
                 <HiddenField/>
-                <FileUploadField fieldLabel={"avatar"} uploadType={"preview"} uploadProps={{multi: true}} isSyncUpload={true}/>
+                <FileUploadField fieldLabel={"avatar"} uploadType={"preview"} uploadProps={{multi: true}}
+                                 isSyncUpload={true}/>
                 <TextField name={"login_field"} fieldLabel={"Login Field"} placeholder={"user id"}/>
                 <TextField name={"password"} type={"password"} fieldLabel={"Password"} placeholder={"password"}/>
                 <NumberTextField name={"number_field"} fieldLabel={"Number Field"} placeholder={"password"}/>

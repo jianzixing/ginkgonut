@@ -4,7 +4,7 @@ import {IconTypes} from "../icon/IconTypes";
 import Tooltip, {TooltipManager} from "../tooltips/Tooltip";
 import Component, {ComponentProps} from "../component/Component";
 import MessageBox from "../window/MessageBox";
-import {WindowPanel} from "../window/Window";
+import WindowPanel from "../window/Window";
 import FormPanel from "../panel/FormPanel";
 import TextField from "../form/TextField";
 import Toolbar, {ToolbarSplit} from "../toolbar/Toolbar";

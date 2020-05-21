@@ -44,7 +44,7 @@ export interface WindowProps extends ComponentProps, PanelProps {
 }
 
 
-export class WindowPanel<P extends WindowProps> extends Component<P> {
+export default class WindowPanel<P extends WindowProps> extends Component<P> {
     protected static windowManager: WindowManager = new WindowManager();
 
     protected static windowCls;

@@ -30,7 +30,7 @@ export interface FileUploadFieldProps extends TextFieldProps {
     onDeleteResponse?: (params: FileUploadResponse) => void;
 }
 
-export class FileUploadField<P extends FileUploadFieldProps> extends TextField<P> {
+export default class FileUploadField<P extends FileUploadFieldProps> extends TextField<P> {
     protected static fileUploadFieldRightCls;
 
     protected rightElRef: RefObject<HTMLComponent> = Ginkgo.createRef();

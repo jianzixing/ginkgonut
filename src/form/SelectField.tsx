@@ -13,7 +13,7 @@ export interface SelectFieldProps extends TextFieldProps {
     valueField?: string;
 }
 
-export class SelectField<P extends SelectFieldProps> extends TextField<P> {
+export default class SelectField<P extends SelectFieldProps> extends TextField<P> {
     protected static selectFieldRightCls;
 
     protected rightElRef: RefObject<HTMLComponent> = Ginkgo.createRef();

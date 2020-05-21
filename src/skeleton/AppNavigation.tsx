@@ -3,12 +3,6 @@ import TreePanel from "../tree/TreePanel";
 import FormLayout from "../layout/FormLayout";
 import Button from "../button/Button";
 
-import pic1 from "../assests/ms/userDefined.png";
-import pic2 from "../assests/ms/htaccess_dark.png";
-import pic3 from "../assests/ms/library.png";
-import pic4 from "../assests/ms/settings.png";
-import pic5 from "../assests/ms/shop.png";
-import pic6 from "../assests/ms/wechat.png";
 import BorderLayout, {BorderLayoutItem} from "../layout/BorderLayout";
 import Component, {ComponentProps} from "../component/Component";
 import APIModule from "./APIModule";
@@ -76,13 +70,15 @@ export default class AppNavigation extends Component<AppNavigationProps> {
                         onTreeItemClick={(e, model) => {
                             if (this.props.onModuleItemClick) {
                                 let data = model.data;
+
                                 this.props.onModuleItemClick({
                                     text: data['text'],
-                                    name: data['name'],
+                                    name: data['linkModule'],
                                     icon: data['icon'],
                                     iconType: data['iconType'],
                                     module: data['module'],
-                                    props: data['props']
+                                    props: data['props'],
+                                    data: data
                                 });
                             }
                         }}

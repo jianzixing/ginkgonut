@@ -1,5 +1,5 @@
 import Ginkgo, {CSSProperties, GinkgoElement, GinkgoNode, RefObject} from "ginkgoes";
-import {WindowPanel, WindowProps} from "./Window";
+import WindowPanel, {WindowProps} from "./Window";
 import Button, {ButtonProps} from "../button/Button";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
