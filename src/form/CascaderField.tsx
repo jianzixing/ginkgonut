@@ -66,38 +66,47 @@ export default class CascaderField<P extends CascaderFieldProps> extends Combobo
                 let i = 0;
                 for (let models of modelList) {
                     let items = [];
-                    for (let dt of models) {
-                        let cls = [CascaderField.cascaderFieldPickerLiCls];
-                        if (dt.selected) {
-                            cls.push(CascaderField.cascaderFieldPickerSelectedCls);
-                            if (this.inputEl) this.inputEl.value = dt.text;
-                        }
-                        let hasCaretRight = dt.children && dt.children.length > 0;
-                        let icon;
-                        if (hasCaretRight) {
-                            icon = (<div className={CascaderField.cascaderFieldPickerIconCls}>
-                                <Icon icon={IconTypes.caretRight}/>
-                            </div>)
-                        }
+                    if (models && models.length > 0) {
+                        for (let dt of models) {
+                            let cls = [CascaderField.cascaderFieldPickerLiCls];
+                            if (dt.selected) {
+                                cls.push(CascaderField.cascaderFieldPickerSelectedCls);
+                                if (this.inputEl) this.inputEl.value = dt.text;
+                            }
+                            let hasCaretRight = dt.children && dt.children.length > 0;
+                            let icon;
+                            if (hasCaretRight) {
+                                icon = (<div className={CascaderField.cascaderFieldPickerIconCls}>
+                                    <Icon icon={IconTypes.caretRight}/>
+                                </div>)
+                            }
 
-                        items.push(
-                            <li className={cls} onClick={(e) => {
-                                if (dt.children && dt.children.length > 0) {
-                                    this.value = dt;
-                                    this.redrawingPickerBody();
-                                } else {
-                                    this.onItemClick(e, dt);
-                                }
-                            }}>
-                                <span className={CascaderField.cascaderFieldPickerTextCls}>{dt.text}</span>
-                                {icon}
-                            </li>);
+                            items.push(
+                                <li className={cls} onClick={(e) => {
+                                    if (dt.children && dt.children.length > 0) {
+                                        this.value = dt;
+                                        this.redrawingPickerBody();
+                                    } else {
+                                        this.onItemClick(e, dt);
+                                    }
+                                }}>
+                                    <span className={CascaderField.cascaderFieldPickerTextCls}>{dt.text}</span>
+                                    {icon}
+                                </li>);
+                        }
                     }
 
                     let listCls = [CascaderField.cascaderFieldPickerUlCls];
-                    if (i != modelList.length - 1) listCls.push(CascaderField.cascaderFieldPickerListBorderCls);
+                    let style: CSSProperties = {};
+                    if (!items || items.length == 0) {
+                        items.push(<DataEmpty/>);
+                        style.float = "none";
+                    }
+                    if (i != modelList.length - 1) {
+                        listCls.push(CascaderField.cascaderFieldPickerListBorderCls);
+                    }
                     list.push(
-                        <ul className={listCls}>
+                        <ul className={listCls} style={style}>
                             {items}
                         </ul>
                     );
