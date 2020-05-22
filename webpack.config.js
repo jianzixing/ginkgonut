@@ -13,6 +13,9 @@ module.exports = function (webpackEnv) {
             library: "ginkgonut",
             libraryTarget: "umd"
         },
+        externals: {
+            ginkgoes: "ginkgoes"
+        },
         module: {
             rules: [
                 {

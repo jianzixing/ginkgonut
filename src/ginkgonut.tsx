@@ -1,6 +1,10 @@
 import Component, {ComponentProps} from "./component/Component";
 import Container from "./component/Container";
 
+import {Request, Requests, Submit, setRequestServer, RequestDecoratorConfig} from "./http/Request";
+
+import Icon, {IconProps} from "./icon/Icon";
+import {IconTypes} from "./icon/IconTypes";
 import Button, {ButtonProps} from "./button/Button";
 import ButtonGroup, {ButtonGroupProps} from "./button/ButtonGroup";
 import DatePicker, {DatePickerProps} from "./datepicker/DatePicker";
@@ -44,16 +48,6 @@ import TableRow, {TableRecord, TableRowProps, ActionColumnItem, CellEditing} fro
 import Grid, {GridProps, GridBodyPlugin, GridCellPlugin, GridRowPlugin} from "./grid/Grid";
 import GridPanel, {GridPanelProps} from "./grid/GridPanel";
 
-import {Request, Requests, Submit, setRequestServer, RequestDecoratorConfig} from "./http/Request";
-import Icon, {IconProps} from "./icon/Icon";
-import {IconTypes} from "./icon/IconTypes";
-import AbsoluteLayout, {
-    AbsoluteLayoutItem,
-    AbsoluteLayoutItemProps,
-    AbsoluteLayoutProps
-} from "./layout/AbsoluteLayout";
-import BorderLayout, {BorderLayoutItem, BorderLayoutItemProps, BorderLayoutProps} from "./layout/BorderLayout";
-import FormLayout, {FormLayoutTitle, FormLayoutProps, FormLayoutTitleProps} from "./layout/FormLayout";
 import Loading, {LoadingProps} from "./loading/Loading";
 import Menu, {MenuProps, MenuModel, MenuShowing} from "./menu/Menu";
 import FormPanel, {FormPanelProps} from "./panel/FormPanel";
@@ -75,6 +69,16 @@ import Upload, {UploadModel, UploadProps} from "./upload/Upload";
 import MessageBox, {MessageBoxProps} from "./window/MessageBox";
 import WindowPanel, {WindowProps, WindowWrapper} from "./window/Window";
 import WindowManager from "./window/WindowManager";
+
+
+import AbsoluteLayout, {
+    AbsoluteLayoutItem,
+    AbsoluteLayoutItemProps,
+    AbsoluteLayoutProps
+} from "./layout/AbsoluteLayout";
+import BorderLayout, {BorderLayoutItem, BorderLayoutItemProps, BorderLayoutProps} from "./layout/BorderLayout";
+import FormLayout, {FormLayoutTitle, FormLayoutProps, FormLayoutTitleProps} from "./layout/FormLayout";
+
 
 export {
     Component,
