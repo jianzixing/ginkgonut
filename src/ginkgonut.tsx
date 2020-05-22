@@ -3,6 +3,15 @@ import Container from "./component/Container";
 
 import {Request, Requests, Submit, setRequestServer, RequestDecoratorConfig} from "./http/Request";
 
+import AbsoluteLayout, {
+    AbsoluteLayoutItem,
+    AbsoluteLayoutItemProps,
+    AbsoluteLayoutProps
+} from "./layout/AbsoluteLayout";
+import BorderLayout, {BorderLayoutItem, BorderLayoutItemProps, BorderLayoutProps} from "./layout/BorderLayout";
+import FormLayout, {FormLayoutTitle, FormLayoutProps, FormLayoutTitleProps} from "./layout/FormLayout";
+
+
 import Icon, {IconProps} from "./icon/Icon";
 import {IconTypes} from "./icon/IconTypes";
 import Button, {ButtonProps} from "./button/Button";
@@ -69,16 +78,6 @@ import Upload, {UploadModel, UploadProps} from "./upload/Upload";
 import MessageBox, {MessageBoxProps} from "./window/MessageBox";
 import WindowPanel, {WindowProps, WindowWrapper} from "./window/Window";
 import WindowManager from "./window/WindowManager";
-
-
-import AbsoluteLayout, {
-    AbsoluteLayoutItem,
-    AbsoluteLayoutItemProps,
-    AbsoluteLayoutProps
-} from "./layout/AbsoluteLayout";
-import BorderLayout, {BorderLayoutItem, BorderLayoutItemProps, BorderLayoutProps} from "./layout/BorderLayout";
-import FormLayout, {FormLayoutTitle, FormLayoutProps, FormLayoutTitleProps} from "./layout/FormLayout";
-
 
 export {
     Component,
