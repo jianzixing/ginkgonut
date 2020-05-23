@@ -25,7 +25,7 @@ export interface TableColumnModel {
     className?: string;
     children?: Array<TableColumnModel>;
     editing?: CellEditing;
-    render?: (data: any, column: TableColumnModel) => GinkgoNode;
+    render?: (value: any, data?: any, column?: TableColumnModel) => GinkgoNode;
 
     // type="actioncolumn" 时有效
     items?: Array<ActionColumnItem>;

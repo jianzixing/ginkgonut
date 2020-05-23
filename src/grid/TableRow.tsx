@@ -198,7 +198,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                             )
                         } else if (column.type == "actioncolumn") {
                             if (column.render) {
-                                let node = column.render(tableItem.data, column);
+                                let node = column.render(value, tableItem.data, column);
                                 els.push(node);
                             } else {
                                 let icons = [];
@@ -253,9 +253,14 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                             }
                         } else {
                             if (column.render) {
-                                let node = column.render(tableItem.data, column);
+                                let node = column.render(value, tableItem.data, column);
                                 els.push(node);
                             } else {
+                                if (typeof value == "object") {
+                                    value = JSON.stringify(value);
+                                } else if (typeof value == "function") {
+                                    value = value.toString();
+                                }
                                 els.push(<TableCell
                                     key={"" + index}
                                     column={column}

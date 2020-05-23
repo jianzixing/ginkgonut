@@ -17,6 +17,8 @@ export interface DataStoreProps {
     method?: "post" | "get",
     dataType?: "json";
     params?: any,
+    module?: string; // 模块名称
+    moduleName?: string; // 模块参数名称
 
     // 是否需要使用dataField获取数据中的数据 true 不需要 false 需要
     root?: boolean;
@@ -89,6 +91,7 @@ export default class DataStore {
     load(): void {
         if (this.props.type == "ajax") {
             let params = {...(this.props.params || {}), ...(this.pagingParam || {})};
+            if (module) params[this.props.moduleName || '_page'] = this.props.module;
             if (this.props.api) {
                 this.processor && this.processor.map(value => {
                     value && value.storeBeforeLoad && value.storeBeforeLoad()
@@ -97,16 +100,17 @@ export default class DataStore {
                 let promise;
                 if (this.props.api instanceof Submit) {
                     let api = this.props.api;
+                    let newParams = {...api.getParams() || {}, ...params,}
                     if (this.props.method == "post") {
-                        promise = Ginkgo.post(api.getUrl(), api.getParams());
+                        promise = Ginkgo.post(api.getUrl(), newParams, {withCredentials: true});
                     } else {
-                        promise = Ginkgo.get(api.getUrl(), api.getParams());
+                        promise = Ginkgo.get(api.getUrl(), newParams, {withCredentials: true});
                     }
                 } else {
                     if (this.props.method == "post") {
-                        promise = Ginkgo.post(this.props.api, params);
+                        promise = Ginkgo.post(this.props.api, params, {withCredentials: true});
                     } else {
-                        promise = Ginkgo.get(this.props.api, params);
+                        promise = Ginkgo.get(this.props.api, params, {withCredentials: true});
                     }
                 }
 
@@ -160,7 +164,11 @@ export default class DataStore {
     private setAllStoreJsonData(data: Object, error?: any): void {
         if (this.processor) {
             for (let p of this.processor) {
-                this.setStoreJsonData(p, data, error);
+                try {
+                    this.setStoreJsonData(p, data, error);
+                } catch (e) {
+                    console.error("data store processor call storeLoaded error", e);
+                }
             }
         }
     }

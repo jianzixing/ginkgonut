@@ -13,6 +13,7 @@ import "./App.scss";
 import APIAdmin from "./APIAdmin";
 import {setRequestServer} from "../http/Request";
 import APIModule from "./APIModule";
+import {ViewMapping} from "./mapping";
 
 setRequestServer(params => {
     if (params.url) {
@@ -87,6 +88,8 @@ export default class App extends Ginkgo.Component {
                                                 return;
                                             }
                                         }
+                                        let comp = ViewMapping[model.module];
+                                        model.module = comp;
                                         this.contents.map(value => value.action = false);
                                         this.contents.push({
                                             key: model.text,
