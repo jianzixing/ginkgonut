@@ -36,7 +36,7 @@ export default class MemberManager extends AppManager<MemberManagerProps> {
                                    else return '未知';
                                }
                            },
-                           {title: "生日", width: 200, dataIndex: 'birthday'},
+                           {type: "datecolumn", title: "生日", width: 200, dataIndex: 'birthday',format:"yyyy/MM/dd"},
                            {title: "邮件地址", width: 260, dataIndex: 'email'},
                            {
                                type: "actioncolumn", items: [

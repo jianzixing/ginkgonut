@@ -12,10 +12,12 @@ export interface TableColumnModel {
     type?: tableCellTypes;
     width?: number;
     title?: string;
+
     dataIndex?: string;
     dataSplit?: string;
     dataDefault?: string;
-    
+    format?: string; // if type==datetime
+
     show?: boolean;
     checked?: boolean;
     sort?: "asc" | "desc";

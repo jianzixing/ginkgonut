@@ -7,7 +7,7 @@ import {IconTypes} from "../icon/IconTypes";
 import {TableRecord} from "./TableRow";
 import "./TableCell.scss";
 
-export type tableCellTypes = "gridcolumn" | "rownumber" | "checkbox" | "actioncolumn";
+export type tableCellTypes = "gridcolumn" | "rownumber" | "checkbox" | "actioncolumn" | "datecolumn";
 export const RowNumberWidth = 32;
 
 export function isFixCellWidth(type: tableCellTypes) {

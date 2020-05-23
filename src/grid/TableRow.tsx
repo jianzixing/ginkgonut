@@ -7,6 +7,7 @@ import {TableCellPlugin, TableItemModel, TableRowPlugin} from "./Table";
 import {TableColumnModel} from "./TableColumn";
 import "./TableRow.scss";
 import ObjectTools from "../tools/ObjectTools";
+import DateTools from "../tools/DateTools";
 
 export interface ActionColumnItem {
     icon?: string;
@@ -135,7 +136,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                     let cellEl;
                     let pluginCells = plugin ? plugin.cell : undefined;
                     let value = ObjectTools.valueFromTemplate(data, column.dataIndex);
-                    if (value == null && column.dataDefault) value = column.dataDefault;
+                    if (value == null && column.dataDefault != null) value = column.dataDefault;
 
                     if (pluginCells && pluginCells[column.dataIndex]) {
                         cellEl = pluginCells[column.dataIndex].renderCell(this, column, value, index);
@@ -272,12 +273,21 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                 let node = column.render(value, tableItem.data, column);
                                 cellValue = node;
                             } else {
-                                if (value instanceof Array) {
-                                    cellValue = value.join(column.dataSplit ? column.dataSplit : ",");
-                                } else if (typeof value == "object") {
-                                    cellValue = JSON.stringify(value);
-                                } else if (typeof value == "function") {
-                                    cellValue = value.toString();
+                                if (column.type == "datecolumn") {
+                                    let date = DateTools.toDate(cellValue);
+                                    if (date) {
+                                        cellValue = DateTools.format(date, column.format || "yyyy-MM-dd HH:mm:ss")
+                                    } else {
+                                        cellValue = column.dataDefault || null;
+                                    }
+                                } else {
+                                    if (value instanceof Array) {
+                                        cellValue = value.join(column.dataSplit ? column.dataSplit : ",");
+                                    } else if (typeof value == "object") {
+                                        cellValue = JSON.stringify(value);
+                                    } else if (typeof value == "function") {
+                                        cellValue = value.toString();
+                                    }
                                 }
                             }
 
