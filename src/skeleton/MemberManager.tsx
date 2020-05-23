@@ -21,7 +21,7 @@ export default class MemberManager extends AppManager<MemberManagerProps> {
                            {
                                title: "头像", width: 60, dataIndex: 'avatar', render: data => {
                                    return <DisplayImage type={"fit"} width={40} height={40}
-                                                        src={"http://t9.baidu.com/it/u=3363001160,1163944807&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1590816975&t=eaad431500913e9a2a090c1aab99b46f"}/>
+                                                        src={"http://thirdwx.qlogo.cn/mmopen/Q3auHgzwzM4jcureRpRnRumgeywo3yU0nSU3ApjQqzHIo3LfbSF5dgovILrPC5TnvR4LdqWejZ8ENcEUaEiccoQ/132"}/>
                                }
                            },
                            {title: "用户名", width: 200, dataIndex: 'userName'},

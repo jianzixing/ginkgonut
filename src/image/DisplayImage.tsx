@@ -57,7 +57,7 @@ export default class DisplayImage<P extends DisplayImageProps> extends Component
                         pos.t = (ph - pos.h) / 2;
                     } else {
                         pos.h = ph;
-                        pos.w = ph / h * pw;
+                        pos.w = ph / h * w;
                         pos.l = (pw - pos.w) / 2;
                         pos.t = 0;
                     }
