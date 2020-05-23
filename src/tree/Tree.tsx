@@ -143,18 +143,21 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
     }
 
     protected buildTreeStructs(data: Array<any> | undefined, deep: number = 1): Array<TreeListModel> | undefined {
-        this.treeListItems = [];
-        this.treeListItemMapping = {};
-        if (data) {
+        if (deep == 1) {
+            this.treeListItems = [];
+            this.treeListItemMapping = {};
+        }
+        if (data && data instanceof Array) {
             let ls: Array<TreeListModel> = [];
             data.map((value, index) => {
                 let childData = value[this.props.childrenField || "children"];
                 let children;
                 if (childData != null && childData instanceof Array) {
-                    children = this.buildTreeStructs(childData, deep + 1);
+                    let nextDeep = deep + 1;
+                    children = this.buildTreeStructs(childData, nextDeep);
                 }
                 let key = "tree_cell_" + (this.treeListModelKey++);
-                let tableListItem = {
+                let tableListItem: TableItemModel = {
                     key: key,
                     data: value
                 };

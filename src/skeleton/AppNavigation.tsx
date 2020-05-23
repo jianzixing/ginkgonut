@@ -129,7 +129,7 @@ export default class AppNavigation extends Component<AppNavigationProps> {
 
     onModuleButtonClick(module) {
         let name = module.name;
-        APIModule.getTreeModules(name)
+        APIModule.getTreeAuthModules(name)
             .load(data => {
                 let auths = data['auths'];
                 GlobalAuthorizes[module] = auths;

@@ -8,7 +8,7 @@ export default class APIModule {
     }
 
     @Request
-    public static getTreeModules(module: string): any {
+    public static getTreeAuthModules(module: string): any {
 
     }
 }
