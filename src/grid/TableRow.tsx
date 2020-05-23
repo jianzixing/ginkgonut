@@ -197,11 +197,11 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                 </TableCell>
                             )
                         } else if (column.type == "actioncolumn") {
+                            let icons = [];
                             if (column.render) {
                                 let node = column.render(value, tableItem.data, column);
-                                els.push(node);
+                                icons.push(node);
                             } else {
-                                let icons = [];
                                 let items = column.items;
                                 if (items && items.length > 0) {
                                     for (let item of items) {
@@ -230,55 +230,57 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                         }
                                     }
                                 }
-
-                                els.push(<TableCell
-                                    type={column.type}
-                                    key={"" + index}
-                                    column={column}
-                                    style={cellStyle}
-                                    className={className}
-                                    hasPadding={false}
-                                    data={data}
-                                    value={value}
-                                    record={record}
-                                    cellSpace={this.props.cellSpace}
-                                    onValueChange={(cellData, cellValue) => {
-                                        this.redrawing();
-                                    }}
-                                >
-                                    <div className={TableRow.tableClsRowActions}>
-                                        {icons}
-                                    </div>
-                                </TableCell>)
                             }
+
+                            els.push(<TableCell
+                                type={column.type}
+                                key={"" + index}
+                                column={column}
+                                style={cellStyle}
+                                className={className}
+                                hasPadding={false}
+                                data={data}
+                                value={value}
+                                record={record}
+                                cellSpace={this.props.cellSpace}
+                                onValueChange={(cellData, cellValue) => {
+                                    this.redrawing();
+                                }}
+                            >
+                                <div className={TableRow.tableClsRowActions}>
+                                    {icons}
+                                </div>
+                            </TableCell>)
                         } else {
+                            let cellValue = value;
                             if (column.render) {
                                 let node = column.render(value, tableItem.data, column);
-                                els.push(node);
+                                cellValue = node;
                             } else {
                                 if (typeof value == "object") {
-                                    value = JSON.stringify(value);
+                                    cellValue = JSON.stringify(value);
                                 } else if (typeof value == "function") {
-                                    value = value.toString();
+                                    cellValue = value.toString();
                                 }
-                                els.push(<TableCell
-                                    key={"" + index}
-                                    column={column}
-                                    style={cellStyle}
-                                    className={className}
-                                    data={data}
-                                    value={value}
-                                    record={record}
-                                    cellSpace={this.props.cellSpace}
-                                    onValueChange={(cellData, cellValue) => {
-                                        this.redrawing();
-                                    }}
-                                >
-                                    {
-                                        value ? value : <span>&nbsp;</span>
-                                    }
-                                </TableCell>);
                             }
+
+                            els.push(<TableCell
+                                key={"" + index}
+                                column={column}
+                                style={cellStyle}
+                                className={className}
+                                data={data}
+                                value={value}
+                                record={record}
+                                cellSpace={this.props.cellSpace}
+                                onValueChange={(cellData, cellValue) => {
+                                    this.redrawing();
+                                }}
+                            >
+                                {
+                                    cellValue ? cellValue : <span>&nbsp;</span>
+                                }
+                            </TableCell>);
                         }
                     }
                 }
