@@ -22,8 +22,7 @@ export default class MemberManager extends AppManager<MemberManagerProps> {
                            {type: "checkbox"},
                            {
                                title: "头像", width: 60, dataIndex: 'avatar', render: data => {
-                                   return <DisplayImage type={"fit"} width={40} height={40}
-                                                        src={"http://thirdwx.qlogo.cn/mmopen/Q3auHgzwzM4jcureRpRnRumgeywo3yU0nSU3ApjQqzHIo3LfbSF5dgovILrPC5TnvR4LdqWejZ8ENcEUaEiccoQ/132"}/>
+                                   return <DisplayImage type={"fit"} width={40} height={40} src={data}/>
                                }
                            },
                            {title: "用户名", width: 200, dataIndex: 'userName'},

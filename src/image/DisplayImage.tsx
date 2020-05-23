@@ -5,6 +5,7 @@ import "./DisplayImage.scss";
 export interface DisplayImageProps extends ComponentProps {
     type?: "center" | "fit" | "stretch";
     src: string;
+    empty?: string;
 }
 
 export default class DisplayImage<P extends DisplayImageProps> extends Component<P> {
@@ -32,7 +33,7 @@ export default class DisplayImage<P extends DisplayImageProps> extends Component
 
     protected drawing(): GinkgoNode | GinkgoElement[] {
         return (
-            <img ref={this.imgRef} className={DisplayImage.imagePicCls} src={this.value}/>
+            <img ref={this.imgRef} className={DisplayImage.imagePicCls} src={this.value || this.props.empty}/>
         )
     }
 
