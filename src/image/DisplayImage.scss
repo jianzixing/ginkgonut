@@ -1,0 +1,11 @@
+.x-image {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+
+  .x-image-pic {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}

@@ -10,8 +10,11 @@ import "./TableRow.scss";
 export interface ActionColumnItem {
     icon?: string;
     iconType?: string;
+    style?: CSSProperties;
     color?: string;
+    size?: number;
     key?: string | number;
+    text?: string;
 }
 
 export interface CellEditing {
@@ -205,10 +208,11 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                 let items = column.items;
                                 if (items && items.length > 0) {
                                     for (let item of items) {
-                                        let style = {};
-                                        if (item.color) {
-                                            style['color'] = item.color;
-                                        }
+                                        let style: CSSProperties = {};
+                                        if (item.style) style = {...item.style};
+                                        if (item.color) style['color'] = item.color;
+                                        if (item.size) style.fontSize = item.size;
+
                                         if (item.iconType) {
                                             icons.push(
                                                 <div className={TableRow.tableClsRowActionItem}
@@ -218,7 +222,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                                      }}>
                                                     <Icon icon={item.iconType}/>
                                                 </div>)
-                                        } else {
+                                        } else if (item.icon) {
                                             icons.push(
                                                 <div className={TableRow.tableClsRowActionItem}
                                                      style={style}
@@ -226,6 +230,15 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                                          this.onActionClick(e, item);
                                                      }}>
                                                     <img src={item.icon}/>
+                                                </div>)
+                                        } else if (item.text) {
+                                            icons.push(
+                                                <div className={TableRow.tableClsRowActionItem}
+                                                     style={style}
+                                                     onClick={e => {
+                                                         this.onActionClick(e, item);
+                                                     }}>
+                                                    <span>{item.text}</span>
                                                 </div>)
                                         }
                                     }

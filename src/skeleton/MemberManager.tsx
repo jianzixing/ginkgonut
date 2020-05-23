@@ -5,6 +5,8 @@ import GridPanel from "../grid/GridPanel";
 import DataStore from "../store/DataStore";
 import Button from "../button/Button";
 import Toolbar from "../toolbar/Toolbar";
+import {IconTypes} from "../icon/IconTypes";
+import DisplayImage from "../image/DisplayImage";
 
 export interface MemberManagerProps extends AppManagerProps {
 }
@@ -16,7 +18,12 @@ export default class MemberManager extends AppManager<MemberManagerProps> {
                        fit={true}
                        columns={[
                            {type: "checkbox"},
-                           {title: "头像", width: 60, dataIndex: 'avatar'},
+                           {
+                               title: "头像", width: 60, dataIndex: 'avatar', render: data => {
+                                   return <DisplayImage type={"fit"} width={40} height={40}
+                                                        src={"http://t9.baidu.com/it/u=3363001160,1163944807&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1590816975&t=eaad431500913e9a2a090c1aab99b46f"}/>
+                               }
+                           },
                            {title: "用户名", width: 200, dataIndex: 'userName'},
                            {title: "等级", width: 100, dataIndex: 'TableUserLevel'},
                            {title: "积分", width: 100, dataIndex: 'TableIntegral'},
@@ -31,7 +38,20 @@ export default class MemberManager extends AppManager<MemberManagerProps> {
                            },
                            {title: "生日", width: 200, dataIndex: 'birthday'},
                            {title: "邮件地址", width: 260, dataIndex: 'email'},
-                           {type: "actioncolumn"}
+                           {
+                               type: "actioncolumn", items: [
+                                   {
+                                       iconType: IconTypes.trash
+                                   },
+                                   {
+                                       iconType: IconTypes.times
+                                   },
+                                   {
+                                       text: "删除",
+                                       size: 14
+                                   }
+                               ]
+                           }
                        ]}
                        header={false}
                        store={new DataStore({api: APIUser.getUsers(), module: MemberManager.name, autoLoad: true})}

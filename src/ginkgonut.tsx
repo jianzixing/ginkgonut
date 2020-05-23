@@ -20,6 +20,7 @@ import DatePicker, {DatePickerProps} from "./datepicker/DatePicker";
 import MonthPicker, {MonthPickerProps} from "./datepicker/MonthPicker";
 import Moving, {MovingPoint, MovingProps} from "./dragdrop/Moving";
 import DataEmpty, {DataEmptyProps} from "./empty/DataEmpty";
+import DisplayImage, {DisplayImageProps} from "./image/DisplayImage";
 
 import {AbstractFormField, AbstractFormFieldProps} from "./form/AbstractFormField";
 import FormField, {FormFieldProps} from "./form/FormField";
@@ -178,6 +179,8 @@ export {
     Icon,
     IconProps,
     IconTypes,
+    DisplayImage,
+    DisplayImageProps,
 
     AbsoluteLayout,
     AbsoluteLayoutItem,
