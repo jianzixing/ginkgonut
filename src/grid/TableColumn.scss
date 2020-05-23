@@ -15,14 +15,6 @@
       border-right-width: 1px;
     }
 
-    &.x-column-header-align-left {
-      text-align: left;
-    }
-
-    &.x-column-header-align-center {
-      text-align: center;
-    }
-
     .x-column-header-inner {
       position: relative;
       width: 100%;
@@ -43,6 +35,18 @@
         .x-column-header-text-inner {
           display: table-cell;
           vertical-align: middle;
+
+          &.x-column-header-align-left {
+            text-align: left;
+          }
+
+          &.x-column-header-align-center {
+            text-align: center;
+          }
+
+          &.x-column-header-align-right {
+            text-align: right;
+          }
 
           .x-column-header-text-title {
             display: block;

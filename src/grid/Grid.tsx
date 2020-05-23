@@ -27,6 +27,7 @@ export interface GridCellPlugin extends TableCellPlugin {
 
 export interface GridProps extends TableProps {
     columns: Array<TableColumnModel>;
+    columnTextAlign?: "left" | "center" | "right";
     plugin?: {
         body?: GridBodyPlugin,
         row?: GridRowPlugin,
@@ -114,6 +115,7 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
                     columnPositionRef={this.gridBodyRef}
                     columnResizeLineRef={this.columnLineRef}
                     columns={columns}
+                    textAlign={this.props.columnTextAlign}
                     fit={this.props.fit}
                     fitBaseRef={this.tableRef}
                     columnSpace={this.props.tableCellBorder}

@@ -17,6 +17,7 @@ export interface TableColumnModel {
     dataSplit?: string;
     dataDefault?: string;
     format?: string; // if type==datetime
+    items?: Array<ActionColumnItem>; // type=="actioncolumn" 时有效
 
     show?: boolean;
     checked?: boolean;
@@ -31,9 +32,6 @@ export interface TableColumnModel {
     children?: Array<TableColumnModel>;
     editing?: CellEditing;
     render?: (value: any, data?: any, column?: TableColumnModel) => GinkgoNode;
-
-    // type="actioncolumn" 时有效
-    items?: Array<ActionColumnItem>;
 }
 
 export interface GridColumnProps extends ComponentProps {
@@ -46,6 +44,7 @@ export interface GridColumnProps extends ComponentProps {
     // current column resize min width , default 40px
     minWidth?: number;
     columnSpace?: boolean;
+    textAlign?: "left" | "center" | "right";
 }
 
 export default class TableColumn<P extends GridColumnProps> extends Component<P> {
@@ -55,6 +54,7 @@ export default class TableColumn<P extends GridColumnProps> extends Component<P>
     protected static columnClsBodyBorder;
     protected static columnClsAlignLeft;
     protected static columnClsAlignCenter;
+    protected static columnClsAlignRight;
     protected static columnClsInner;
     protected static columnClsText;
     protected static columnClsTextInner;
@@ -79,8 +79,11 @@ export default class TableColumn<P extends GridColumnProps> extends Component<P>
         TableColumn.gridClsColumn = this.getThemeClass("column-header");
         TableColumn.columnClsBody = this.getThemeClass("column-header-body");
         TableColumn.columnClsBodyBorder = this.getThemeClass("column-header-border");
+
         TableColumn.columnClsAlignLeft = this.getThemeClass("column-header-align-left");
         TableColumn.columnClsAlignCenter = this.getThemeClass("column-header-align-center");
+        TableColumn.columnClsAlignRight = this.getThemeClass("column-header-align-right");
+
         TableColumn.columnClsInner = this.getThemeClass("column-header-inner");
         TableColumn.columnClsText = this.getThemeClass("column-header-text");
         TableColumn.columnClsTextInner = this.getThemeClass("column-header-text-inner");
@@ -97,7 +100,8 @@ export default class TableColumn<P extends GridColumnProps> extends Component<P>
             columnWidth = column && column.width ? column.width : 120,
             text = column && column.title ? <span>{column.title}</span> : <span>&nbsp;</span>,
             extEls: Array<GinkgoElement> = [],
-            contentBodyEls;
+            contentBodyEls,
+            textAlign = this.props.textAlign;
 
         if (column && column.type == "rownumber") {
             contentBodyEls = (
@@ -162,6 +166,10 @@ export default class TableColumn<P extends GridColumnProps> extends Component<P>
                     );
                 }
 
+                let headerInnerCls = [TableColumn.columnClsTextInner];
+                if (textAlign == "left") headerInnerCls.push(TableColumn.columnClsAlignLeft);
+                if (textAlign == "center") headerInnerCls.push(TableColumn.columnClsAlignCenter);
+                if (textAlign == "right") headerInnerCls.push(TableColumn.columnClsAlignRight);
                 contentBodyEls = (
                     <div
                         className={TableColumn.columnClsInner}
@@ -192,7 +200,7 @@ export default class TableColumn<P extends GridColumnProps> extends Component<P>
                         }}
                     >
                         <div className={TableColumn.columnClsText}>
-                            <div className={TableColumn.columnClsTextInner}>
+                            <div className={headerInnerCls}>
                                 <div className={TableColumn.columnClsTextTitle}>
                                     {text}
                                     {extEls}

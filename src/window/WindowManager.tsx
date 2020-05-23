@@ -33,8 +33,6 @@ export default class WindowManager {
                         mask.mask.style.display = "none";
                     }
                 }
-
-                console.log("添加窗口: ", WindowManager.windows.length);
             }
         }
     }

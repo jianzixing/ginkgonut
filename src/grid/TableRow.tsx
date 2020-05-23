@@ -17,6 +17,7 @@ export interface ActionColumnItem {
     size?: number;
     key?: string | number;
     text?: string;
+    onActionClick?: (value: any, data: any) => void;
 }
 
 export interface CellEditing {
@@ -205,8 +206,12 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                         } else if (column.type == "actioncolumn") {
                             let icons = [];
                             if (column.render) {
-                                let node = column.render(value, tableItem.data, column);
-                                icons.push(node);
+                                try {
+                                    let node = column.render(value, tableItem.data, column);
+                                    icons.push(node);
+                                } catch (e) {
+                                    console.error("column render error", e);
+                                }
                             } else {
                                 let items = column.items;
                                 if (items && items.length > 0) {
@@ -221,7 +226,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                                 <div className={TableRow.tableClsRowActionItem}
                                                      style={style}
                                                      onClick={e => {
-                                                         this.onActionClick(e, item);
+                                                         this.onActionClick(e, item, column, data, value);
                                                      }}>
                                                     <Icon icon={item.iconType}/>
                                                 </div>)
@@ -230,7 +235,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                                 <div className={TableRow.tableClsRowActionItem}
                                                      style={style}
                                                      onClick={e => {
-                                                         this.onActionClick(e, item);
+                                                         this.onActionClick(e, item, column, data, value);
                                                      }}>
                                                     <img src={item.icon}/>
                                                 </div>)
@@ -239,7 +244,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                                 <div className={TableRow.tableClsRowActionItem}
                                                      style={style}
                                                      onClick={e => {
-                                                         this.onActionClick(e, item);
+                                                         this.onActionClick(e, item, column, data, value);
                                                      }}>
                                                     <span>{item.text}</span>
                                                 </div>)
@@ -270,8 +275,12 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                         } else {
                             let cellValue = value;
                             if (column.render) {
-                                let node = column.render(value, tableItem.data, column);
-                                cellValue = node;
+                                try {
+                                    let node = column.render(value, tableItem.data, column);
+                                    cellValue = node;
+                                } catch (e) {
+                                    console.error("column render error", e);
+                                }
                             } else {
                                 if (column.type == "datecolumn") {
                                     let date = DateTools.toDate(cellValue);
@@ -287,6 +296,8 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                         cellValue = JSON.stringify(value);
                                     } else if (typeof value == "function") {
                                         cellValue = value.toString();
+                                    } else {
+                                        cellValue = "" + cellValue;
                                     }
                                 }
                             }
@@ -346,11 +357,27 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
         return arr;
     }
 
-    protected onActionClick(e: Event, item: ActionColumnItem) {
+    protected onActionClick(e: Event,
+                            item: ActionColumnItem,
+                            column: TableColumnModel,
+                            data,
+                            value) {
         e.stopPropagation();
         e.preventDefault();
-        if (this.props.onActionClick) {
-            this.props.onActionClick(e, this.props.tableItem, item);
+
+        try {
+            if (item && item.onActionClick) {
+                item.onActionClick(value, data);
+            }
+        } catch (e) {
+            console.log("call onActionClick error", e);
+        }
+        try {
+            if (this.props.onActionClick) {
+                this.props.onActionClick(e, this.props.tableItem, item);
+            }
+        } catch (e) {
+            console.error(e);
         }
     }
 

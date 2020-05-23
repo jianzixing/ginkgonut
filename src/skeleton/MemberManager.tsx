@@ -16,6 +16,8 @@ export default class MemberManager extends AppManager<MemberManagerProps> {
         return (
             <GridPanel paging={true}
                        fit={true}
+                       columnTextAlign={"center"}
+                       tableCellBorder={false}
                        columns={[
                            {type: "checkbox"},
                            {
@@ -26,7 +28,7 @@ export default class MemberManager extends AppManager<MemberManagerProps> {
                            },
                            {title: "用户名", width: 200, dataIndex: 'userName'},
                            {title: "等级", width: 100, dataIndex: 'TableUserLevel.name', dataDefault: "ELSE"},
-                           {title: "积分", width: 100, dataIndex: 'TableIntegral'},
+                           {title: "积分", width: 100, dataIndex: 'TableIntegral.amount', dataDefault: "0"},
                            {title: "openid", width: 100, dataIndex: 'openid'},
                            {title: "昵称", width: 100, dataIndex: 'nick'},
                            {
@@ -36,7 +38,7 @@ export default class MemberManager extends AppManager<MemberManagerProps> {
                                    else return '未知';
                                }
                            },
-                           {type: "datecolumn", title: "生日", width: 200, dataIndex: 'birthday',format:"yyyy/MM/dd"},
+                           {type: "datecolumn", title: "生日", width: 200, dataIndex: 'birthday', format: "yyyy/MM/dd"},
                            {title: "邮件地址", width: 260, dataIndex: 'email'},
                            {
                                type: "actioncolumn", items: [

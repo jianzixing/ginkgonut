@@ -119,9 +119,15 @@ export default class App extends Ginkgo.Component {
         APIAdmin.isLogin()
             .load(data => {
                 try {
+                    let user;
+                    if (typeof data == "string") {
+                        user = JSON.parse(data);
+                    } else {
+                        user = data;
+                    }
                     let modules = localStorage.getItem("$jianzixing_modules");
                     modules = JSON.parse(modules);
-                    if (data == "1" && modules && modules.length > 0) {
+                    if (user.type == "1" && modules && modules.length > 0) {
                         this.isUserLogin = true;
                         this.isCheckLogin = false;
                         this.moduleList = modules;

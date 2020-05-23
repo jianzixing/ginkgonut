@@ -17,6 +17,7 @@ export interface TableColumnGroupProps extends ComponentProps {
     // 计算填充满时的宽度
     fitBaseRef?: RefObject<HTMLComponent>;
     tableWidth?: number;
+    textAlign?: "left" | "center" | "right";
 }
 
 export default class TableColumnGroup<P extends TableColumnGroupProps> extends Component<P> {
@@ -206,6 +207,7 @@ export default class TableColumnGroup<P extends TableColumnGroupProps> extends C
                 column={value}
                 columnSpace={this.props.columnSpace}
                 hidden={value.show == false}
+                textAlign={this.props.textAlign}
                 onColumnStartResize={(point, column) => {
                     this.onColumnStartResize(point, column);
                 }}
