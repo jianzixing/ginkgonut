@@ -34,7 +34,7 @@ export default class MemberManager extends AppManager<MemberManagerProps> {
                            {type: "actioncolumn"}
                        ]}
                        header={false}
-                       store={new DataStore({api: APIUser.getUsers(), module: MemberManager.name})}
+                       store={new DataStore({api: APIUser.getUsers(), module: MemberManager.name, autoLoad: true})}
                        toolbars={
                            [
                                <Toolbar>

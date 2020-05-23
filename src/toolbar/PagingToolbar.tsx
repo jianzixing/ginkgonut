@@ -3,14 +3,14 @@ import Toolbar, {ToolbarProps, ToolbarSplit} from "./Toolbar";
 import Button from "../button/Button";
 import {IconTypes} from "../icon/IconTypes";
 import TextField from "../form/TextField";
-import {StoreProcessor} from "../store/DataStore";
+import {StoreAutoLoad, StoreProcessor} from "../store/DataStore";
 import "./PagingToolbar.scss";
 
 export interface PagingToolbarProps extends ToolbarProps {
     pageCount?: number;
 }
 
-export default class PagingToolbar<P extends PagingToolbarProps> extends Toolbar<P> implements StoreProcessor {
+export default class PagingToolbar<P extends PagingToolbarProps> extends Toolbar<P> implements StoreProcessor, StoreAutoLoad {
     protected page = 1;
     protected totalPage = 0;
     protected totalRecord = 0;
@@ -141,5 +141,9 @@ export default class PagingToolbar<P extends PagingToolbarProps> extends Toolbar
         this.isLoading = false;
         this.totalRecord = total;
         this.redrawing();
+    }
+
+    storeAutoLoad(): void {
+        this.loading();
     }
 }

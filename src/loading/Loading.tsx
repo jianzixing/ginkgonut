@@ -1,8 +1,8 @@
 import Ginkgo, {HTMLComponent, RefObject} from "ginkgoes";
-import Component, {ComponentProps} from "../component/Component";
+import "../component/Component.scss";
 import "./Loading.scss";
 
-export interface LoadingProps extends ComponentProps {
+export interface LoadingProps {
     text?: string;
 }
 
