@@ -13,6 +13,9 @@ export interface TableColumnModel {
     width?: number;
     title?: string;
     dataIndex?: string;
+    dataSplit?: string;
+    dataDefault?: string;
+    
     show?: boolean;
     checked?: boolean;
     sort?: "asc" | "desc";

@@ -25,7 +25,7 @@ export default class MemberManager extends AppManager<MemberManagerProps> {
                                }
                            },
                            {title: "用户名", width: 200, dataIndex: 'userName'},
-                           {title: "等级", width: 100, dataIndex: 'TableUserLevel'},
+                           {title: "等级", width: 100, dataIndex: 'TableUserLevel.name', dataDefault: "ELSE"},
                            {title: "积分", width: 100, dataIndex: 'TableIntegral'},
                            {title: "openid", width: 100, dataIndex: 'openid'},
                            {title: "昵称", width: 100, dataIndex: 'nick'},
