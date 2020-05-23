@@ -108,7 +108,7 @@ export default class TableColumnGroup<P extends TableColumnGroupProps> extends C
                             flexTotal += c.flex;
                         } else {
                             if (!isFixCellWidth(c.type)) {
-                                totalWidth += c.originWidth;
+                                totalWidth += c.width;
                             } else {
                                 width -= getFixCellWidth(c.type);
                             }
@@ -124,7 +124,7 @@ export default class TableColumnGroup<P extends TableColumnGroupProps> extends C
                     } else {
                         for (let c of columns) {
                             if (!isFixCellWidth(c.type)) {
-                                c.width = Math.floor(width / totalWidth * c.originWidth);
+                                c.width = Math.floor(width / totalWidth * c.width);
                             }
                         }
                     }
