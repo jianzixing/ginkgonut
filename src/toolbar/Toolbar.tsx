@@ -222,6 +222,11 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
         return this.props.children;
     }
 
+    componentReceiveProps(props: P, context?: { oldProps: P; type: "new" | "mounted" }) {
+        super.componentReceiveProps(props, context);
+        this.setChildButton();
+    }
+
     private getAllChildren() {
         let children = [];
         for (let l of this.positionChildren.left) {
@@ -238,7 +243,11 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
 
     protected onAfterDrawing() {
         super.onAfterDrawing();
+        this.setChildButton();
+        this.resetPositionChildren();
+    }
 
+    protected setChildButton() {
         let children = this.getAllChildren();
         for (let l of children) {
             let component = l.ref.instance as HTMLComponent;
@@ -250,8 +259,6 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
                 }
             }
         }
-
-        this.resetPositionChildren();
     }
 
     onSizeChange(width: number, height: number): void {

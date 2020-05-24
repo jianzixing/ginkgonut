@@ -41,22 +41,25 @@ export default class FormPanel<P extends FormPanelProps> extends Panel<P> {
     protected onAfterDrawing() {
         super.onAfterDrawing();
 
-        if (this.formLayoutRef && this.formLayoutRef.instance) {
-            Ginkgo.forEachContent(component => {
-                if (component instanceof AbstractFormField) {
-                    component.addOnChange(this.onFormFieldsChange);
-                }
-            }, this.formLayoutRef.instance);
+        Ginkgo.forEachContent(component => {
+            if (component instanceof AbstractFormField) {
+                component.addOnChange(this.onFormFieldsChange);
+            }
+        }, this);
 
-            Ginkgo.forEachContent(component => {
-                if (component instanceof Button) {
-                    let props = component.props as ButtonProps;
-                    if (props.type == "submit") {
-                        component.setTypeEvent(this.onFormSubmitClick);
-                    }
+        Ginkgo.forEachContent(component => {
+            if (component instanceof Button) {
+                let props = component.props as ButtonProps;
+                if (props.type == "submit") {
+                    component.setTypeEvent(this.onFormSubmitClick);
                 }
-            }, this.wrapperEl);
-        }
+                if (props.type == "resetForm") {
+                    component.setTypeEvent((e) => {
+                        this.resetFormValue();
+                    });
+                }
+            }
+        }, this.wrapperEl);
 
         if (this.props.values) {
             this.setValues(this.props.values);
@@ -107,6 +110,14 @@ export default class FormPanel<P extends FormPanelProps> extends Panel<P> {
         }, this);
 
         return isValid;
+    }
+
+    resetFormValue() {
+        Ginkgo.forEachContent(component => {
+            if (component instanceof AbstractFormField) {
+                component.setValue(null);
+            }
+        }, this);
     }
 
     setValues(values: any): void {

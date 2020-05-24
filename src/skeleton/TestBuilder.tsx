@@ -58,13 +58,12 @@ export default class TestBuilder<P extends TestBuilderProps> extends AppManager<
                                <Button iconType={"save"}
                                        iconColor={"#30c461"}
                                        text={"保存"}
-                                       onClick={e => {
-                                           if (this.formPanelRef.instance.validate()) {
-                                               console.log(this.formPanelRef.instance.getValues());
-                                           }
-                                       }}/>
+                                       type={"submit"}/>
                            </Toolbar>
                        ]}
+                       onSubmit={(values, formData) => {
+                           console.log(values)
+                       }}
                        values={{
                            login_field: "Value - Login Field",
                            password: "Value - Password Field",

@@ -9,9 +9,10 @@ export interface ButtonProps extends ComponentProps {
     /**
      * default 默认button按钮
      * submit  提交表单按钮
+     * resetForm  清空表单内容
      * close   关闭按钮(比如WindowPanel)
      */
-    type?: "default" | "submit" | "close";
+    type?: "default" | "submit" | "resetForm" | "close";
     text?: string;
     action?: "default" | "light" | "none";
     disabled?: boolean;

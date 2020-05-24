@@ -8,7 +8,7 @@ import "./FormField.scss";
 
 
 export interface FormFieldProps extends AbstractFormFieldProps {
-    fieldLabel?: string;
+    fieldLabel?: string | GinkgoNode;
     // label是否有冒号
     colon?: boolean;
     labelAlign?: "left" | "center" | "right";
@@ -131,7 +131,7 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
         if (label && label != '') {
             labelEls = (
                 <label className={labelCss}>
-                    <span>{label}</span>
+                    {typeof label == "string" ? <span>{label}</span> : {label}}
                 </label>
             )
         }

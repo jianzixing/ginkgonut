@@ -244,6 +244,7 @@ export default class Upload<P extends UploadProps> extends Component<P> {
         let fileList = input.files;
         let reupload = this.props.reupload;
         if (this.props.type == "avatar") reupload = true;
+        if (this.props.type == "button" && !this.props.multi) reupload = true;
         if (reupload) {
             this.items = [];
         }

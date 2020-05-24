@@ -8,6 +8,7 @@ import DateTools from "../tools/DateTools";
 
 export interface DateFieldProps extends TextFieldProps {
     format?: string;
+    formatTime?: boolean;
     showTime?: boolean;
 }
 
@@ -72,7 +73,11 @@ export default class DateTimeField<P extends DateFieldProps> extends TextField<P
 
     protected fillInputValue() {
         if (this.value) {
-            this.inputEl.value = DateTools.format(this.value, this.props.format ? this.props.format : "yyyy-MM-dd HH:mm:ss");
+            let defFormat = "yyyy-MM-dd HH:mm:ss";
+            if (this.props.formatTime != true && this.props.showTime != true) {
+                defFormat = "yyyy-MM-dd";
+            }
+            this.inputEl.value = DateTools.format(this.value, this.props.format ? this.props.format : defFormat);
         } else {
             this.inputEl.value = "";
         }
