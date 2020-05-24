@@ -30,9 +30,10 @@ export interface CellEditing {
 export interface TableRowProps extends ComponentProps {
     zebra?: boolean;
     selected?: boolean;
-    onSelected?: (e: Event, data: any, multiSelect: boolean) => void;
-    onDeselected?: (e: Event, data: any, multiSelect: boolean) => void;
-    onActionClick?: (e: Event, data, actionItem: ActionColumnItem) => void;
+    onSelected?: (e: Event, data: TableItemModel, multiSelect: boolean) => void;
+    onDeselected?: (e: Event, data: TableItemModel, multiSelect: boolean) => void;
+    onActionClick?: (e: Event, data: TableItemModel, actionItem: ActionColumnItem) => void;
+    onClick?: (e: Event, data?: TableItemModel) => void;
     disableClickSelected?: boolean;
     enableToggleSelected?: boolean;
     tableItem: TableItemModel;
@@ -403,7 +404,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
         }
 
         try {
-            this.props.onClick && this.props.onClick(e);
+            this.props.onClick && this.props.onClick(e, this.props.tableItem);
         } catch (e) {
             console.error(e);
         }

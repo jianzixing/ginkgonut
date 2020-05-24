@@ -16,20 +16,9 @@ export default class TreeGrid<P extends TreeGridProps> extends Tree<P> {
         return (
             <Grid
                 {...this.buildGridProps()}
-                onSelected={(e, data) => {
+                onItemClick={(e, data) => {
                     if (this.props && this.props.onTreeItemClick) {
-                        this.props.onTreeItemClick(e, {
-                            data: data.data,
-                            type: "selected"
-                        });
-                    }
-                }}
-                onDeselected={(e, data) => {
-                    if (this.props && this.props.onTreeItemClick) {
-                        this.props.onTreeItemClick(e, {
-                            data: data.data,
-                            type: "deselected"
-                        });
+                        this.props.onTreeItemClick(e, data.data);
                     }
                 }}
             />

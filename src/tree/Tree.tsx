@@ -18,15 +18,10 @@ export interface TreeListModel {
     icon?: string;
 }
 
-export interface TreeItemClickModel {
-    data?: { [key: string]: any };
-    type?: "selected" | "deselected";
-}
-
 export interface TreeProps extends ComponentProps {
     data?: Array<any>;
     childrenField?: string;
-    onTreeItemClick?: (e: Event, model: TreeItemClickModel) => void;
+    onTreeItemClick?: (e: Event, data?: TableItemModel) => void;
 
     iconTypeKey?: string;
     iconKey?: string;
@@ -106,20 +101,9 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
             return (
                 <Table
                     {...this.buildTableProps()}
-                    onSelected={(e, data) => {
+                    onItemClick={(e, data) => {
                         if (this.props && this.props.onTreeItemClick) {
-                            this.props.onTreeItemClick(e, {
-                                data: data.data,
-                                type: "selected"
-                            });
-                        }
-                    }}
-                    onDeselected={(e, data) => {
-                        if (this.props && this.props.onTreeItemClick) {
-                            this.props.onTreeItemClick(e, {
-                                data: data.data,
-                                type: "deselected"
-                            });
+                            this.props.onTreeItemClick(e, data.data);
                         }
                     }}
                 />

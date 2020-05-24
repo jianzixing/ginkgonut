@@ -19,10 +19,7 @@ export default class TreePanel<P extends TreePanelProps> extends Panel<P> {
     protected drawingPanelChild() {
         let newProps: any = {...this.props};
         newProps.ref = undefined;
-        return (
-            <Tree
-                {...newProps}
-            />)
+        return (<Tree {...newProps}/>)
     }
 
     render(): any {

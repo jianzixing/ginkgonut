@@ -48,7 +48,7 @@ export interface TableProps extends ComponentProps {
     onDeselected?: (e: Event, data: TableItemModel) => void;
 
     // 包含各种情况的点击
-    onItemClick?: (e: Event, data: { data: any, actionItem?: ActionColumnItem }) => void;
+    onItemClick?: (e: Event, data: { data: TableItemModel, actionItem?: ActionColumnItem }) => void;
 
     feature?: FeatureTypes;
     plugin?: {
@@ -140,9 +140,6 @@ export default class Table<P extends TableProps> extends Component<P> {
                                             if (this.props.onSelected) {
                                                 this.props.onSelected(e, data);
                                             }
-                                            if (this.props.onItemClick) {
-                                                this.props.onItemClick(e, {data: data ? data.data : null})
-                                            }
                                         }
                                     }}
                                     onDeselected={(e, data: TableItemModel, multiSelect) => {
@@ -153,6 +150,11 @@ export default class Table<P extends TableProps> extends Component<P> {
 
                                         if (this.props.onDeselected) {
                                             this.props.onDeselected(e, data);
+                                        }
+                                    }}
+                                    onClick={(e, data: TableItemModel) => {
+                                        if (this.props.onItemClick) {
+                                            this.props.onItemClick(e, {data: data});
                                         }
                                     }}
                                     onActionClick={(e, data: TableItemModel, actionItem) => {

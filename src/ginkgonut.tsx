@@ -73,7 +73,7 @@ import TabPanel, {TabModel, TabPanelProps} from "./tab/TabPanel";
 import PagingToolbar, {PagingToolbarProps} from "./toolbar/PagingToolbar";
 import Toolbar, {ToolbarProps, ToolbarSplit, ToolbarSplitProps} from "./toolbar/Toolbar";
 import Tooltip, {TooltipManager, TooltipProps} from "./tooltips/Tooltip";
-import Tree, {TreeProps, TreeItemClickModel, TreeListModel} from "./tree/Tree";
+import Tree, {TreeProps, TreeListModel} from "./tree/Tree";
 import TreeCell, {TreeCellProps} from "./tree/TreeCell";
 import TreeGrid, {TreeGridProps} from "./tree/TreeGrid";
 import TreePanel, {TreePanelProps} from "./tree/TreePanel";
@@ -86,7 +86,7 @@ export {
     CookieTools,
     ObjectTools,
     DateTools,
-    
+
     Component,
     ComponentProps,
     Container,
@@ -232,7 +232,6 @@ export {
     TooltipProps,
     Tree,
     TreeProps,
-    TreeItemClickModel,
     TreeListModel,
     TreeCell,
     TreeCellProps,
