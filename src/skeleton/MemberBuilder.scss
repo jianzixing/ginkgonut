@@ -1,0 +1,14 @@
+.mg-member-builder {
+  display: table;
+  width: 100%;
+  height: 100%;
+
+  .mg-member-builder-left {
+    display: table-cell;
+    width: 180px;
+  }
+
+  .mg-member-builder-right {
+    display: table-cell;
+  }
+}

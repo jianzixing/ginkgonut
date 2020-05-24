@@ -7,6 +7,7 @@ import Button from "../button/Button";
 import Toolbar from "../toolbar/Toolbar";
 import {IconTypes} from "../icon/IconTypes";
 import DisplayImage from "../image/DisplayImage";
+import MemberBuilder from "./MemberBuilder";
 
 export interface MemberManagerProps extends AppManagerProps {
 }
@@ -62,6 +63,7 @@ export default class MemberManager extends AppManager<MemberManagerProps> {
                                    <Button iconType={"plus"}
                                            text={"添加会员"}
                                            onClick={e => {
+                                               this.forward(<MemberBuilder/>)
                                            }}/>
                                </Toolbar>
                            ]

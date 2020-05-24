@@ -5,7 +5,7 @@ import {AbstractFormField, AbstractFormFieldProps} from "../form/AbstractFormFie
 import Button, {ButtonProps} from "../button/Button";
 
 export interface FormPanelProps extends PanelProps {
-    layout?: FormLayoutProps;
+    layout?: FormLayoutProps | boolean;
     values?: { [key: string]: any };
     formValues?: { [key: string]: any };
     onSubmit?: (values: { [key: string]: any }, formData?: FormData) => void;
@@ -26,12 +26,16 @@ export default class FormPanel<P extends FormPanelProps> extends Panel<P> {
     }
 
     protected drawingPanelChild(): GinkgoNode | GinkgoElement[] {
-        return (
-            <FormLayout {...this.props.layout || {}}
-                        ref={this.formLayoutRef}>
-                {this.props.children}
-            </FormLayout>
-        );
+        if (this.props.layout == false) {
+            return this.props.children;
+        } else {
+            return (
+                <FormLayout {...this.props.layout || {}}
+                            ref={this.formLayoutRef}>
+                    {this.props.children}
+                </FormLayout>
+            );
+        }
     }
 
     protected onAfterDrawing() {
