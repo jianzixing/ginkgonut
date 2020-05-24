@@ -42,6 +42,6 @@
     "webpack-dev-server": "^3.10.1"
   },
   "peerDependencies": {
-    "ginkgoes": ">=0.0.13"
+    "ginkgoes": ">=0.0.15"
   }
 }

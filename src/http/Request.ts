@@ -129,7 +129,7 @@ export class Submit {
      */
     fetch = (module?: string | undefined, succ?: (data: any) => void, fail?: (message: any) => any, keepStruct?: boolean) => {
         let self = this;
-        Ginkgo.post(this.getParamUrl(), undefined, {url: null, withCredentials: true})
+        Ginkgo.post(this.getUrl(), this.getFormData(), {withCredentials: true})
             .then(function (response) {
                 let data: any = response;
                 if (typeof data != "object") {
@@ -267,7 +267,11 @@ export class Submit {
             const str = [];
             for (let i in copyParams) {
                 const obj = copyParams[i];
-                str.push(i + "=" + encodeURIComponent(this.getParamValue(obj)));
+                if (obj instanceof File || obj instanceof FileList || obj instanceof FormData) {
+
+                } else {
+                    str.push(i + "=" + encodeURIComponent(this.getParamValue(obj)));
+                }
             }
             if (module) {
                 str.push("_page=" + module);
@@ -279,6 +283,39 @@ export class Submit {
             }
         }
         return copyParams;
+    }
+
+    private getFormData(module?: string): FormData {
+        let formData = new FormData();
+        const copyParams = {...this.params, ...this.extParams};
+
+        if (copyParams && typeof copyParams === "object") {
+            for (let i in copyParams) {
+                const obj = copyParams[i];
+                if (obj) {
+                    if (obj instanceof File || obj instanceof FileList || obj instanceof FormData) {
+                        if (obj instanceof File) formData.append(i, obj);
+                        if (obj instanceof FileList) {
+                            for (let k = 0; k < obj.length; k++) {
+                                formData.append(i + "_" + k, obj.item(k));
+                            }
+                        }
+                        if (obj instanceof FormData) {
+                            obj.forEach((value, key) => {
+                                formData.append(key, value);
+                            })
+                        }
+                    } else {
+                        formData.append(i, this.getParamValue(obj));
+                    }
+                }
+            }
+            if (module) {
+                formData.append("_page", "" + module);
+            }
+        }
+
+        return formData;
     }
 
     private getParamValue(obj: any): string {
