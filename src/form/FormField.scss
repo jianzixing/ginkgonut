@@ -46,10 +46,13 @@
 
     .x-field-body {
       display: table-cell;
-      min-width: 170px;
       min-height: 32px;
       vertical-align: middle;
       height: 100%;
+
+      .x-field-body-width {
+        min-width: 170px;
+      }
 
       .x-field-body-inner {
         display: block;

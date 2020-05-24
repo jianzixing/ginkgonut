@@ -38,13 +38,18 @@ export default class RadioGroupField<P extends RadioGroupFieldProps> extends For
             for (let m of this.models) {
                 if (m.selected) this.value = m;
                 let style = {};
-                if (this.props.direction == "vertical") style["width"] = "100%";
+                if (this.props.direction == "vertical") {
+                    style["width"] = "100%";
+                } else {
+                    style['width'] = 100 / this.models.length + "%";
+                }
                 items.push(
                     <div className={RadioGroupField.radioGroupFieldItemCls} style={style}>
                         <div className={RadioGroupField.radioGroupFieldItemBodyCls}>
                             <RadioField text={m.text || ""}
                                         selected={m.selected ? true : false}
                                         disabledFormChange={true}
+                                        fixMinWidth={false}
                                         width={this.props.itemWidth > 0 ? this.props.itemWidth : undefined}
                                         onChange={e => {
                                             let oldValue = this.value ? this.value.value : undefined;

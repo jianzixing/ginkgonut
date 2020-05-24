@@ -38,13 +38,18 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
             for (let m of this.models) {
                 if (m.checked) this.value.push(m);
                 let style = {};
-                if (this.props.direction == "vertical") style["width"] = "100%";
+                if (this.props.direction == "vertical") {
+                    style["width"] = "100%";
+                } else {
+                    style["width"] = 100 / this.models.length + "%";
+                }
                 items.push(
                     <div className={CheckboxGroupField.checkboxGroupFieldItemCls} style={style}>
                         <div className={CheckboxGroupField.checkboxGroupFieldItemBodyCls}>
                             <CheckboxField text={m.text || ""}
                                            checked={m.checked ? true : false}
                                            disabledFormChange={true}
+                                           fixMinWidth={false}
                                            width={this.props.itemWidth > 0 ? this.props.itemWidth : undefined}
                                            onChange={e => {
                                                let oldValue = [];

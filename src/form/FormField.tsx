@@ -17,6 +17,7 @@ export interface FormFieldProps extends AbstractFormFieldProps {
     blankText?: string;
     regex?: RegExp;
     regexText?: string;
+    fixMinWidth?: boolean;
 }
 
 /**
@@ -30,6 +31,7 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
     protected static formFieldFocusBorderCls;
     protected static formFieldLabelCls;
     protected static formFieldBodyCls;
+    protected static formFieldBodyWidthCls;
     protected static formFieldBodyInnerCls;
     protected static formFieldPickerCls;
     protected static formFieldPickerShadowCls;
@@ -90,6 +92,7 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
         FormField.formFieldFocusBorderCls = this.getThemeClass("field-focus-border");
         FormField.formFieldLabelCls = this.getThemeClass("field-label");
         FormField.formFieldBodyCls = this.getThemeClass("field-body");
+        FormField.formFieldBodyWidthCls = this.getThemeClass("field-body-width");
         FormField.formFieldBodyInnerCls = this.getThemeClass("field-body-inner");
         FormField.formFieldPickerCls = this.getThemeClass("field-picker");
         FormField.formFieldPickerShadowCls = this.getThemeClass("field-picker-shadow");
@@ -136,10 +139,15 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
             )
         }
 
+        let formFieldBodyClsList = [FormField.formFieldBodyCls];
+        if (this.props.fixMinWidth || this.props.fixMinWidth == null) {
+            formFieldBodyClsList.push(FormField.formFieldBodyWidthCls);
+        }
+
         return (
             <div className={FormField.formFieldContentCls}>
                 {labelEls}
-                <div className={FormField.formFieldBodyCls}>
+                <div className={formFieldBodyClsList}>
                     <div ref={this.fieldBodyRefObject}
                          className={bodyInnerCss}
                          onMouseEnter={e => {

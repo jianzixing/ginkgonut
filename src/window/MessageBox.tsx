@@ -57,9 +57,9 @@ export default class MessageBox<P extends MessageBoxProps> extends WindowPanel<P
                                            title={title}
                                            content={content}
                                            onOkClick={(e, value) => {
-                                               onOkClick(e)
+                                               onOkClick && onOkClick(e)
                                            }}
-                                           onCancelClick={e => onCancelClick(e)}/>)
+                                           onCancelClick={e => onCancelClick && onCancelClick(e)}/>)
     }
 
     public static showWait() {
