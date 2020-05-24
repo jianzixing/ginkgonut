@@ -13,6 +13,8 @@ export interface MemberManagerProps extends AppManagerProps {
 }
 
 export default class MemberManager extends AppManager<MemberManagerProps> {
+    protected store = new DataStore({api: APIUser.getUsers(), module: MemberManager.name, autoLoad: true});
+
     render(): GinkgoNode {
         return (
             <GridPanel paging={true}
@@ -56,7 +58,7 @@ export default class MemberManager extends AppManager<MemberManagerProps> {
                            }
                        ]}
                        header={false}
-                       store={new DataStore({api: APIUser.getUsers(), module: MemberManager.name, autoLoad: true})}
+                       store={this.store}
                        toolbars={
                            [
                                <Toolbar>

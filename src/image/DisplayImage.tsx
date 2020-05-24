@@ -37,6 +37,14 @@ export default class DisplayImage<P extends DisplayImageProps> extends Component
         )
     }
 
+    protected compareUpdate(key: string, newValue: any, oldValue: any): boolean {
+        if (key == "src" && this.value != newValue) {
+            this.value = newValue;
+            this.redrawing();
+        }
+        return false;
+    }
+
     protected onAfterDrawing() {
         if (this.imgRef.instance) {
             let el = this.imgRef.instance.dom as HTMLImageElement;

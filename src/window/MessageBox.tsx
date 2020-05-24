@@ -50,6 +50,22 @@ export default class MessageBox<P extends MessageBoxProps> extends WindowPanel<P
         return MessageBox.show(<MessageBox title={title} content={content}/>);
     }
 
+    public static showConfirm(title: string, content: string,
+                              onOkClick: (e) => void,
+                              onCancelClick?: (e) => void) {
+        return MessageBox.show(<MessageBox type={"confirm"}
+                                           title={title}
+                                           content={content}
+                                           onOkClick={(e, value) => {
+                                               onOkClick(e)
+                                           }}
+                                           onCancelClick={e => onCancelClick(e)}/>)
+    }
+
+    public static showWait() {
+        return MessageBox.show(<MessageBox type={"wait"}/>)
+    }
+
     public static close(props: MessageBoxProps) {
         Ginkgo.unmountByElement(props, document.body);
     }

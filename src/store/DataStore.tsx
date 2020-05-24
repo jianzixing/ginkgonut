@@ -36,8 +36,8 @@ export default class DataStore {
     protected data: any;
 
     protected pagingParam: Object;
-
     protected status = 0;
+    protected isAutoLoaded = false;
 
     constructor(props: DataStoreProps) {
         this.props = {
@@ -50,25 +50,6 @@ export default class DataStore {
             dataField: "records",
             ...props
         };
-
-        if (this.props.autoLoad) {
-            setTimeout(() => {
-                let isAutoLoad = false;
-                if (this.processor instanceof Array) {
-                    for (let p of this.processor) {
-                        if (p['storeAutoLoad'] && typeof p['storeAutoLoad'] == "function") {
-                            try {
-                                p['storeAutoLoad']();
-                                isAutoLoad = true;
-                            } catch (e) {
-                                console.error("processor auto load error", e);
-                            }
-                        }
-                    }
-                }
-                if (!isAutoLoad) this.load();
-            }, 100);
-        }
     }
 
     setPagingParam(pagingParam: Object): void {
@@ -96,6 +77,31 @@ export default class DataStore {
                     this.processor.splice(this.processor.indexOf(rm), 1);
                 }
             }
+
+            this.startAutoLoad();
+        }
+    }
+
+    private startAutoLoad() {
+        if (this.props.autoLoad && !this.isAutoLoaded) {
+            setTimeout(() => {
+                let isAutoLoad = false;
+                if (this.processor instanceof Array) {
+                    for (let p of this.processor) {
+                        if (p['storeAutoLoad'] && typeof p['storeAutoLoad'] == "function") {
+                            try {
+                                p['storeAutoLoad']();
+                                isAutoLoad = true;
+                            } catch (e) {
+                                console.error("processor auto load error", e);
+                            }
+                        }
+                    }
+                }
+                if (!isAutoLoad) this.load();
+            }, 100);
+
+            this.isAutoLoaded = true;
         }
     }
 
@@ -117,7 +123,11 @@ export default class DataStore {
                 }
                 if (this.props.api) {
                     this.processor && this.processor.map(value => {
-                        value && value.storeBeforeLoad && value.storeBeforeLoad()
+                        try {
+                            value && value.storeBeforeLoad && value.storeBeforeLoad();
+                        } catch (e) {
+                            console.error("call store before load error", e);
+                        }
                     });
                     this.status = 1;
                     let promise;

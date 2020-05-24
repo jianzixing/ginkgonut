@@ -53,8 +53,13 @@ export default class MemberBuilder<P extends MemberBuilderProps> extends AppMana
                             <Upload type={"button"} buttonText={"选择头像"} style={{margin: "0px 0px 10px"}}
                                     onChange={(items, news) => {
                                         if (items && items.length > 0) {
-                                            this.headerLogo = items[0].file['src'];
-                                            this.forceRender();
+                                            let reads = new FileReader();
+                                            reads.readAsDataURL(items[0].file);
+                                            reads.onload = (e) => {
+                                                let src = reads.result;
+                                                this.headerLogo = src;
+                                                this.forceRender();
+                                            };
                                         }
                                     }}/>
                         </div>
