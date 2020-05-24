@@ -24,6 +24,14 @@ setRequestServer(params => {
     }
 })
 
+export function getImageDownload(f: string) {
+    if (f) {
+        if (f && f.startsWith("http://")) return f;
+        return "http://localhost:8080/web/image/load.jhtml?f=" + f;
+    }
+    return undefined;
+}
+
 export default class App extends Ginkgo.Component {
     protected appContentRef: RefObject<AppContent<any>> = Ginkgo.createRef();
     protected isUserLogin = false;

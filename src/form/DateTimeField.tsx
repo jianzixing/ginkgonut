@@ -88,11 +88,9 @@ export default class DateTimeField<P extends DateFieldProps> extends TextField<P
 
         if (value instanceof Date) {
             this.value = value;
-        } else if (typeof value === "string") {
+        } else {
             let date = DateTools.toDate(value);
             this.value = date;
-        } else {
-            this.value = null;
         }
 
         this.fillInputValue();
