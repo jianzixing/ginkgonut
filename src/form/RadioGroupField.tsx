@@ -97,7 +97,9 @@ export default class RadioGroupField<P extends RadioGroupFieldProps> extends For
     }
 
     getValue(): any {
-        return this.value.value;
+        if (this.value) {
+            return this.value.value;
+        }
     }
 
     getRowValue(): any {

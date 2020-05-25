@@ -112,7 +112,9 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
     }
 
     getValue(): any {
-        return this.value.filter(value => value.value);
+        if (this.value) {
+            return this.value.filter(value => value.value);
+        }
     }
 
     getRowValue(): any {
