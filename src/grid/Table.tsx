@@ -44,8 +44,8 @@ export interface TableProps extends ComponentProps {
     enableToggleSelected?: boolean;
     /*true时表格不再计算总宽度*/
     ignoreCalcWidth?: boolean;
-    onSelected?: (e: Event, data: TableItemModel) => void;
-    onDeselected?: (e: Event, data: TableItemModel) => void;
+    onSelected?: (e: Event, data: TableItemModel, sel?: Array<TableItemModel>) => void;
+    onDeselected?: (e: Event, data: TableItemModel, sel?: Array<TableItemModel>) => void;
 
     // 包含各种情况的点击
     onItemClick?: (e: Event, data: { data: TableItemModel, actionItem?: ActionColumnItem }) => void;
@@ -138,7 +138,13 @@ export default class Table<P extends TableProps> extends Component<P> {
                                             this.redrawing();
 
                                             if (this.props.onSelected) {
-                                                this.props.onSelected(e, data);
+                                                let sels = [];
+                                                if (tableItemModels) {
+                                                    tableItemModels.map((v) => {
+                                                        if (v.selected) sels.push(v);
+                                                    });
+                                                }
+                                                this.props.onSelected(e, data, sels);
                                             }
                                         }
                                     }}
@@ -149,7 +155,13 @@ export default class Table<P extends TableProps> extends Component<P> {
                                         }
 
                                         if (this.props.onDeselected) {
-                                            this.props.onDeselected(e, data);
+                                            let sels = [];
+                                            if (tableItemModels) {
+                                                tableItemModels.map((v) => {
+                                                    if (v.selected) sels.push(v);
+                                                });
+                                            }
+                                            this.props.onDeselected(e, data, sels);
                                         }
                                     }}
                                     onClick={(e, data: TableItemModel) => {
