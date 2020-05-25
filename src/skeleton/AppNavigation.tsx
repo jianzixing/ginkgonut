@@ -65,6 +65,7 @@ export default class AppNavigation extends Component<AppNavigationProps> {
                     <TreePanel
                         key={"tree"}
                         ref={this.treePanelRef}
+                        showCheckbox={true}
                         title={"Examples"}
                         titleIconType={"university"}
                         onTreeItemClick={(e, model) => {
@@ -81,6 +82,9 @@ export default class AppNavigation extends Component<AppNavigationProps> {
                                     data: data
                                 });
                             }
+                        }}
+                        onCheckboxChange={(item, checked, checkItems) => {
+                            console.log(checkItems)
                         }}
                     />
                 </BorderLayoutItem>

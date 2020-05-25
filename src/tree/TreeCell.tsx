@@ -13,7 +13,10 @@ export interface TreeCellProps extends TableCellProps {
     deep?: number;
     treeListItem?: TreeListModel;
     expandByRow?: boolean;
-    onExpand?: (e: { treeListItem: TreeListModel | undefined }) => void
+    onExpand?: (e: { treeListItem: TreeListModel | undefined }) => void;
+    showCheckbox?: boolean;
+
+    onCheck?: (item: TreeListModel, sel: boolean) => void;
 }
 
 export default class TreeCell<P extends TreeCellProps> extends TableCell<P> {
@@ -21,6 +24,7 @@ export default class TreeCell<P extends TreeCellProps> extends TableCell<P> {
     protected static treeCellClsElbow;
     protected static treeCellClsExpander;
     protected static treeCellClsIcon;
+    protected static treeCellClsCheck;
     protected static treeCellClsText;
 
     protected onExpandEvent?: (e: { treeListItem: TreeListModel | undefined }) => void = this.props.onExpand;
@@ -32,6 +36,7 @@ export default class TreeCell<P extends TreeCellProps> extends TableCell<P> {
         TreeCell.treeCellClsElbow = this.getThemeClass("tree-cell-elbow");
         TreeCell.treeCellClsExpander = this.getThemeClass("tree-cell-expander");
         TreeCell.treeCellClsIcon = this.getThemeClass("tree-cell-icon");
+        TreeCell.treeCellClsCheck = this.getThemeClass("tree-cell-check");
         TreeCell.treeCellClsText = this.getThemeClass("tree-cell-text");
     }
 
@@ -43,6 +48,8 @@ export default class TreeCell<P extends TreeCellProps> extends TableCell<P> {
 
         let elbowEl,
             iconEl,
+            checkEl,
+            checkElCls = [TreeCell.treeCellClsCheck],
             elbowCls = [TreeCell.treeCellClsElbow, TreeCell.treeCellClsExpander],
             /*微调图标*/
             style: CSSProperties = {position: "relative", top: "1px"};
@@ -80,23 +87,49 @@ export default class TreeCell<P extends TreeCellProps> extends TableCell<P> {
                 deepEls.push(<div key={"blank" + i} className={TreeCell.treeCellClsElbow}></div>);
             }
         }
+
+        if (this.props.showCheckbox) {
+            if (this.props.treeListItem && this.props.treeListItem.checked) {
+                checkEl = (
+                    <div key={"check"} className={checkElCls}
+                         onClick={e => {
+                             e.stopPropagation();
+                             e.preventDefault();
+                             this.props.onCheck && this.props.onCheck(this.props.treeListItem, false);
+                         }}>
+                        <Icon icon={IconTypes._extCheckedSel}/>
+                    </div>);
+            } else {
+                checkEl = (
+                    <div key={"check"} className={checkElCls}
+                         onClick={e => {
+                             e.stopPropagation();
+                             e.preventDefault();
+                             this.props.onCheck && this.props.onCheck(this.props.treeListItem, true);
+                         }}>
+                        <Icon icon={IconTypes._extCheckedUnset}/>
+                    </div>);
+            }
+        }
+
         return (
             <div className={cls.join(" ")} onClick={(e) => {
                 this.onExpandNodeClick(1);
             }}>
                 {deepEls}
-                <div className={elbowCls.join(" ")} onClick={(e) => {
+                <div key={"elbow"} className={elbowCls} onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
                     this.onExpandNodeClick(2);
                 }}>
                     {elbowEl}
                 </div>
-                <div className={[TreeCell.treeCellClsIcon].join(" ")}>
+                {checkEl}
+                <div key={"icon"} className={[TreeCell.treeCellClsIcon]}>
                     {iconEl}
                 </div>
-                {this.props.text ? <span className={TreeCell.treeCellClsText}>{this.props.text}</span> :
-                    <span className={TreeCell.treeCellClsText}>&nbsp;</span>}
+                {this.props.text ? <span key={"text"} className={TreeCell.treeCellClsText}>{this.props.text}</span> :
+                    <span key={"text"} className={TreeCell.treeCellClsText}>&nbsp;</span>}
             </div>
         )
     }

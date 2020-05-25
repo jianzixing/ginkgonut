@@ -10,12 +10,13 @@ import "./Tree.scss";
 export interface TreeListModel {
     /*树组件时表示当前的层级*/
     deep?: number;
-    tableListItem?: TableItemModel;
+    tableItem?: TableItemModel;
     children?: Array<TreeListModel>;
     show?: boolean;
     leaf?: boolean;
     iconType?: string;
     icon?: string;
+    checked?: boolean;
 }
 
 export interface TreeProps extends ComponentProps {
@@ -26,6 +27,8 @@ export interface TreeProps extends ComponentProps {
     iconTypeKey?: string;
     iconKey?: string;
     leafKey?: string;
+    showCheckbox?: boolean;
+    onCheckboxChange?: (item: TableItemModel, checked: boolean, checkItems?: Array<TableItemModel>) => void;
 }
 
 export default class Tree<P extends TreeProps> extends Component<P> implements TableCellPlugin {
@@ -66,6 +69,7 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
                     iconType={treeListItem.iconType}
                     data={tableRow.props && tableRow.props.tableItem ? tableRow.props.tableItem.data : undefined}
                     value={value}
+                    showCheckbox={this.props.showCheckbox}
                     onExpand={(e) => {
                         if (e.treeListItem) {
                             if (e.treeListItem.show) {
@@ -76,9 +80,46 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
                             this.redrawing();
                         }
                     }}
+                    onCheck={(item, sel) => {
+                        if (item) {
+                            this.setItemChecked(item, sel);
+                            this.redrawing();
+
+                            if (this.props.onCheckboxChange) {
+                                this.props.onCheckboxChange(item, sel, this.getCheckItems(this.treeListItems));
+                            }
+                        }
+                    }}
                 />
             );
         }
+    }
+
+    protected setItemChecked(item: TreeListModel, checked: boolean) {
+        if (item) {
+            item.checked = checked;
+            let children = item.children;
+            if (children && children.length > 0) {
+                for (let c of children) {
+                    this.setItemChecked(c, checked);
+                }
+            }
+        }
+    }
+
+    protected getCheckItems(items: Array<TreeListModel>): Array<TreeListModel> {
+        let arr = [];
+        if (items && items.length > 0) {
+            for (let item of items) {
+                if (item.checked) {
+                    arr.push(item);
+                }
+                let children = item.children;
+                let chs = this.getCheckItems(children);
+                chs.map(value => arr.push(value));
+            }
+        }
+        return arr;
     }
 
     protected buildClassNames(themePrefix: string): void {
@@ -147,7 +188,7 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
                 };
                 let treeListItem: TreeListModel = {
                     deep: deep,
-                    tableListItem: tableListItem,
+                    tableItem: tableListItem,
                     children: children,
                     show: true
                 };
@@ -170,8 +211,8 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
     protected buildTableStructs(treeListItems: Array<TreeListModel>): Array<TableItemModel> | undefined {
         let arr: Array<TableItemModel> = [];
         for (let treeListItem of treeListItems) {
-            if (treeListItem.tableListItem) {
-                arr.push(treeListItem.tableListItem);
+            if (treeListItem.tableItem) {
+                arr.push(treeListItem.tableItem);
                 if (treeListItem.children && treeListItem.children.length > 0) {
                     let childs = this.buildTableStructs(treeListItem.children);
                     if (childs && childs.length > 0) {
@@ -192,13 +233,13 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
      */
     protected showTreeListItems(treeListItem: TreeListModel, show: boolean): void {
         treeListItem.show = show;
-        if (treeListItem.tableListItem) {
+        if (treeListItem.tableItem) {
             if (treeListItem.children && treeListItem.children.length > 0) {
                 let cs = treeListItem.children;
                 if (cs && cs.length > 0) {
                     for (let item of cs) {
-                        if (item.tableListItem) {
-                            item.tableListItem.show = show;
+                        if (item.tableItem) {
+                            item.tableItem.show = show;
                         }
                         this.showTreeListItems(item, show);
                     }

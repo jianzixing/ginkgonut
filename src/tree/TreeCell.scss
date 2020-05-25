@@ -20,6 +20,21 @@
     }
   }
 
+  .x-tree-cell-check {
+    display: inline-block;
+    margin-right: 6px;
+    top: 8px;
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+    color: #5fa2dd;
+    vertical-align: top;
+    position: relative;
+
+    margin-top: -7px;
+    margin-bottom: -6px;
+  }
+
   .x-tree-cell-text {
     padding-left: 6px;
   }
