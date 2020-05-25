@@ -75,6 +75,9 @@ export default class MemberManager extends AppManager<MemberManagerProps> {
                        ]}
                        header={false}
                        store={this.store}
+                       onSelected={(e, data, sel) => {
+                           console.log(sel)
+                       }}
                        toolbars={
                            [
                                <Toolbar>

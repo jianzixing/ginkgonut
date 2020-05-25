@@ -149,7 +149,7 @@ export default class Table<P extends TableProps> extends Component<P> {
                                         }
                                     }}
                                     onDeselected={(e, data: TableItemModel, multiSelect) => {
-                                        if (this.props.enableToggleSelected == true) {
+                                        if (this.props.enableToggleSelected == true || multiSelect == true) {
                                             data.selected = false;
                                             this.redrawing();
                                         }

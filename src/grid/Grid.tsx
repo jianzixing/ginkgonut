@@ -165,6 +165,10 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
                                     let arr = columns.filter(column => column.type == "checkbox");
                                     arr.map(column => column.checked = true);
                                     this.redrawing();
+                                } else if (!allSel) {
+                                    let arr = columns.filter(column => column.type == "checkbox");
+                                    arr.map(column => column.checked = false);
+                                    this.redrawing();
                                 }
                             }
                             if (this.props.onSelected) {
