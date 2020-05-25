@@ -135,8 +135,9 @@ export class Submit {
     fetch = (module?: string | undefined, succ?: (data: any) => void, fail?: (message: any) => any, keepStruct?: boolean) => {
         let self = this;
         // "Content-Type", "application/x-www-form-urlencoded;"
+        let formData = this.getFormData(module);
         // POST 字符串则可以接收
-        Ginkgo.post(this.getUrl(), this.getFormData(), {withCredentials: true, onprogress: this.callProgressEvent})
+        Ginkgo.post(this.getUrl(), formData, {withCredentials: true, onprogress: this.callProgressEvent})
             .then(function (response) {
                 let data: any = response;
                 if (typeof data != "object") {
