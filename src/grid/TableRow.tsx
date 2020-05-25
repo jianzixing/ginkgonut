@@ -399,6 +399,13 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                             this.props.onDeselected(e, this.props.tableItem, false);
                         }
                     }
+                } else {
+                    this.setSelected(true);
+                    if (this.props && !this.props.disableClickSelected) {
+                        if (this.props.onSelected) {
+                            this.props.onSelected(e, this.props.tableItem, false);
+                        }
+                    }
                 }
             }
         }

@@ -129,7 +129,7 @@ export default class Table<P extends TableProps> extends Component<P> {
                                     index={index}
                                     onSelected={(e, data: TableItemModel, multiSelect) => {
                                         if (tableItemModels) {
-                                            if (!multiSelect) {
+                                            if (!multiSelect && this.props.enableToggleSelected != true) {
                                                 tableItemModels.map((v) => {
                                                     v.selected = false;
                                                 });

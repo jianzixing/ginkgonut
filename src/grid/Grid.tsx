@@ -144,9 +144,9 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
                     }}
                 >
                     <Table
-                        disableClickSelected={false}
-                        enableToggleSelected={true}
                         {...this.props}
+                        disableClickSelected={this.props.disableClickSelected}
+                        enableToggleSelected={this.props.enableToggleSelected}
                         width={this.tableWidth}
                         height={undefined}
                         ref={c => this.tableComponentRef = (c as Table<any>)}
