@@ -37,6 +37,7 @@ export interface GridProps extends TableProps {
     models?: Array<TableItemModel>;
     /*列宽度保持表格总宽度*/
     fit?: boolean;
+    onSelectChange?: (sel: Array<TableItemModel>, data?: { data: TableItemModel, isSelect: boolean }) => void;
 }
 
 export default class Grid<P extends GridProps> extends Component<P> implements StoreProcessor {
@@ -153,7 +154,7 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
                         tableItemModels={this.tableItemModels}
                         referRefObjectWidth={this.tableRef}
                         columns={columns}
-                        onSelected={(e: Event, data: TableItemModel) => {
+                        onSelected={(e: Event, data: TableItemModel, sel?: Array<TableItemModel>) => {
                             if (this.tableItemModels) {
                                 let allSel = true;
                                 this.tableItemModels.map(tableItemModel => {
@@ -172,10 +173,13 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
                                 }
                             }
                             if (this.props.onSelected) {
-                                this.props.onSelected(e, data.data);
+                                this.props.onSelected(e, data.data, sel);
+                            }
+                            if (this.props.onSelectChange) {
+                                this.props.onSelectChange(sel, {data: data, isSelect: true});
                             }
                         }}
-                        onDeselected={(e: Event, data: TableItemModel) => {
+                        onDeselected={(e: Event, data: TableItemModel, sel?: Array<TableItemModel>) => {
                             if (this.props.columns) {
                                 let arr = columns.filter(column => column.type == "checkbox");
                                 arr.map(column => column.checked = false);
@@ -183,7 +187,10 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
                             this.redrawing();
 
                             if (this.props.onDeselected) {
-                                this.props.onDeselected(e, data.data);
+                                this.props.onDeselected(e, data.data, sel);
+                            }
+                            if (this.props.onSelectChange) {
+                                this.props.onSelectChange(sel, {data: data, isSelect: false});
                             }
                         }}
                     />
