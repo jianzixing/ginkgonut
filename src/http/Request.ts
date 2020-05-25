@@ -103,6 +103,7 @@ export class Submit {
     private params: { [key: string]: Object };
     private extParams: { [key: string]: Object | undefined } | undefined;
     private callAnyway: () => void;
+    private callProgressEvent: (e: ProgressEvent) => void;
 
     constructor(apiName: string, methodName: string, method: any) {
         this.apiName = apiName;
@@ -115,6 +116,10 @@ export class Submit {
         return this;
     };
 
+    progress(callback: (e: ProgressEvent) => void): Submit {
+        this.callProgressEvent = callback;
+        return this;
+    }
 
     load = (succ?: (data: any) => void, fail?: (message: any) => any) => {
         this.fetch(undefined, succ, fail);
@@ -129,7 +134,9 @@ export class Submit {
      */
     fetch = (module?: string | undefined, succ?: (data: any) => void, fail?: (message: any) => any, keepStruct?: boolean) => {
         let self = this;
-        Ginkgo.post(this.getUrl(), this.getFormData(), {withCredentials: true})
+        // "Content-Type", "application/x-www-form-urlencoded;"
+        // POST 字符串则可以接收
+        Ginkgo.post(this.getUrl(), this.getFormData(), {withCredentials: true, onprogress: this.callProgressEvent})
             .then(function (response) {
                 let data: any = response;
                 if (typeof data != "object") {
@@ -168,6 +175,7 @@ export class Submit {
                 }
             })
             .catch(function (error) {
+                console.error("ajax load error", error);
                 let isShowError: any = true;
                 if (self.callAnyway) {
                     try {
@@ -184,15 +192,16 @@ export class Submit {
         return this;
     };
 
-    setParams(params: { [key: string]: Object }) {
+    setParams(params: { [key: string]: Object }): Submit {
         this.params = params;
+        return this;
     };
 
     getParams(): { [key: string]: Object } {
         return this.params;
     };
 
-    addExtParams(params: { [key: string]: Object }) {
+    addExtParams(params: { [key: string]: Object }): Submit {
         if (!this.extParams) {
             this.extParams = params;
         } else {
@@ -201,14 +210,16 @@ export class Submit {
                 ...params
             }
         }
+        return this;
     };
 
-    removeExtParams(params: { [key: string]: Object }) {
+    removeExtParams(params: { [key: string]: Object }): Submit {
         if (this.extParams) {
             for (const key in params) {
                 this.extParams[key] = undefined;
             }
         }
+        return this;
     };
 
     getExtParams(): any {
@@ -224,12 +235,14 @@ export class Submit {
         return false;
     }
 
-    clearExtParams() {
+    clearExtParams(): Submit {
         this.extParams = undefined;
+        return this;
     };
 
-    setUrl(url: string) {
+    setUrl(url: string): Submit {
         this.url = url;
+        return this;
     };
 
     getUrl(): string {

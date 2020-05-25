@@ -129,22 +129,29 @@ export default class AppNavigation extends Component<AppNavigationProps> {
 
     onModuleButtonClick(module) {
         let name = module.name;
-        APIModule.getTreeAuthModules(name)
-            .load(data => {
-                let auths = data['auths'];
-                GlobalAuthorizes[module] = auths;
-                if (auths && auths instanceof Array && auths.length > 0) {
-                    for (let auth of auths) {
-                        if (!Ginkgo.TakeParts) Ginkgo.TakeParts = [];
-                        if (Ginkgo.TakeParts.indexOf(auth) == -1) {
-                            Ginkgo.TakeParts.push(auth['key']);
+        try {
+            APIModule.getTreeAuthModules(name)
+                .progress(e => {
+                    console.log(e);
+                })
+                .load(data => {
+                    let auths = data['auths'];
+                    GlobalAuthorizes[module] = auths;
+                    if (auths && auths instanceof Array && auths.length > 0) {
+                        for (let auth of auths) {
+                            if (!Ginkgo.TakeParts) Ginkgo.TakeParts = [];
+                            if (Ginkgo.TakeParts.indexOf(auth) == -1) {
+                                Ginkgo.TakeParts.push(auth['key']);
+                            }
                         }
                     }
-                }
-                if (this.treePanelRef && this.treePanelRef.instance) {
-                    this.treePanelRef.instance.update({data: data['modules'], title: module['text']});
-                }
-            });
+                    if (this.treePanelRef && this.treePanelRef.instance) {
+                        this.treePanelRef.instance.update({data: data['modules'], title: module['text']});
+                    }
+                });
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     protected getRootStyle(): CSSProperties {

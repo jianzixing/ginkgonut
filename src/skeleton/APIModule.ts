@@ -1,14 +1,14 @@
-import {Request} from "../http/Request";
+import {Request, Submit} from "../http/Request";
 
 export default class APIModule {
 
     @Request
-    public static getModules(): any {
+    public static getModules(): Submit | any {
 
     }
 
     @Request
-    public static getTreeAuthModules(module: string): any {
+    public static getTreeAuthModules(module: string): Submit | any {
 
     }
 }
