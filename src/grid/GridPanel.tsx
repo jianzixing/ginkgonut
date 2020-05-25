@@ -4,6 +4,7 @@ import Grid, {GridProps} from "./Grid";
 import PagingToolbar, {PagingToolbarProps} from "../toolbar/PagingToolbar";
 import {ToolbarProps} from "../toolbar/Toolbar";
 import "./GridPanel.scss";
+import {TableItemModel} from "./Table";
 
 export interface GridPanelProps extends PanelProps, GridProps {
     paging?: boolean | PagingToolbarProps;
@@ -86,5 +87,11 @@ export default class GridPanel<P extends GridPanelProps> extends Panel<P> {
     doLayout() {
         super.doLayout();
         this.setGridPanelSize();
+    }
+
+    getSelects(): Array<TableItemModel> {
+        if (this.gridRef && this.gridRef.instance) {
+            return this.gridRef.instance.getSelects();
+        }
     }
 }

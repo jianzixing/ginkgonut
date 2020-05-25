@@ -37,7 +37,7 @@ export interface GridProps extends TableProps {
     models?: Array<TableItemModel>;
     /*列宽度保持表格总宽度*/
     fit?: boolean;
-    onSelectChange?: (sel: Array<TableItemModel>, data?: { data: TableItemModel, isSelect: boolean }) => void;
+    onSelectChange?: (sel: Array<TableItemModel>, data?: { data: TableItemModel, type: number }) => void;
 }
 
 export default class Grid<P extends GridProps> extends Component<P> implements StoreProcessor {
@@ -176,7 +176,7 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
                                 this.props.onSelected(e, data.data, sel);
                             }
                             if (this.props.onSelectChange) {
-                                this.props.onSelectChange(sel, {data: data, isSelect: true});
+                                this.props.onSelectChange(sel, {data: data, type: 1});
                             }
                         }}
                         onDeselected={(e: Event, data: TableItemModel, sel?: Array<TableItemModel>) => {
@@ -190,7 +190,7 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
                                 this.props.onDeselected(e, data.data, sel);
                             }
                             if (this.props.onSelectChange) {
-                                this.props.onSelectChange(sel, {data: data, isSelect: false});
+                                this.props.onSelectChange(sel, {data: data, type: 2});
                             }
                         }}
                     />
@@ -253,6 +253,26 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
             }
         }
         this.redrawing();
+
+        if (type == 'checked') {
+            let arr = [];
+            if (this.tableItemModels) {
+                for (let item of this.tableItemModels) {
+                    if (item.selected == true) arr.push(item);
+                }
+            }
+            this.props.onSelectChange && this.props.onSelectChange(arr, {data: undefined, type: 3});
+        }
+    }
+
+    getSelects(): Array<TableItemModel> {
+        let arr = [];
+        if (this.tableItemModels) {
+            for (let item of this.tableItemModels) {
+                if (item.selected == true) arr.push(item);
+            }
+        }
+        return arr;
     }
 
     protected onTableScroll(e: Event) {
