@@ -28,6 +28,8 @@ export interface GridCellPlugin extends TableCellPlugin {
 export interface GridProps extends TableProps {
     columns: Array<TableColumnModel>;
     columnTextAlign?: "left" | "center" | "right";
+    /*列头右边框*/
+    columnSpace?: boolean;
     plugin?: {
         body?: GridBodyPlugin,
         row?: GridRowPlugin,
@@ -119,7 +121,7 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
                     textAlign={this.props.columnTextAlign}
                     fit={this.props.fit}
                     fitBaseRef={this.tableRef}
-                    columnSpace={this.props.tableCellBorder}
+                    columnSpace={this.props.columnSpace}
                     tableWidth={this.tableClientWidth}
                     onColumnResize={(type, column, oldWidth) => {
                         if (type == "start") {

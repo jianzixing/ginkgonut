@@ -35,9 +35,13 @@ export default class DisplayField<P extends DisplayFieldProps> extends FormField
             text = this.value;
         }
 
-        return (
-            <span setInnerHTML={text}></span>
-        )
+        if (typeof text == "object" && text['module']) {
+            return (text)
+        } else {
+            return (
+                <span setInnerHTML={text}></span>
+            )
+        }
     }
 
 

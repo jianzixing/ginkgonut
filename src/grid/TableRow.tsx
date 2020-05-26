@@ -298,7 +298,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                     } else if (typeof value == "function") {
                                         cellValue = value.toString();
                                     } else {
-                                        cellValue = "" + (cellValue ? cellValue : "");
+                                        cellValue = "" + (cellValue != null ? cellValue : "");
                                     }
                                 }
                             }

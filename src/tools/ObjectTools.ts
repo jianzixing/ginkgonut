@@ -1,5 +1,12 @@
 export default class ObjectTools {
     public static valueFromTemplate(obj: any, template: string) {
+        if (typeof obj == "string") {
+            try {
+                obj = JSON.parse(obj);
+            } catch (e) {
+                console.error(e);
+            }
+        }
         if (obj && template) {
             let str1 = template.split(".");
             let str3 = [];

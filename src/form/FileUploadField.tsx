@@ -14,7 +14,7 @@ type FileUploadResponse = {
 };
 
 export interface FileUploadFieldProps extends TextFieldProps {
-    uploadType?: "default" | "preview";
+    uploadType?: "default" | "avatar" | "preview" | "button";
     uploadProps?: UploadProps; // uploadType=preview有效
     buttonText?: string;
     buttonIcon?: string;
@@ -60,6 +60,7 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
         } else {
             return (<Upload {...this.props.uploadProps || {}}
                             ref={this.uploadRef}
+                            type={this.props.uploadType}
                             onAsyncFile={this.onUploadAsyncFile.bind(this)}/>);
         }
     }
@@ -88,13 +89,14 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
             let name = file.name;
             let size = file.size;
             this.inputEl.value = name;
-
-            this.triggerOnChangeEvents(this, this.value);
         }
 
         if (this.props.isSyncUpload) {
             if (type == "add") {
                 let url = this.props.uploadUrl;
+                if (url == null) {
+                    throw new Error("FileUploadField if isSyncUpload=true must set uploadUrl");
+                }
                 if (url instanceof Submit) {
                     url = url.getParamUrl();
                 }
@@ -119,6 +121,19 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
                             } else {
                                 resolve(value);
                             }
+
+                            if (this.uploadRef.instance) {
+                                let arr = [];
+                                let items = this.uploadRef.instance.getItems();
+                                for (let item of items) {
+                                    arr.push(item.data);
+                                }
+                                if (this.props.uploadType == "avatar") {
+                                    this.triggerOnChangeEvents(this, item.data);
+                                } else {
+                                    this.triggerOnChangeEvents(this, arr);
+                                }
+                            }
                         })
                         .catch(reason => {
                             if (this.props.onUploadResponse) {
@@ -135,6 +150,9 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
             }
             if (type == "del") {
                 let url = this.props.deleteUrl;
+                if (url == null) {
+                    throw new Error("FileUploadField if isSyncUpload=true must set deleteUrl");
+                }
                 if (url instanceof Submit) {
                     url = url.getParamUrl();
                 }
@@ -148,6 +166,19 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
                                     this.props.onDeleteResponse({resolve, reject, item, response: value, status: "ok"});
                                 } else {
                                     resolve(value);
+                                }
+
+                                if (this.uploadRef.instance) {
+                                    let arr = [];
+                                    let items = this.uploadRef.instance.getItems();
+                                    for (let item of items) {
+                                        arr.push(item.data);
+                                    }
+                                    if (this.props.uploadType == "avatar") {
+                                        this.triggerOnChangeEvents(this, null);
+                                    } else {
+                                        this.triggerOnChangeEvents(this, arr);
+                                    }
                                 }
                             })
                             .catch(reason => {
@@ -169,6 +200,19 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
                     return promise;
                 } else {
                     console.error("missing delete file data");
+                }
+            }
+        } else {
+            if (this.uploadRef.instance) {
+                let arr = [];
+                let items = this.uploadRef.instance.getItems();
+                for (let item of items) {
+                    arr.push(item.file);
+                }
+                if (this.props.uploadType == "avatar") {
+                    if (arr && arr.length > 0) this.triggerOnChangeEvents(this, arr[0]);
+                } else {
+                    this.triggerOnChangeEvents(this, arr);
                 }
             }
         }
@@ -258,6 +302,13 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
                             arr.push(item.data);
                         } else {
                             arr.push(item.file);
+                        }
+                    }
+                    if (uploadType == "avatar") {
+                        if (arr && arr.length > 0) {
+                            return arr[0];
+                        } else {
+                            return null;
                         }
                     }
                     return arr;

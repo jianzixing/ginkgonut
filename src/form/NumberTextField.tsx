@@ -45,6 +45,8 @@ export default class NumberTextField<P extends NumberTextFieldProps> extends Tex
         }
         this.value = value;
         this.inputEl.value = value;
+
+        this.triggerOnChangeEvents(this, value);
     }
 
     protected onSpinnerDownClick() {
@@ -59,6 +61,8 @@ export default class NumberTextField<P extends NumberTextFieldProps> extends Tex
 
         this.value = value;
         this.inputEl.value = value;
+
+        this.triggerOnChangeEvents(this, value);
     }
 
     protected onInputKeyUp(e) {

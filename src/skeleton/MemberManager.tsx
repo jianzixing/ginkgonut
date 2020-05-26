@@ -21,6 +21,8 @@ export default class MemberManager extends AppManager<MemberManagerProps> {
         return (
             <GridPanel paging={true}
                        columnTextAlign={"center"}
+                       tableCellBorder={false}
+                       columnSpace={false}
                        columns={[
                            {type: "checkbox"},
                            {

@@ -110,7 +110,9 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
             bodyInnerCss = [FormField.formFieldBodyInnerCls, Component.componentClsEnabledSelect];
 
         let label = this.props.fieldLabel;
-        if (label && this.props.colon) label += ":";
+        if (label && this.props.colon && typeof label == "string") {
+            label += ":";
+        }
 
         if (this.fieldBorder) {
             bodyInnerCss.push(FormField.formFieldBorderCls);
@@ -134,7 +136,7 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
         if (label && label != '') {
             labelEls = (
                 <label className={labelCss}>
-                    {typeof label == "string" ? <span>{label}</span> : {label}}
+                    {typeof label == "string" ? <span>{label}</span> : label}
                 </label>
             )
         }
