@@ -19,27 +19,31 @@ export function setRequestServer(callback: (params: { className?: string, method
  */
 export const Request = function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     let originalApiName = target.name;
-    let methodName = propertyKey;
-    let method = descriptor.value;
+    if (originalApiName) {
+        let methodName = propertyKey;
+        let method = descriptor.value;
 
-    let apiName = "";
-    if (originalApiName.indexOf('API') === 0) {
-        apiName = originalApiName.substring(3, originalApiName.length);
-    }
-
-    descriptor.value = (...obj: any) => {
-        let methodStr = method.toString();
-        let s1 = methodStr.match(/\(.*?\)/g);
-        let m1 = s1[0].substring(1, s1[0].length - 1).split(",");
-        let params: { [key: string]: Object } = {};
-        for (let i = 0; i < m1.length; i++) {
-            let m2 = m1[i].trim();
-            params[m2] = obj[i];
+        let apiName = "";
+        if (originalApiName.indexOf('API') === 0) {
+            apiName = originalApiName.substring(3, originalApiName.length);
         }
-        const reqs = new Submit(apiName, methodName, method);
-        reqs.setParams(params);
 
-        return reqs;
+        descriptor.value = (...obj: any) => {
+            let methodStr = method.toString();
+            let s1 = methodStr.match(/\(.*?\)/g);
+            let m1 = s1[0].substring(1, s1[0].length - 1).split(",");
+            let params: { [key: string]: Object } = {};
+            for (let i = 0; i < m1.length; i++) {
+                let m2 = m1[i].trim();
+                params[m2] = obj[i];
+            }
+            const reqs = new Submit(apiName, methodName, method);
+            reqs.setParams(params);
+
+            return reqs;
+        }
+    } else {
+        console.error("can't get class name , method must be static.");
     }
 };
 
