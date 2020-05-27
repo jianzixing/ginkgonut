@@ -27,6 +27,7 @@ export interface UploadProps extends ComponentProps {
     onDelClick?: (item: UploadModel) => void;
     onChange?: (items?: Array<UploadModel>, news?: Array<UploadModel>) => void;
     onAsyncFile?: (item: UploadModel, type: "del" | "add") => Promise<{}>;
+    onImageSrc?: (src: string | ArrayBuffer, item?: UploadModel) => string;
 
     buttonText?: string;
     buttonIcon?: string;
@@ -190,6 +191,10 @@ export default class Upload<P extends UploadProps> extends Component<P> {
                         cls.push(Upload.uploadErrorCls);
                     }
 
+                    let src = item.src;
+                    if (this.props.onImageSrc) {
+                        src = this.props.onImageSrc(src, item);
+                    }
                     items.push(
                         <div key={item.key} className={cls}
                              onMouseEnter={e => {
@@ -202,7 +207,7 @@ export default class Upload<P extends UploadProps> extends Component<P> {
                                  this.redrawing();
                              }}>
                             <div className={Upload.uploadItemImgCls}>
-                                <img src={item.src}/>
+                                <img src={src}/>
                                 {mangerEl}
                                 {errorEl}
                             </div>
@@ -237,6 +242,14 @@ export default class Upload<P extends UploadProps> extends Component<P> {
                 </div>
             );
         }
+    }
+
+    protected compareUpdate(key: string, newValue: any, oldValue: any): boolean {
+        if (key == "models" && this.items != newValue) {
+            this.items = newValue;
+            return true;
+        }
+        return false;
     }
 
     protected onUploadFileChange(e) {

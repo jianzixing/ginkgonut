@@ -24,10 +24,10 @@ export interface FileUploadFieldProps extends TextFieldProps {
     isSyncUpload?: boolean; // true之后组件选择文件后自动上传并获取当前返回值作为value
     uploadUrl?: string | Submit;
     deleteUrl?: string | Submit;
-    previewUrl?: (name: string) => void | string | Submit;
     valueField?: string;
     onUploadResponse?: (params: FileUploadResponse) => void;
     onDeleteResponse?: (params: FileUploadResponse) => void;
+    onImageSrc?: (src: string | ArrayBuffer, item?: UploadModel) => string;
 }
 
 export default class FileUploadField<P extends FileUploadFieldProps> extends TextField<P> {
@@ -61,6 +61,7 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
             return (<Upload {...this.props.uploadProps || {}}
                             ref={this.uploadRef}
                             type={this.props.uploadType}
+                            onImageSrc={this.props.onImageSrc}
                             onAsyncFile={this.onUploadAsyncFile.bind(this)}/>);
         }
     }
@@ -77,6 +78,7 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
                             buttonText={this.props.buttonText}
                             buttonIcon={this.props.buttonIcon}
                             buttonIconType={this.props.buttonIconType}
+                            onImageSrc={this.props.onImageSrc}
                             onAsyncFile={this.onUploadAsyncFile.bind(this)}/>
                 </div>
             )
