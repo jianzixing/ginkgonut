@@ -42,7 +42,7 @@ export default class PagingToolbar<P extends PagingToolbarProps> extends Toolbar
                        value={this.page}
                        focusSelection={true}
                        disable={this.totalRecord == 0}
-                       onChange={value => {
+                       onChange={(field, value) => {
                            this.onPageChange(value);
                        }}/>,
             <label>of {this.totalPage}</label>,
