@@ -77,8 +77,7 @@ export default class FormPanel<P extends FormPanelProps> extends Panel<P> {
     }
 
     protected onFormSubmitClick(e) {
-        this.validate();
-        if (this.props.onSubmit) {
+        if (this.validate() && this.props.onSubmit) {
             this.props.onSubmit(this.getValues(), this.getFormData());
         }
     }

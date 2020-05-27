@@ -1,4 +1,4 @@
-import Ginkgo, {GinkgoElement, GinkgoNode, HTMLComponent, RefObject} from "ginkgoes";
+import Ginkgo, {CSSProperties, GinkgoElement, GinkgoNode, HTMLComponent, RefObject} from "ginkgoes";
 import Component, {ComponentProps} from "../component/Component";
 import "./DisplayImage.scss";
 
@@ -104,5 +104,12 @@ export default class DisplayImage<P extends DisplayImageProps> extends Component
         let arr = super.getRootClassName();
         arr.push(DisplayImage.imageCls);
         return arr;
+    }
+
+    protected getRootStyle(): CSSProperties {
+        let style = super.getRootStyle();
+        if (this.width == null) style.width = 30;
+        if (this.height == null) style.height = 30;
+        return style;
     }
 }
