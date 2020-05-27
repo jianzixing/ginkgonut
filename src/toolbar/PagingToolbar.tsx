@@ -89,10 +89,14 @@ export default class PagingToolbar<P extends PagingToolbarProps> extends Toolbar
     protected onPageChange(value) {
         let v = parseInt(value);
         if (v >= 1 && v <= this.totalPage) {
+            let reload = false;
+            if (this.page != v) {
+                reload = true;
+            }
             this.page = v;
             this.redrawing();
 
-            if (this.page != v) {
+            if (reload) {
                 this.loading();
             }
         } else {
