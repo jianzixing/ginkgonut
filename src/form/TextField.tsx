@@ -38,7 +38,8 @@ export default class TextField<P extends TextFieldProps> extends FormField<P> {
 
         return (
             <div className={TextField.textFieldCls}>
-                <div className={TextField.textFieldBodyCls}>
+                <div className={TextField.textFieldBodyCls}
+                     onClick={this.onInputCtClick.bind(this)}>
                     {inputEl}
                 </div>
                 {spinner}
@@ -59,9 +60,11 @@ export default class TextField<P extends TextFieldProps> extends FormField<P> {
     }
 
     protected drawingFieldBodyInner(): GinkgoNode | GinkgoElement[] {
-        let readonly = !!(this.readonly ? this.readonly : this.props.editable);
+        let readonlys = false;
+        if (this.readonly) readonlys = true;
+        if (this.props.editable == false) readonlys = true;
         let attrs = {};
-        if (readonly) attrs = {readonly: readonly};
+        if (readonlys) attrs = {readonly: readonlys};
         if (this.props.type) attrs['type'] = this.props.type;
 
         return (
@@ -94,6 +97,10 @@ export default class TextField<P extends TextFieldProps> extends FormField<P> {
                     }
                 }}/>
         );
+    }
+
+    protected onInputCtClick(e) {
+
     }
 
     protected onInputKeyUp(e) {

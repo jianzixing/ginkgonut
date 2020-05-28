@@ -104,6 +104,30 @@ export default class BorderLayout<P extends BorderLayoutProps> extends Container
                             iconType = IconTypes.caretLeft;
                             fixY = true;
                         }
+
+                        let collapseSplitEl;
+                        if (c.props && c.props.children
+                            && c.props.children[0]
+                            && c.props.children[0]['collapse']) {
+                            collapseSplitEl = (
+                                <div className={collapseCls.join(" ")}
+                                     onClick={e => {
+                                         if (c.props && c.props.children && c.props.children.length > 0) {
+                                             let layoutItem = Ginkgo.getComponentByProps(c.props);
+                                             let cmp = Ginkgo.getComponentByProps(c.props.children[0]);
+                                             if (layoutItem && layoutItem instanceof BorderLayoutItem
+                                                 && cmp && cmp instanceof Panel) {
+                                                 layoutItem.onPanelCollapseClick(e, cmp);
+                                             }
+                                         }
+                                     }}>
+                                    <div className={BorderLayout.collapseIconCls}>
+                                        <Icon icon={iconType}/>
+                                    </div>
+                                </div>
+                            );
+                        }
+
                         childEls.push(
                             <Moving
                                 ref={refSplit}
@@ -166,14 +190,7 @@ export default class BorderLayout<P extends BorderLayoutProps> extends Container
                                     return true;
                                 }}
                             >
-                                <div
-                                    className={collapseCls.join(" ")}
-                                    onMouseDown={e => e.stopPropagation()}
-                                >
-                                    <div className={BorderLayout.collapseIconCls}>
-                                        <Icon icon={iconType}/>
-                                    </div>
-                                </div>
+                                {collapseSplitEl}
                             </Moving>);
                     }
 
@@ -409,6 +426,49 @@ export default class BorderLayout<P extends BorderLayoutProps> extends Container
         arr.push(BorderLayout.borderLayoutCls);
         return arr;
     }
+
+    setSplitArrow(item: BorderLayoutItem<BorderLayoutItemProps>, collapse: boolean) {
+        let ref = this.childrenRefs[item.props.type];
+        if (ref) {
+            let moving = ref.split.instance;
+            let props = item.props;
+            if (moving) {
+                let el = moving.query('.' + BorderLayout.collapseIconCls);
+                if (el) {
+                    let iconType;
+                    if (props.type == "north") {
+                        if (collapse) {
+                            iconType = IconTypes.caretDown;
+                        } else {
+                            iconType = IconTypes.caretUp;
+                        }
+                    }
+                    if (props.type == "south") {
+                        if (collapse) {
+                            iconType = IconTypes.caretUp;
+                        } else {
+                            iconType = IconTypes.caretDown;
+                        }
+                    }
+                    if (props.type == "east") {
+                        if (collapse) {
+                            iconType = IconTypes.caretLeft;
+                        } else {
+                            iconType = IconTypes.caretRight;
+                        }
+                    }
+                    if (props.type == "west") {
+                        if (collapse) {
+                            iconType = IconTypes.caretRight;
+                        } else {
+                            iconType = IconTypes.caretLeft;
+                        }
+                    }
+                    el.overlap(<Icon icon={iconType}/>);
+                }
+            }
+        }
+    }
 }
 
 export interface BorderLayoutItemProps extends ComponentProps {
@@ -473,6 +533,15 @@ export class BorderLayoutItem<P extends BorderLayoutItemProps> extends Container
         return arr;
     }
 
+    isCollapse(): boolean {
+        let child = this.children[0];
+        if (child && child instanceof Panel) {
+            console.log(child.isCollapse());
+            return child.isCollapse();
+        }
+        return false;
+    }
+
     onPanelCollapseClick(e, panel: Panel<any>) {
         let rootEl = this.rootEl,
             width = panel.getOriginalWidth(),
@@ -506,6 +575,8 @@ export class BorderLayoutItem<P extends BorderLayoutItemProps> extends Container
                         parent.setDisableSplitByItem(this, false);
                         parent.layout();
                         rootDom.style.zIndex = null;
+
+                        parent.setSplitArrow(this, false);
                     }
                 }
             });
@@ -527,6 +598,10 @@ export class BorderLayoutItem<P extends BorderLayoutItemProps> extends Container
                         panel.setCollapseClose();
                         this.releaseWidth = -1;
                         this.setWidth(minWidth);
+
+                        if (this.parent && this.parent instanceof BorderLayout) {
+                            this.parent.setSplitArrow(this, true);
+                        }
 
                         rootEl.animation({
                             translateX: 0,

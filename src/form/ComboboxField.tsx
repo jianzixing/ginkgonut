@@ -72,6 +72,12 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
         );
     }
 
+    protected onInputCtClick(e) {
+        if (this.props.editable == false) {
+            this.onSpinnerDownClick(e);
+        }
+    }
+
     protected onSpinnerDownClick(e) {
         if (this.isPickerShowing()) {
             this.closePicker();
