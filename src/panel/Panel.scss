@@ -68,6 +68,10 @@
         .x-panel-header-icon-body {
           display: flex;
 
+          &.x-panel-header-icon-pretools {
+            margin-right: 8px;
+          }
+
           .x-panel-header-icon-inner {
             display: flex;
             justify-content: center;

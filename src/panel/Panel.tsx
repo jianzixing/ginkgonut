@@ -57,6 +57,7 @@ export default class Panel<P extends PanelProps> extends Container<P> {
     protected static panelClsTitleIcon;
 
     protected static panelClsHeaderIconBody;
+    protected static panelClsHeaderIconPreTools;
     protected static panelClsHeaderIcon;
     protected static panelClsHeaderIconTool;
     protected static panelClsHeaderImg;
@@ -105,6 +106,7 @@ export default class Panel<P extends PanelProps> extends Container<P> {
         Panel.panelClsTitleIcon = this.getThemeClass("panel-header-title-icon");
 
         Panel.panelClsHeaderIconBody = this.getThemeClass("panel-header-icon-body");
+        Panel.panelClsHeaderIconPreTools = this.getThemeClass("panel-header-icon-pretools");
         Panel.panelClsHeaderIcon = this.getThemeClass("panel-header-icon-inner");
         Panel.panelClsHeaderIconTool = this.getThemeClass("panel-header-icon-tool");
         Panel.panelClsHeaderImg = this.getThemeClass("panel-header-img-inner");
@@ -151,13 +153,16 @@ export default class Panel<P extends PanelProps> extends Container<P> {
         }
 
         if (this.props.header != false && (this.props.header == true || this.props.title)) {
-
             if (this.props.collapse) {
-                let icon;
+                let icon, isCollapseLeft = false;
                 if (this.collapse) {
-                    if (this.collapseType == "left") icon = <Icon icon={IconTypes.chevronRight}/>;
-                    else if (this.collapseType == "right") icon = <Icon icon={IconTypes.chevronLeft}/>;
-                    else if (this.collapseType == "bottom") icon = <Icon icon={IconTypes.chevronUp}/>;
+                    if (this.collapseType == "left") {
+                        icon = <Icon icon={IconTypes.chevronUp}/>;
+                        isCollapseLeft = true;
+                    } else if (this.collapseType == "right") {
+                        icon = <Icon icon={IconTypes.chevronDown}/>;
+                        isCollapseLeft = true;
+                    } else if (this.collapseType == "bottom") icon = <Icon icon={IconTypes.chevronUp}/>;
                     else icon = <Icon icon={IconTypes.chevronDown}/>;
                 } else {
                     if (this.collapseType == "left") icon = <Icon icon={IconTypes.chevronLeft}/>;
@@ -165,7 +170,8 @@ export default class Panel<P extends PanelProps> extends Container<P> {
                     else if (this.collapseType == "bottom") icon = <Icon icon={IconTypes.chevronDown}/>;
                     else icon = <Icon icon={IconTypes.chevronUp}/>;
                 }
-                toolsEl.push(
+
+                (isCollapseLeft ? preToolsEl : toolsEl).push(
                     <div
                         key="panel_header_icon_collapse"
                         className={Panel.panelClsHeaderIcon + " " + Panel.panelClsHeaderIconTool}
@@ -236,7 +242,7 @@ export default class Panel<P extends PanelProps> extends Container<P> {
             if (preToolsEl && preToolsEl.length > 0) {
                 iconsEl1 = (
                     <div key={"panel_header_icon_body_1"}
-                         className={Panel.panelClsHeaderIconBody}>
+                         className={[Panel.panelClsHeaderIconBody, Panel.panelClsHeaderIconPreTools]}>
                         {preToolsEl}
                     </div>
                 );
