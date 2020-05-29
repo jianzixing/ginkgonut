@@ -16,7 +16,11 @@ export default class HtmlEditorField<P extends HtmlEditorFieldProps> extends For
             editorProps.height = this.props.height;
         }
         return (
-            <HtmlEditor ref={this.htmlEditor} {...editorProps}/>
+            <HtmlEditor ref={this.htmlEditor}
+                        {...editorProps}
+                        onChange={value => {
+                            this.triggerOnChangeEvents(this, value);
+                        }}/>
         );
     }
 
