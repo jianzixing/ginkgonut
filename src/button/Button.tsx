@@ -17,10 +17,13 @@ export interface ButtonProps extends ComponentProps {
     action?: "default" | "light" | "none";
     disabled?: boolean;
     selected?: boolean;
+
     icon?: string;
     iconType?: string;
     iconAlign?: "left" | "top" | "right" | "bottom";
     iconColor?: string;
+    iconStyle?: CSSProperties;
+
     size?: "small" | "medium" | "large";
     toggle?: boolean;
     menuType?: "normal" | "bottom" | "splitNormal" | "splitBottom";
@@ -130,18 +133,19 @@ export default class Button<P extends ButtonProps> extends Component<P> {
             iconCls.push(Button.buttonClsIconRight);
         }
         if (iconType) {
-            let style: CSSProperties = {};
+            let style: CSSProperties = this.props.iconStyle || {};
             if (iconColor) style.color = iconColor;
             buttonTextEl.push(
-                <span key={1} className={iconCls} style={style}>
-                    <Icon icon={iconType}/>
+                <span key={1} className={iconCls}>
+                    <Icon icon={iconType} style={style}/>
                 </span>);
         }
         if (icon) {
-            iconCls.push(Button.buttonClsImg)
+            iconCls.push(Button.buttonClsImg);
+            let style: CSSProperties = this.props.iconStyle || {};
             buttonTextEl.push(
                 <span key={2} className={iconCls}>
-                    <img src={icon}/>
+                    <img src={icon} style={style}/>
                 </span>);
         }
 
