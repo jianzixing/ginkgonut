@@ -22,6 +22,8 @@ import Button from "../button/Button";
 import {IconTypes} from "../icon/IconTypes";
 import HiddenField from "../form/HiddenField";
 import SelectField from "../form/SelectField";
+import HtmlEditor from "../htmleditor/HtmlEditor";
+import HtmlEditorField from "../form/HtmlEditorField";
 
 export interface TestBuilderProps extends AppManagerProps {
 
@@ -115,6 +117,10 @@ export default class TestBuilder<P extends TestBuilderProps> extends AppManager<
                     <TextField type={"password"} fieldLabel={"Password"} placeholder={"password"}
                                style={{width: "100%"}}/>
                 </FormFieldSet>
+
+                <HtmlEditor height={300}/>
+
+                <HtmlEditorField height={300} fieldLabel={"HTML Editor"} labelVAlign={"top"}/>
             </FormPanel>
         );
     }

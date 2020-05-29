@@ -42,6 +42,14 @@
       &.x-label-align-right {
         text-align: right;
       }
+
+      &.x-label-align-top {
+        vertical-align: top;
+      }
+
+      &.x-label-align-bottom {
+        vertical-align: bottom;
+      }
     }
 
     .x-field-body {

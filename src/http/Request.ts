@@ -287,7 +287,7 @@ export class Submit {
                 const obj = copyParams[i];
                 if (obj instanceof File || obj instanceof FileList || obj instanceof FormData) {
 
-                } else {
+                } else if (obj) {
                     str.push(i + "=" + encodeURIComponent(this.getParamValue(obj)));
                 }
             }

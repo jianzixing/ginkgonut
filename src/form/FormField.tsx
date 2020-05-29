@@ -12,6 +12,7 @@ export interface FormFieldProps extends AbstractFormFieldProps {
     // label是否有冒号
     colon?: boolean;
     labelAlign?: "left" | "center" | "right";
+    labelVAlign?: "top" | "middle" | "bottom";
     disable?: boolean;
     allowBlank?: boolean;
     blankText?: string;
@@ -42,6 +43,8 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
 
     protected static labelAlignCenterCls;
     protected static labelAlignRightCls;
+    protected static labelAlignTopCls;
+    protected static labelAlignBottomCls;
 
     defaultProps = {
         colon: true
@@ -103,6 +106,8 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
 
         FormField.labelAlignCenterCls = this.getThemeClass("label-align-center");
         FormField.labelAlignRightCls = this.getThemeClass("label-align-right");
+        FormField.labelAlignTopCls = this.getThemeClass("label-align-top");
+        FormField.labelAlignBottomCls = this.getThemeClass("label-align-bottom");
     }
 
     protected drawing(): GinkgoElement<any> | string | undefined | null | GinkgoElement[] {
@@ -130,6 +135,12 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
         }
         if (this.props.labelAlign && this.props.labelAlign == "right") {
             labelCss.push(FormField.labelAlignRightCls);
+        }
+        if (this.props.labelVAlign && this.props.labelVAlign == "top") {
+            labelCss.push(FormField.labelAlignTopCls);
+        }
+        if (this.props.labelVAlign && this.props.labelVAlign == "bottom") {
+            labelCss.push(FormField.labelAlignBottomCls);
         }
 
         let labelEls = null;
