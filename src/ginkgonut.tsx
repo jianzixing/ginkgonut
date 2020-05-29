@@ -25,6 +25,7 @@ import MonthPicker, {MonthPickerProps} from "./datepicker/MonthPicker";
 import Moving, {MovingPoint, MovingProps} from "./dragdrop/Moving";
 import DataEmpty, {DataEmptyProps} from "./empty/DataEmpty";
 import DisplayImage, {DisplayImageProps} from "./image/DisplayImage";
+import HtmlEditor, {HtmlEditorProps} from "./htmleditor/HtmlEditor";
 
 import {AbstractFormField, AbstractFormFieldProps} from "./form/AbstractFormField";
 import FormField, {FormFieldProps} from "./form/FormField";
@@ -45,6 +46,7 @@ import SelectField, {SelectFieldProps} from "./form/SelectField";
 import SliderField, {SliderFieldProps} from "./form/SliderField";
 import TagField, {TagFieldProps} from "./form/TagField";
 import TextAreaField, {TextAreaFieldProps} from "./form/TextAreaField";
+import HtmlEditorField, {HtmlEditorFieldProps} from "./form/HtmlEditorField";
 
 import Table, {
     TableItemModel,
@@ -104,6 +106,8 @@ export {
     MovingProps,
     DataEmpty,
     DataEmptyProps,
+    HtmlEditor,
+    HtmlEditorProps,
 
     AbstractFormField,
     AbstractFormFieldProps,
@@ -147,6 +151,8 @@ export {
     TagFieldProps,
     TextAreaField,
     TextAreaFieldProps,
+    HtmlEditorField,
+    HtmlEditorFieldProps,
 
     TableItemModel,
     TableProps,

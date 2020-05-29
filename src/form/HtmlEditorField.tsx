@@ -2,7 +2,7 @@ import FormField, {FormFieldProps} from "./FormField";
 import Ginkgo, {GinkgoNode, RefObject} from "ginkgoes";
 import HtmlEditor, {HtmlEditorProps} from "../htmleditor/HtmlEditor";
 
-interface HtmlEditorFieldProps extends FormFieldProps {
+export interface HtmlEditorFieldProps extends FormFieldProps {
     editor?: HtmlEditorProps;
 }
 
