@@ -310,21 +310,21 @@ export default class CascaderField<P extends CascaderFieldProps> extends Combobo
                     if (m) arr.push(m);
                 }
                 let text = this.showCascaderModels(arr);
-                this.inputEl.value = text;
+                this.inputEl.value = text || "";
 
                 this.value = arr[arr.length - 1];
             } else if (typeof value == "object") {
                 let m = this.getModelByCascaderValue(value, this.models, 2);
                 let arr = this.model2Array(m);
                 let text = this.showCascaderModels(arr);
-                this.inputEl.value = text;
+                this.inputEl.value = text || "";
 
                 this.value = m;
             } else {
                 let m = this.getModelByCascaderValue(value, this.models, 1);
                 let arr = this.model2Array(m);
                 let text = this.showCascaderModels(arr);
-                this.inputEl.value = text;
+                this.inputEl.value = text || value + "";
 
                 this.value = m;
             }

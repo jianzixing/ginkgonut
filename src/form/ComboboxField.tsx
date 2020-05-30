@@ -168,7 +168,7 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
                 selected: this.props.selectData ? this.props.selectData == dt : false,
                 data: dt
             };
-            if (!item.value) {
+            if (item.value == null) {
                 item.value = item.text;
             }
             models.push(item);
@@ -272,13 +272,13 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
     }
 
     getValue(): any {
-        if (this.value && this.value.value != undefined) {
+        if (this.value != null && this.value.value != null) {
             return this.value.value;
         }
-        if (this.value && this.value.text) {
+        if (this.value != null && this.value.text != null) {
             return this.value.text;
         }
-        if (this.value && this.value.data) {
+        if (this.value != null && this.value.data != null) {
             return this.value.data;
         }
         return super.getValue();
