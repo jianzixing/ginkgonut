@@ -136,15 +136,17 @@ export default class CascaderField<P extends CascaderFieldProps> extends Combobo
         this.value = sel;
         if (this.inputEl) {
             let cm = sel as CascaderModel;
-            let cms = this.model2Array(cm);
-            let text = cm.text;
-            if (this.props.onShowText) {
-                text = this.props.onShowText(cms);
-            } else {
-                text = this.showCascaderModels(cms);
+            if (cm) {
+                let cms = this.model2Array(cm);
+                let text = cm.text;
+                if (this.props.onShowText) {
+                    text = this.props.onShowText(cms);
+                } else {
+                    text = this.showCascaderModels(cms);
+                }
+                this.inputEl.value = text;
+                this.triggerOnChangeEvents(this, this.getValue());
             }
-            this.inputEl.value = text;
-            this.triggerOnChangeEvents(this, this.getValue());
         }
         this.closePicker();
     }
@@ -259,15 +261,17 @@ export default class CascaderField<P extends CascaderFieldProps> extends Combobo
     }
 
     protected model2Array(cm: CascaderModel): Array<CascaderModel> {
-        let parent = cm.parent;
-        if (parent) {
-            let arr = this.model2Array(parent);
-            arr.push(cm);
-            return arr;
-        } else {
-            let arr = [];
-            arr.push(cm);
-            return arr;
+        if (cm) {
+            let parent = cm.parent;
+            if (parent) {
+                let arr = this.model2Array(parent);
+                arr.push(cm);
+                return arr;
+            } else {
+                let arr = [];
+                arr.push(cm);
+                return arr;
+            }
         }
     }
 
