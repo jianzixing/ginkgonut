@@ -105,8 +105,11 @@ export default class TestBuilder<P extends TestBuilderProps> extends AppManager<
                                  models={[{value: 1, text: 'S1'}, {value: 2, text: 'S2'}, {value: 3, text: 'S3'}]}
                                  itemWidth={60}/>
                 <TagField name={"tag_field"} fieldLabel={"Tag Field"}
+                          useInputValue={true}
                           models={[{id: 1, text: 'S1'}, {id: 2, text: 'S2'}, {id: 3, text: 'S3'},
-                              {id: 4, text: 'S4'}, {id: 5, text: 'S5'}]}/>
+                              {id: 4, text: 'S4'}, {id: 5, text: 'S5'}]}
+                          store={new DataStore({api: "http://localhost:8080/abc.html"})}
+                          remote={true}/>
                 <TextAreaField name={"text_area_field"} fieldLabel={"Text Area Field"}
                                placeholder={"Text Area Content..."}/>
                 <DisplayField name={"display_field"} fieldLabel={"Display Field"}

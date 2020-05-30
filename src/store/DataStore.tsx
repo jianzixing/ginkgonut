@@ -111,10 +111,14 @@ export default class DataStore {
         }
     }
 
-    load(): void {
+    load(ext?: Object): void {
         try {
             if (this.props.type == "ajax") {
-                let params = {...(this.props.params || {}), ...(this.pagingParam || {})};
+                let params = {
+                    ...(this.props.params || {}),
+                    ...(this.pagingParam || {}),
+                    ...(ext || {})
+                };
                 if (module) params[this.props.moduleName || '_page'] = this.props.module;
                 if (params) {
                     for (let k in params) {

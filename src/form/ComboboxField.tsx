@@ -98,6 +98,8 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
             this.models = this.data2Models(this.props.data);
         }
 
+        let models = this.filterPickerModels(this.models);
+
         let list = null, style: CSSProperties = {};
 
         if (this.isLoading) {
@@ -107,8 +109,8 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
             style.height = 80;
         } else {
             let items = [];
-            if (this.models) {
-                for (let dt of this.models) {
+            if (models) {
+                for (let dt of models) {
                     let cls = [ComboboxField.comboboxFieldPickerItem];
                     if (dt.selected) {
                         cls.push(ComboboxField.comboboxFieldPickerSelected);
@@ -141,6 +143,10 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
             </div>)
     }
 
+    protected filterPickerModels(models: Array<ComboboxModel>) {
+        return models;
+    }
+
     protected onItemClick(e, sel: ComboboxModel) {
         this.value = sel;
         if (this.inputEl) {
@@ -169,6 +175,7 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
 
     protected redrawingPickerBody() {
         this.pickerBindRef.instance.forceRender();
+        this.resizeFieldPicker(2);
     }
 
     storeBeforeLoad(): void {
