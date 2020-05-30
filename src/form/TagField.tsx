@@ -22,7 +22,7 @@ export default class TagField<P extends TagFieldProps> extends ComboboxField<P> 
     protected tagInputRef: RefObject<InputComponent> = Ginkgo.createRef();
     protected values: Array<ComboboxModel> = [];
     protected tagInputValue: string;
-    protected tagOldInputValue: string;
+    protected tagOldInputValue: string = "";
     protected isFilterModels: boolean = false;
 
     protected buildClassNames(themePrefix: string): void {
@@ -86,7 +86,6 @@ export default class TagField<P extends TagFieldProps> extends ComboboxField<P> 
                        this.tagInputValue = this.tagInputRef.instance.value + "";
                        this.redrawingFieldBody();
                        this.onInputChange(this.tagInputValue, false);
-                       this.tagOldInputValue = this.tagInputValue;
                    }}
                    onFocus={e => {
                        this.onInputChange(this.tagInputValue, true);
@@ -119,9 +118,7 @@ export default class TagField<P extends TagFieldProps> extends ComboboxField<P> 
     protected onInputChange(value?: string, load?: boolean) {
         if (this.props.remote) {
             if (this.props.store) {
-                if (this.tagInputValue == null
-                    || this.tagInputValue != this.tagOldInputValue
-                    || load) {
+                if (this.tagInputValue != this.tagOldInputValue) {
                     let store = this.props.store;
                     let p: any = {};
                     if (this.props.queryField) {
@@ -137,6 +134,13 @@ export default class TagField<P extends TagFieldProps> extends ComboboxField<P> 
                     } catch (e) {
                     }
                     store.load(p);
+                    this.tagOldInputValue = this.tagInputValue;
+                } else {
+                    if (load) {
+                        if (!this.isPickerShowing()) {
+                            this.showPicker();
+                        }
+                    }
                 }
             } else {
                 console.warn("TagField remote load data , but store is empty.")
