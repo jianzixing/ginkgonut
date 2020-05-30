@@ -1,9 +1,7 @@
 import Ginkgo, {
     BindComponent,
     CSSProperties,
-    GinkgoElement,
     GinkgoNode,
-    InputComponent,
     RefObject
 } from "ginkgoes";
 import TextField, {TextFieldProps} from "./TextField";
@@ -27,6 +25,7 @@ export interface ComboboxFieldProps extends TextFieldProps {
     data?: Array<any>;
     valueField?: string;
     displayField?: string;
+    renderDisplayField?: (item: ComboboxModel, value: string) => GinkgoNode;
     selectData?: any;
 }
 
@@ -99,7 +98,6 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
         }
 
         let models = this.filterPickerModels(this.models);
-
         let list = null, style: CSSProperties = {};
 
         if (this.isLoading) {
@@ -116,9 +114,14 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
                         cls.push(ComboboxField.comboboxFieldPickerSelected);
                         if (this.inputEl) this.inputEl.value = dt.text;
                     }
+
+                    let text: any = dt.text;
+                    if (this.props.renderDisplayField) {
+                        text = this.props.renderDisplayField(dt, text);
+                    }
                     items.push(<li className={cls} onClick={(e) => {
                         this.onItemClick(e, dt);
-                    }}>{dt.text}</li>);
+                    }}>{text}</li>);
                 }
             }
 
@@ -194,6 +197,7 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
                 this.redrawingPickerBody();
             }
         } else {
+            this.models = [];
             if (this.pickerBindRef && this.pickerBindRef.instance) {
                 this.redrawingPickerBody();
             }

@@ -22,6 +22,7 @@ export default class TagField<P extends TagFieldProps> extends ComboboxField<P> 
     protected tagInputRef: RefObject<InputComponent> = Ginkgo.createRef();
     protected values: Array<ComboboxModel> = [];
     protected tagInputValue: string;
+    protected tagOldInputValue: string;
     protected isFilterModels: boolean = false;
 
     protected buildClassNames(themePrefix: string): void {
@@ -84,8 +85,8 @@ export default class TagField<P extends TagFieldProps> extends ComboboxField<P> 
                    onInput={e => {
                        this.tagInputValue = this.tagInputRef.instance.value + "";
                        this.redrawingFieldBody();
-
                        this.onInputChange(this.tagInputValue);
+                       this.tagOldInputValue = this.tagInputValue;
                    }}
                    onFocus={e => {
                        this.onInputChange(this.tagInputValue);
@@ -118,14 +119,23 @@ export default class TagField<P extends TagFieldProps> extends ComboboxField<P> 
     protected onInputChange(value?: string) {
         if (this.props.remote) {
             if (this.props.store) {
-                let store = this.props.store;
-                let p: any = {};
-                if (this.props.queryField) {
-                    p[this.props.queryField] = value;
-                } else {
-                    p['keyword'] = value;
+                if (this.tagInputValue == null || this.tagInputValue != this.tagOldInputValue) {
+                    let store = this.props.store;
+                    let p: any = {};
+                    if (this.props.queryField) {
+                        p[this.props.queryField] = value;
+                    } else {
+                        p['keyword'] = value;
+                    }
+                    try {
+                        if (this.isPickerShowing()) {
+                        } else {
+                            this.showPicker();
+                        }
+                    } catch (e) {
+                    }
+                    store.load(p);
                 }
-                store.load(p);
             } else {
                 console.warn("TagField remote load data , but store is empty.")
             }
@@ -137,7 +147,6 @@ export default class TagField<P extends TagFieldProps> extends ComboboxField<P> 
                 } else {
                     this.showPicker();
                 }
-
             } catch (e) {
             }
             this.isFilterModels = false;
