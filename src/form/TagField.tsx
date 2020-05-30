@@ -85,11 +85,11 @@ export default class TagField<P extends TagFieldProps> extends ComboboxField<P> 
                    onInput={e => {
                        this.tagInputValue = this.tagInputRef.instance.value + "";
                        this.redrawingFieldBody();
-                       this.onInputChange(this.tagInputValue);
+                       this.onInputChange(this.tagInputValue, false);
                        this.tagOldInputValue = this.tagInputValue;
                    }}
                    onFocus={e => {
-                       this.onInputChange(this.tagInputValue);
+                       this.onInputChange(this.tagInputValue, true);
                    }}
                    onKeyDown={e => {
                        if (e.keyCode == 13) {
@@ -116,10 +116,12 @@ export default class TagField<P extends TagFieldProps> extends ComboboxField<P> 
         }
     }
 
-    protected onInputChange(value?: string) {
+    protected onInputChange(value?: string, load?: boolean) {
         if (this.props.remote) {
             if (this.props.store) {
-                if (this.tagInputValue == null || this.tagInputValue != this.tagOldInputValue) {
+                if (this.tagInputValue == null
+                    || this.tagInputValue != this.tagOldInputValue
+                    || load) {
                     let store = this.props.store;
                     let p: any = {};
                     if (this.props.queryField) {
