@@ -23,6 +23,13 @@ export default class PagingToolbar<P extends PagingToolbarProps> extends Toolbar
     protected drawingToolbarChildren(): Array<GinkgoElement> {
         this.totalPage = Math.ceil(this.totalRecord / (this.props.pageCount || 20));
 
+        let label;
+        if (this.totalRecord == 0) {
+            label = <label>Empty Data</label>;
+        } else {
+            label = <label>Displaying {this.page} - {this.totalPage} of {this.totalRecord}</label>;
+        }
+
         return [
             <Button iconType={IconTypes._tbarPageFirst}
                     action={"none"}
@@ -66,7 +73,7 @@ export default class PagingToolbar<P extends PagingToolbarProps> extends Toolbar
                         this.loading();
                     }}/>,
             <ToolbarSplit type={"align"}/>,
-            <label>Displaying {this.page} - {this.totalPage} of {this.totalRecord}</label>
+            {label}
         ];
     }
 
