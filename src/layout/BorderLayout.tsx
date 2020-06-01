@@ -502,7 +502,7 @@ export class BorderLayoutItem<P extends BorderLayoutItemProps> extends Container
     }
 
     protected drawing(): GinkgoElement | undefined | null | GinkgoElement[] {
-        if (this.props.children.length > 1) {
+        if (this.props && this.props.children && this.props.children.length > 1) {
             throw Error("BorderLayoutItem children only one Component");
         }
         return this.props.children;
@@ -511,15 +511,17 @@ export class BorderLayoutItem<P extends BorderLayoutItemProps> extends Container
     componentDidMount(): void {
         super.componentDidMount();
 
-        let child = this.children[0];
-        if (child && child instanceof Panel) {
-            if (this.props.type == "north") child.update("", "top");
-            if (this.props.type == "south") child.setCollapseType("bottom");
-            if (this.props.type == "west") child.setCollapseType("left");
-            if (this.props.type == "east") child.setCollapseType("right");
-            if (this.props.type == "center") child.setCollapse(false);
+        if (this.children && this.children.length > 0) {
+            let child = this.children[0];
+            if (child && child instanceof Panel) {
+                if (this.props.type == "north") child.update("", "top");
+                if (this.props.type == "south") child.setCollapseType("bottom");
+                if (this.props.type == "west") child.setCollapseType("left");
+                if (this.props.type == "east") child.setCollapseType("right");
+                if (this.props.type == "center") child.setCollapse(false);
 
-            child.setOnCollapseClick(this.onPanelCollapseClick.bind(this));
+                child.setOnCollapseClick(this.onPanelCollapseClick.bind(this));
+            }
         }
     }
 
@@ -534,10 +536,12 @@ export class BorderLayoutItem<P extends BorderLayoutItemProps> extends Container
     }
 
     isCollapse(): boolean {
-        let child = this.children[0];
-        if (child && child instanceof Panel) {
-            console.log(child.isCollapse());
-            return child.isCollapse();
+        if (this.children && this.children.length > 0) {
+            let child = this.children[0];
+            if (child && child instanceof Panel) {
+                console.log(child.isCollapse());
+                return child.isCollapse();
+            }
         }
         return false;
     }
