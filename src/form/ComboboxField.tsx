@@ -40,7 +40,7 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
     protected static comboboxFieldPickerSelected;
     protected static comboboxFieldEmpty;
 
-    protected value: ComboboxModel;
+    protected comboboxValue: ComboboxModel;
     protected cacheSetValue: any;
     protected models?: Array<ComboboxModel> = this.props.models;
     protected pickerBindRef: RefObject<BindComponent> = Ginkgo.createRef();
@@ -75,6 +75,10 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
         if (this.props.editable == false) {
             this.onSpinnerDownClick(e);
         }
+    }
+
+    protected onInputChange(e) {
+
     }
 
     protected onSpinnerDownClick(e) {
@@ -151,9 +155,10 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
     }
 
     protected onItemClick(e, sel: ComboboxModel) {
-        this.value = sel;
+        this.comboboxValue = sel;
         if (this.inputEl) {
-            this.inputEl.value = this.value.text;
+            this.inputEl.value = this.comboboxValue.text;
+            super.value = this.comboboxValue.text;
             this.triggerOnChangeEvents(this, this.getValue());
         }
         this.closePicker();
@@ -228,7 +233,8 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
             if (this.models) {
                 for (let model of this.models) {
                     if (model.value == v) {
-                        this.value = model;
+                        this.comboboxValue = model;
+                        super.value = model.text;
                         isSetValue = true;
                     }
                 }
@@ -242,7 +248,8 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
                     selected: true,
                     data: value
                 }
-                this.value = cv;
+                this.comboboxValue = cv;
+                super.value = cv.text;
             }
             this.redrawingFieldBody();
         } else {
@@ -250,7 +257,8 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
             if (this.models) {
                 for (let model of this.models) {
                     if (model.value == value) {
-                        this.value = model;
+                        this.comboboxValue = model;
+                        super.value = model.text;
                         isSetValue = true;
                     }
                 }
@@ -258,36 +266,37 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
 
             if (!isSetValue) {
                 if (value) {
-                    this.value = {
+                    this.comboboxValue = {
                         text: value
                     }
+                    super.value = this.comboboxValue.text;
                 }
             } else {
                 this.redrawingFieldBody();
             }
         }
-        if (this.value) {
-            this.inputEl.value = this.value.text || "";
+        if (this.comboboxValue) {
+            this.inputEl.value = this.comboboxValue.text || "";
         }
     }
 
     getValue(): any {
-        if (this.value != null && this.value.value != null) {
-            return this.value.value;
+        if (this.comboboxValue != null && this.comboboxValue.value != null) {
+            return this.comboboxValue.value;
         }
-        if (this.value != null && this.value.text != null) {
-            return this.value.text;
+        if (this.comboboxValue != null && this.comboboxValue.text != null) {
+            return this.comboboxValue.text;
         }
-        if (this.value != null && this.value.data != null) {
-            return this.value.data;
+        if (this.comboboxValue != null && this.comboboxValue.data != null) {
+            return this.comboboxValue.data;
         }
         return super.getValue();
     }
 
     getRowValue(): any {
-        if (this.value && this.value.data) {
-            return this.value.data;
+        if (this.comboboxValue && this.comboboxValue.data) {
+            return this.comboboxValue.data;
         }
-        return this.value;
+        return this.comboboxValue || super.value;
     }
 }

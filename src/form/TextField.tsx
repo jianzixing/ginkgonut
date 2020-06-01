@@ -78,8 +78,7 @@ export default class TextField<P extends TextFieldProps> extends FormField<P> {
                 autocomplete="off"
                 placeholder={this.props.placeholder || ""}
                 onChange={e => {
-                    this.value = "" + this.inputEl.value;
-                    this.triggerOnChangeEvents(this, this.value);
+                    this.onInputChange(e);
                 }}
                 onFocus={e => {
                     if (this.props.focusSelection) {
@@ -105,6 +104,11 @@ export default class TextField<P extends TextFieldProps> extends FormField<P> {
 
     protected onInputKeyUp(e) {
         this.validate();
+    }
+
+    protected onInputChange(e) {
+        this.value = "" + this.inputEl.value;
+        this.triggerOnChangeEvents(this, this.value);
     }
 
     setValue(value: any): void {
