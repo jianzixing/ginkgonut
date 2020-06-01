@@ -73,7 +73,7 @@ export default class PagingToolbar<P extends PagingToolbarProps> extends Toolbar
                         this.loading();
                     }}/>,
             <ToolbarSplit type={"align"}/>,
-            {label}
+            label
         ];
     }
 
