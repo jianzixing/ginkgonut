@@ -35,7 +35,6 @@ export default class ViewPort extends Container<ViewPortProps> {
     }
 
     drawing() {
-        debugger
         return this.props.children;
     }
 
