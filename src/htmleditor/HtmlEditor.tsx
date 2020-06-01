@@ -160,9 +160,14 @@ export default class HtmlEditor<P extends HtmlEditorProps> extends Component<P> 
 
         if (this.customEditor && this.customEditor.destroy) {
             this.customEditor.destroy();
+            this.customEditor = null;
         }
         if (this.editor) {
-            this.editor.destroy();
+            try {
+                this.editor.destroy();
+            } catch (e) {
+            }
+            this.editor = null;
         }
     }
 

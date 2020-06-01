@@ -439,7 +439,9 @@ export default class Panel<P extends PanelProps> extends Container<P> {
     protected resizeToolbars() {
         Ginkgo.forEachChildren(component => {
             if (component instanceof Toolbar) {
-                component.setWidth(this.getWidth());
+                if (this.getWidth() > 0) {
+                    component.setWidth(this.getWidth());
+                }
             }
         }, this);
     }

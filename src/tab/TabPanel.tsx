@@ -64,6 +64,7 @@ export default class TabPanel<P extends TabPanelProps> extends Container<P> {
 
     protected headerBodyStyle?: CSSProperties;
     protected tabs?: Array<TabModelWrapper>;
+    protected tabChange?: boolean = false;
     protected headerAlign: string = this.props.headerAlign;
     protected headerRotation: string = this.props.headerRotation;
     protected tabInnerRef: RefObject<HTMLComponent> = Ginkgo.createRef();
@@ -142,6 +143,7 @@ export default class TabPanel<P extends TabPanelProps> extends Container<P> {
                             tab.model.action = true;
                             this.onTabClickSetting(tab);
                             this.redrawing();
+                            this.layout();
                         }}
                     >
                         <div className={TabPanel.tabPanelClsHeaderBodyItemInner}>
@@ -217,6 +219,10 @@ export default class TabPanel<P extends TabPanelProps> extends Container<P> {
     protected onAfterDrawing() {
         this.resetHeaderAlign();
         this.recalTabPosition();
+        if (this.tabChange == true) {
+            this.layout();
+            this.tabChange = false;
+        }
     }
 
     componentChildChange(children: Array<GinkgoElement>, old: Array<GinkgoElement>): void {
@@ -421,6 +427,7 @@ export default class TabPanel<P extends TabPanelProps> extends Container<P> {
                 tabs.push({model: v});
             }
             this.tabs = tabs;
+            this.tabChange = true;
             return true;
         }
         return false;

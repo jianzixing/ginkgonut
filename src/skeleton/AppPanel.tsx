@@ -54,6 +54,7 @@ export default class AppPanel<P extends AppPanelProps> extends Container<P> {
             this.history.splice(this.history.length - 1, 1);
         }
         this.redrawing();
+        this.layout();
     }
 
     protected getRootClassName(): string[] {
