@@ -3,6 +3,10 @@
   position: relative;
   overflow: hidden;
 
+  .x-image-href {
+    text-decoration: none;
+  }
+
   .x-image-pic {
     position: absolute;
     left: 0;

@@ -1,0 +1,12 @@
+.x-display-image-group {
+
+  .x-display-image-group-item {
+    display: inline-block;
+    overflow: hidden;
+    margin-right: 5px;
+
+    &:last-child {
+      margin-right: 0px;
+    }
+  }
+}

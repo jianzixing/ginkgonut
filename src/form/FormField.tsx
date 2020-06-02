@@ -77,7 +77,8 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
     protected onDocumentMouseDown(e: MouseEvent) {
         if (this.fieldBodyRefObject && this.fieldBodyRefObject.instance) {
             let dom1 = (this.fieldBodyRefObject.instance as HTMLComponent).dom;
-            let dom2 = (this.pickerRefObject.instance as HTMLComponent).dom;
+            let dom2 = this.pickerRefObject && this.pickerRefObject.instance ?
+                (this.pickerRefObject.instance as HTMLComponent).dom : undefined;
             if (dom1 && this.contains(dom1, e.target as Node)
                 || dom2 && this.contains(dom2, e.target as Node)) {
 

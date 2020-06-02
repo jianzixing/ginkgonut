@@ -61,7 +61,12 @@ export default class DateTools {
             return date;
         }
         if (typeof value === "number") {
-            return new Date(value);
+            if (("" + value).length == 13) {
+                return new Date(value);
+            }
+            if (("" + value).length == 10) {
+                return new Date(value * 1000);
+            }
         }
         return null;
     }

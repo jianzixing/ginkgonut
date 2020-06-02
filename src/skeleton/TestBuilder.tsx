@@ -24,6 +24,7 @@ import HiddenField from "../form/HiddenField";
 import SelectField from "../form/SelectField";
 import HtmlEditor from "../htmleditor/HtmlEditor";
 import HtmlEditorField from "../form/HtmlEditorField";
+import DisplayImageGroup from "../image/DisplayImageGroup";
 
 export interface TestBuilderProps extends AppManagerProps {
 
@@ -120,8 +121,16 @@ export default class TestBuilder<P extends TestBuilderProps> extends AppManager<
                     <TextField type={"password"} fieldLabel={"Password"} placeholder={"password"}
                                style={{width: "100%"}}/>
                 </FormFieldSet>
-
-                <HtmlEditor height={300}/>
+                <DisplayImageGroup
+                    models={[
+                        {
+                            url: "http://t8.baidu.com/it/u=3571592872,3353494284&fm=79&app=86&f=JPEG?w=1200&h=1290",
+                            link: "http://t8.baidu.com/it/u=3571592872,3353494284&fm=79&app=86&f=JPEG?w=1200&h=1290"
+                        },
+                        {url: "http://t8.baidu.com/it/u=3571592872,3353494284&fm=79&app=86&f=JPEG?w=1200&h=1290"},
+                        {url: "http://t8.baidu.com/it/u=3571592872,3353494284&fm=79&app=86&f=JPEG?w=1200&h=1290"}
+                    ]}
+                />
 
                 <HtmlEditorField height={300} fieldLabel={"HTML Editor"} labelVAlign={"top"}/>
             </FormPanel>

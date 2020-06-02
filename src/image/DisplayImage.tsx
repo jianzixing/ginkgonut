@@ -6,10 +6,12 @@ export interface DisplayImageProps extends ComponentProps {
     type?: "center" | "fit" | "stretch";
     src: string;
     empty?: string;
+    link?: string;
 }
 
 export default class DisplayImage<P extends DisplayImageProps> extends Component<P> {
     protected static imageCls;
+    protected static imageHrefCls;
     protected static imagePicCls;
     protected static imageCenterCls;
     protected static imageFitCls;
@@ -26,15 +28,24 @@ export default class DisplayImage<P extends DisplayImageProps> extends Component
         super.buildClassNames(themePrefix);
 
         DisplayImage.imageCls = this.getThemeClass("image");
+        DisplayImage.imageHrefCls = this.getThemeClass("image-href");
         DisplayImage.imagePicCls = this.getThemeClass("image-pic");
         DisplayImage.imageCenterCls = this.getThemeClass("image-center");
         DisplayImage.imageFitCls = this.getThemeClass("image-fit");
     }
 
     protected drawing(): GinkgoNode | GinkgoElement[] {
-        return (
-            <img ref={this.imgRef} className={DisplayImage.imagePicCls} src={this.value || this.props.empty}/>
-        )
+        if (this.props.link) {
+            return (
+                <a className={DisplayImage.imageHrefCls} href={this.props.link} target={"_blank"}>
+                    <img ref={this.imgRef} className={DisplayImage.imagePicCls} src={this.value || this.props.empty}/>
+                </a>
+            )
+        } else {
+            return (
+                <img ref={this.imgRef} className={DisplayImage.imagePicCls} src={this.value || this.props.empty}/>
+            )
+        }
     }
 
     protected compareUpdate(key: string, newValue: any, oldValue: any): boolean {
