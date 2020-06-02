@@ -83,6 +83,7 @@ import Upload, {UploadModel, UploadProps} from "./upload/Upload";
 import MessageBox, {MessageBoxProps} from "./window/MessageBox";
 import WindowPanel, {WindowProps, WindowWrapper} from "./window/Window";
 import WindowManager from "./window/WindowManager";
+import DisplayImageGroup, { DisplayImageGroupProps, DisplayImageGroupModel } from "./image/DisplayImageGroup";
 
 export {
     CookieTools,
@@ -108,6 +109,9 @@ export {
     DataEmptyProps,
     HtmlEditor,
     HtmlEditorProps,
+    DisplayImageGroup,
+    DisplayImageGroupProps,
+    DisplayImageGroupModel,
 
     AbstractFormField,
     AbstractFormFieldProps,
