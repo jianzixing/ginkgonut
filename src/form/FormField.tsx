@@ -76,8 +76,10 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
 
     protected onDocumentMouseDown(e: MouseEvent) {
         if (this.fieldBodyRefObject && this.fieldBodyRefObject.instance) {
-            let dom = (this.fieldBodyRefObject.instance as HTMLComponent).dom;
-            if (dom && this.contains(dom, e.target as Node)) {
+            let dom1 = (this.fieldBodyRefObject.instance as HTMLComponent).dom;
+            let dom2 = (this.pickerRefObject.instance as HTMLComponent).dom;
+            if (dom1 && this.contains(dom1, e.target as Node)
+                || dom2 && this.contains(dom2, e.target as Node)) {
 
             } else {
                 this.closePicker();
@@ -253,8 +255,7 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
                              ref={this.pickerShadowRefObject}>
                         </div>
                         <div className={cnf.pickerCls}
-                             ref={this.pickerRefObject}
-                             onMouseDown={this.onPickerBodyMouseDown.bind(this)}>
+                             ref={this.pickerRefObject}>
                             {picker}
                         </div>
                     </Ginkgo.Fragment>, document.body);
@@ -343,11 +344,6 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
                 (shadow.dom as HTMLDivElement).style.height = sh + "px";
             }
         }
-    }
-
-    protected onPickerBodyMouseDown(e) {
-        e.stopPropagation();
-        e.preventDefault();
     }
 
     protected showErrorMessage() {

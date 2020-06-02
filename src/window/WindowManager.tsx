@@ -99,7 +99,6 @@ export default class WindowManager {
                 }
 
             }
-            console.log("移除窗口: ", WindowManager.windows.length);
         }
     }
 

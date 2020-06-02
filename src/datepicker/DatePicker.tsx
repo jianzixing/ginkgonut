@@ -139,7 +139,7 @@ export default class DatePicker<P extends DatePickerProps> extends Component<P> 
                 trows.push(
                     <th className={cls}>
                         <div className={DatePicker.datePickerTdInnerCls}
-                             onClick={() => this.onDayClick(currElDate)}>
+                             onClick={() => this.onDayClick(currElDate, infos.date)}>
                             {item}
                         </div>
                     </th>
@@ -152,7 +152,7 @@ export default class DatePicker<P extends DatePickerProps> extends Component<P> 
         }
 
         table = (
-            <table className={DatePicker.datePickerBodyCls}>
+            <table key={"body"} className={DatePicker.datePickerBodyCls}>
                 <thead className={DatePicker.datePickerTheadCls}>
                 <tr className={DatePicker.datePickerThCls}>
                     {thead}
@@ -166,7 +166,7 @@ export default class DatePicker<P extends DatePickerProps> extends Component<P> 
 
         if (this.props.showTime) {
             timeEls = (
-                <div className={DatePicker.datePickerTimeCls}>
+                <div key={"time"} className={DatePicker.datePickerTimeCls}>
                     <div className={DatePicker.datePickerTimeItemCls}>
                         <NumberTextField ref={this.hoursField} width={90} value={infos.date.hour}/>
                     </div>
@@ -180,7 +180,7 @@ export default class DatePicker<P extends DatePickerProps> extends Component<P> 
         }
 
         buttons = (
-            <div className={DatePicker.datePickerFooterCls}>
+            <div key={"buttons"} className={DatePicker.datePickerFooterCls}>
                 {this.props.showTime ?
                     <Button text={"Ok"}
                             isAction={false}
@@ -200,7 +200,7 @@ export default class DatePicker<P extends DatePickerProps> extends Component<P> 
 
         return (
             <div className={DatePicker.datePickerInnerCls}>
-                <div className={DatePicker.datePickerHeaderCls}>
+                <div key={"header"} className={DatePicker.datePickerHeaderCls}>
                     <div className={[DatePicker.datePickerHeaderSwitchCls, DatePicker.datePickerHeaderPreCls]}
                          onClick={this.onLeftClick.bind(this)}>
                         <Icon icon={IconTypes.angleDoubleLeft}/>
@@ -221,7 +221,7 @@ export default class DatePicker<P extends DatePickerProps> extends Component<P> 
                 {timeEls}
                 {buttons}
 
-                <div ref={this.monthPickerEl}
+                <div key={"month"} ref={this.monthPickerEl}
                      className={DatePicker.datePickerMonthPickerCls}>
                     {monthPickerEl}
                 </div>
@@ -261,8 +261,16 @@ export default class DatePicker<P extends DatePickerProps> extends Component<P> 
         this.redrawing();
     }
 
-    protected onDayClick(currElDate: { year: number, month: number, day: number }) {
-        this.date = new Date(currElDate.year, currElDate.month, currElDate.day);
+    protected onDayClick(currElDate: { year: number, month: number, day: number },
+                         infoDate: any) {
+        this.date = new Date(
+            currElDate.year,
+            currElDate.month,
+            currElDate.day,
+            infoDate.hour,
+            infoDate.minute,
+            infoDate.second
+        );
         if (this.props.onSelectedDate && !this.props.showTime) {
             // let hours = this.hoursField.instance ? this.hoursField.instance.getValue() : 0;
             // let minutes = this.minutesField.instance ? this.minutesField.instance.getValue() : 0;
