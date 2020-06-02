@@ -288,6 +288,7 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
                 }
             }
         }
+        this.triggerOnChangeEvents(this, this.getValue());
     }
 
     getValue(): FileList | Array<File> | Array<string> | string {

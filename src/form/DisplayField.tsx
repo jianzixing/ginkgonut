@@ -46,12 +46,17 @@ export default class DisplayField<P extends DisplayFieldProps> extends FormField
 
 
     setValue(value: any): void {
+        let oldValue = this.getValue();
         if (this.props.valueField) {
             this.value = value[this.props.valueField];
         } else {
             this.value = value;
         }
         this.redrawingFieldBody();
+        let newValue = this.getValue();
+        if (oldValue != newValue) {
+            this.triggerOnChangeEvents(this, newValue);
+        }
     }
 
     getValue(): any {

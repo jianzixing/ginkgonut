@@ -43,6 +43,7 @@ export default class RadioField<P extends RadioFieldProps> extends FormField<P> 
     }
 
     protected onFieldClick(e) {
+        let oldValue = this.getValue();
         if (this.value) {
             this.value = false;
         } else {
@@ -50,6 +51,10 @@ export default class RadioField<P extends RadioFieldProps> extends FormField<P> 
         }
         this.redrawingFieldBody();
         this.triggerOnChangeEvents(this, this.value);
+        let newValue = this.getValue();
+        if (oldValue != newValue) {
+            this.triggerOnChangeEvents(this, newValue);
+        }
     }
 
 

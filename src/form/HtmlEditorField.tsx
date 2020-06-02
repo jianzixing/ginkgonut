@@ -31,8 +31,13 @@ export default class HtmlEditorField<P extends HtmlEditorFieldProps> extends For
     }
 
     setValue(value: any) {
+        let oldValue = this.getValue();
         if (this.htmlEditor.instance) {
             this.htmlEditor.instance.setValue(value);
+        }
+        let newValue = this.getValue();
+        if (oldValue != newValue) {
+            this.triggerOnChangeEvents(this, newValue);
         }
     }
 

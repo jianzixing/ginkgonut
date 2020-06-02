@@ -5,6 +5,7 @@ import DataEmpty from "../empty/DataEmpty";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
 import "./CascaderField.scss";
+import ObjectTools from "../tools/ObjectTools";
 
 export interface CascaderModel extends ComboboxModel {
     parent?: CascaderModel;
@@ -303,6 +304,7 @@ export default class CascaderField<P extends CascaderFieldProps> extends Combobo
         }
 
         if (this.models) {
+            let oldValue = this.getValue();
             if (value instanceof Array) {
                 let arr = [];
                 for (let v of value) {
@@ -327,6 +329,10 @@ export default class CascaderField<P extends CascaderFieldProps> extends Combobo
                 this.inputEl.value = text || value + "";
 
                 this.value = m;
+            }
+            let newValue = this.getValue();
+            if (!ObjectTools.objectEqualArray(oldValue, newValue)) {
+                this.triggerOnChangeEvents(this, newValue);
             }
         }
     }

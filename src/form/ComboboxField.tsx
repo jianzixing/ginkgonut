@@ -227,6 +227,7 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
             }
         }
 
+        let oldValue = this.getValue();
         if (typeof value == "object") {
             let v = value[this.props.valueField || "id"];
             let isSetValue = false;
@@ -277,6 +278,10 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
         }
         if (this.comboboxValue) {
             this.inputEl.value = this.comboboxValue.text || "";
+        }
+        let newValue = this.getValue();
+        if (oldValue != newValue) {
+            this.triggerOnChangeEvents(this, newValue, oldValue);
         }
     }
 

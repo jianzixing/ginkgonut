@@ -77,12 +77,18 @@ export default class CheckboxField<P extends CheckboxFieldProps> extends FormFie
 
 
     setValue(value: any): void {
+        let oldValue = this.getValue();
         if (value) {
             this.value = true;
         } else {
             this.value = false;
         }
         this.redrawingFieldBody();
+
+        let newValue = this.getValue();
+        if (oldValue != newValue) {
+            this.triggerOnChangeEvents(this, this.getValue());
+        }
     }
 
     getValue(): any {

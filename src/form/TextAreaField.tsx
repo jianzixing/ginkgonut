@@ -41,8 +41,13 @@ export default class TextAreaField<P extends TextAreaFieldProps> extends TextFie
     }
 
     setValue(value: any): void {
+        let oldValue = this.getValue();
         this.value = value;
         this.redrawingFieldBody();
+        let newValue = this.getValue();
+        if (oldValue != newValue) {
+            this.triggerOnChangeEvents(this, newValue);
+        }
     }
 
     getValue(): any {

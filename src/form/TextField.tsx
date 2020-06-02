@@ -47,14 +47,6 @@ export default class TextField<P extends TextFieldProps> extends FormField<P> {
         );
     }
 
-    protected compareUpdate(key: string, newValue: any, oldValue: any): boolean {
-        if (key == "value" && this.value != newValue) {
-            this.value = newValue;
-            return true;
-        }
-        return false;
-    }
-
     protected drawingFieldSpinner(): GinkgoNode {
         return null;
     }

@@ -3,6 +3,7 @@ import ComboboxField, {ComboboxFieldProps, ComboboxModel} from "./ComboboxField"
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
 import "./TagField.scss";
+import ObjectTools from "../tools/ObjectTools";
 
 export interface TagFieldProps extends ComboboxFieldProps {
     useInputValue?: boolean;
@@ -173,6 +174,7 @@ export default class TagField<P extends TagFieldProps> extends ComboboxField<P> 
     }
 
     setValue(value: any): void {
+        let oldValue = this.getValue();
         this.values = [];
         if (value instanceof Array) {
             for (let v of value) {
@@ -190,6 +192,10 @@ export default class TagField<P extends TagFieldProps> extends ComboboxField<P> 
             this.redrawingFieldBody();
         } else {
             this.redrawingFieldBody();
+        }
+        let newValue = this.getValue();
+        if (!ObjectTools.objectEqualArray(oldValue, newValue, false)) {
+            this.triggerOnChangeEvents(this, newValue);
         }
     }
 

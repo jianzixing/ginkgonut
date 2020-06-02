@@ -53,6 +53,7 @@ export default class SelectField<P extends SelectFieldProps> extends TextField<P
     }
 
     setValue(value: string | { [key: string]: any }): void {
+        let oldValue = this.getValue();
         if (typeof value == "string") {
             this.inputEl.value = value;
         }
@@ -62,6 +63,10 @@ export default class SelectField<P extends SelectFieldProps> extends TextField<P
         }
 
         this.value = value;
+        let newValue = this.getValue();
+        if (oldValue != newValue) {
+            this.triggerOnChangeEvents(this, newValue);
+        }
     }
 
     getValue(): any {

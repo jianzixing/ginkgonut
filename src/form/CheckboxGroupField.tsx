@@ -2,6 +2,7 @@ import Ginkgo, {InputComponent} from "ginkgoes";
 import FormField, {FormFieldProps} from "./FormField";
 import CheckboxField from "./CheckboxField";
 import "./CheckboxGroupField.scss";
+import ObjectTools from "../tools/ObjectTools";
 
 export interface CheckboxGroupModel {
     value?: number | string;
@@ -79,6 +80,7 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
 
     setValue(value: any): void {
         if (this.props.models) {
+            let oldValue = this.getValue();
             for (let m of this.props.models) {
                 m.checked = false;
             }
@@ -96,6 +98,10 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
                 this.value = [];
             }
             this.redrawingFieldBody();
+            let newValue = this.getValue();
+            if (!ObjectTools.objectEqualArray(oldValue, newValue, false)) {
+                this.triggerOnChangeEvents(this, newValue);
+            }
         }
     }
 

@@ -125,6 +125,7 @@ export default class SliderField<P extends SliderFieldProps> extends FormField<P
 
 
     setValue(value: number): void {
+        let oldValue = this.getValue();
         if (value == null) value = 0;
         if (typeof value == "number") {
             if (value < 0) value = 0;
@@ -151,6 +152,10 @@ export default class SliderField<P extends SliderFieldProps> extends FormField<P
             });
         } else {
             this.redrawingFieldBody();
+        }
+        let newValue = this.getValue();
+        if (oldValue != newValue) {
+            this.triggerOnChangeEvents(this, newValue);
         }
     }
 

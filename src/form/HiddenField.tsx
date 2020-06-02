@@ -20,9 +20,14 @@ export default class HiddenField<P extends HiddenFieldProps> extends AbstractFor
 
 
     setValue(value: any): void {
+        let oldValue = this.getValue();
         this.value = value;
         if (this.inputRef && this.inputRef.instance) {
             this.inputRef.instance.value = value;
+        }
+        let newValue = this.getValue();
+        if (oldValue != newValue) {
+            this.triggerOnChangeEvents(this, newValue);
         }
     }
 

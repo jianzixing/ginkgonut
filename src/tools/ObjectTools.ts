@@ -65,4 +65,38 @@ export default class ObjectTools {
         }
         return undefined;
     }
+
+    public static objectEqualArray(arr1: Array<any>, arr2: Array<any>, order: boolean = true): boolean {
+        if (arr1 == arr2) return true;
+        if (arr1 != null && arr2 != null
+            && arr1.length == arr2.length) {
+
+            if (order) {
+                let i = 0;
+                for (let a1 of arr1) {
+                    let a2 = arr2[i];
+                    if (a1 != a2) {
+                        return false;
+                    }
+                    i++;
+                }
+                return true;
+            } else {
+                for (let a1 of arr1) {
+                    let is = false;
+                    for (let a2 of arr2) {
+                        if (a1 == a2) {
+                            is = true;
+                            break;
+                        }
+                    }
+                    if (!is) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
+    }
 }

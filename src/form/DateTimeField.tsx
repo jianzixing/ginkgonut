@@ -84,8 +84,8 @@ export default class DateTimeField<P extends DateFieldProps> extends TextField<P
     }
 
     setValue(value: Date | string): void {
+        let oldValue = this.getValue();
         super.setValue(value);
-
         if (value instanceof Date) {
             this.value = value;
         } else {
@@ -94,6 +94,10 @@ export default class DateTimeField<P extends DateFieldProps> extends TextField<P
         }
 
         this.fillInputValue();
+        let newValue = this.getValue();
+        if (oldValue != newValue) {
+            this.triggerOnChangeEvents(this, newValue);
+        }
     }
 
     getValue(): any {
