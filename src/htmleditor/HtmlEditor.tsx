@@ -3,6 +3,7 @@ import Component, {ComponentProps} from "../component/Component";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import "./HtmlEditor.scss";
 import {Submit} from "../http/Request";
+import {ObjectTools} from "../ginkgonut";
 
 export class CustomEditor {
     getValue?(): string;
@@ -20,6 +21,10 @@ export interface HtmlEditorProps extends ComponentProps {
     onEditorReady?: (editor: any) => void;
     editorAutoHeight?: boolean;
     uploadUrl?: string | Submit;
+    uploadFileData?: string;
+    previewUploadFile?: (file: string) => string | string;
+    uploadResponse?: (resolve, reject, data) => boolean;
+    uploadByCustom?: (resolve, reject, file) => void;
     value?: string;
 }
 
@@ -101,18 +106,12 @@ export default class HtmlEditor<P extends HtmlEditorProps> extends Component<P> 
                     } else {
                         options.height = (this.props.height - (this.props.editToolbarHeight || 42)) + "px";
                     }
-                    if (this.props.uploadUrl) {
-                        let url = this.props.uploadUrl;
-                        if (url instanceof Submit) {
-                            url = url.getParamUrl();
-                        }
-                        options.ckfinder = {
-                            uploadUrl: url
-                        }
-                    }
 
                     ClassicEditor.create(dom, options).then(editor => {
                         this.editor = editor;
+                        editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                            return new UploadAdapter(loader, this.props);
+                        };
                         if (this.props.value) {
                             this.editor.setData(this.value);
                         }
@@ -175,5 +174,72 @@ export default class HtmlEditor<P extends HtmlEditorProps> extends Component<P> 
         let arr = super.getRootClassName();
         arr.push(HtmlEditor.htmlEditorCls);
         return arr;
+    }
+}
+
+class UploadAdapter {
+    private loader;
+    private props: HtmlEditorProps;
+
+    constructor(loader, props: HtmlEditorProps) {
+        this.loader = loader;
+        this.props = props;
+    }
+
+    upload() {
+        return new Promise((resolve, reject) => {
+            let filePromise = this.loader.file;
+            filePromise.then(file => {
+                if (this.props.uploadByCustom) {
+                    this.props.uploadByCustom(resolve, reject, file);
+                } else {
+                    if (this.props.uploadUrl instanceof Submit) {
+                        this.props.uploadUrl.addExtParams({file: file})
+                            .load(data => {
+                                this.responseProcessor(resolve, reject, data);
+                            }, message => {
+                                reject(message);
+                            });
+                    } else {
+                        const data = new FormData();
+                        data.append('file', file);
+                        Ginkgo.post(this.props.uploadUrl, data, {withCredentials: true})
+                            .then(value => {
+                                this.responseProcessor(resolve, reject, value);
+                            })
+                            .catch(reason => {
+                                reject(reason);
+                            })
+                    }
+                }
+            })
+        });
+    }
+
+    private responseProcessor(resolve, reject, data) {
+        let next = true;
+        if (this.props.uploadResponse) {
+            next = this.props.uploadResponse(resolve, reject, data);
+        }
+        if (next) {
+            let fileName = data;
+            if (this.props.uploadFileData) {
+                fileName = ObjectTools.valueFromTemplate(data, this.props.uploadFileData);
+                if (this.props.previewUploadFile) {
+                    if (typeof this.props.previewUploadFile == "function") {
+                        fileName = this.props.previewUploadFile(fileName);
+                    } else if (typeof this.props.previewUploadFile == "string") {
+                        fileName = (this.props.previewUploadFile as string)
+                            .replace("{file}", fileName);
+                    }
+                }
+            }
+            resolve({
+                default: fileName
+            })
+        }
+    }
+
+    abort() {
     }
 }

@@ -132,7 +132,15 @@ export default class TestBuilder<P extends TestBuilderProps> extends AppManager<
                     ]}
                 />
 
-                <HtmlEditorField height={300} fieldLabel={"HTML Editor"} labelVAlign={"top"}/>
+                <HtmlEditorField height={300}
+                                 fieldLabel={"HTML Editor"}
+                                 labelVAlign={"top"}
+                                 editor={{
+                                     uploadUrl: "http://localhost:8080/web/file/upload.jhtml",
+                                     uploadFileData: "data[0].fileName",
+                                     previewUploadFile: "http://localhost:8080/web/file/load.jhtml?f={file}"
+                                 }}
+                />
             </FormPanel>
         );
     }

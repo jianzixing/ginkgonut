@@ -192,7 +192,8 @@ export default class Upload<P extends UploadProps> extends Component<P> {
                     }
 
                     let src = item.src;
-                    if (this.props.onImageSrc) {
+                    if (this.props.onImageSrc && src && typeof src == "string" &&
+                        !src.startsWith("data:image/")) {
                         src = this.props.onImageSrc(src, item);
                     }
                     items.push(
