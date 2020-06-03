@@ -132,9 +132,10 @@ export class Submit {
         this.fetch(undefined, succ, fail);
     };
 
-    wait(ref: RefObject<Component<any>> | Component<any>, text?: string) {
+    wait(ref: RefObject<Component<any>> | Component<any>, text?: string): Submit {
         this.waitRef = ref;
         this.waitText = text;
+        return this;
     }
 
     /**
