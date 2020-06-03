@@ -6,11 +6,13 @@ import "./DisplayImageGroup.scss";
 export interface DisplayImageGroupModel {
     url: string;
     link?: string;
-    style?: CSSProperties
+    style?: CSSProperties;
 }
 
 export interface DisplayImageGroupProps extends ComponentProps {
     models: Array<DisplayImageGroupModel>;
+    itemWidth?: number;
+    itemHeight?: number;
 }
 
 export default class DisplayImageGroup<P extends DisplayImageGroupProps> extends Component<P> {
@@ -30,7 +32,9 @@ export default class DisplayImageGroup<P extends DisplayImageGroupProps> extends
             for (let m of this.props.models) {
                 arr.push(<div className={DisplayImageGroup.displayImageGroupItemCls}
                               style={m.style || {}}>
-                    <DisplayImage src={m.url} link={m.link}/>
+                    <DisplayImage width={this.props.itemWidth}
+                                  height={this.props.itemHeight}
+                                  src={m.url} link={m.link}/>
                 </div>);
             }
             return arr;
