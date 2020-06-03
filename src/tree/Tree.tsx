@@ -13,6 +13,7 @@ export interface TreeListModel {
     tableItem?: TableItemModel;
     children?: Array<TreeListModel>;
     show?: boolean;
+    expanded?: boolean;
     leaf?: boolean;
     iconType?: string;
     icon?: string;
@@ -24,9 +25,14 @@ export interface TreeProps extends ComponentProps {
     childrenField?: string;
     onTreeItemClick?: (e: Event, data?: TableItemModel) => void;
 
+    expandType?: 'plus';
+    expandOpenIcon?: string;
+    expandCloseIcon?: string;
+
     iconTypeKey?: string;
     iconKey?: string;
     leafKey?: string;
+    expandedKey?: string;
     showCheckbox?: boolean;
     onCheckboxChange?: (item: TableItemModel, checked: boolean, checkItems?: Array<TableItemModel>) => void;
 }
@@ -51,7 +57,7 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
         if (treeListItem) {
             let status: any = "close",
                 deep = treeListItem.deep;
-            if (treeListItem.show) {
+            if (treeListItem.expanded) {
                 status = "open";
             }
             if (treeListItem.leaf) status = "leaf";
@@ -60,6 +66,9 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
                     treeListItem={treeListItem}
                     column={columnModel}
                     status={status}
+                    expandType={this.props.expandType}
+                    expandOpenIcon={this.props.expandOpenIcon}
+                    expandCloseIcon={this.props.expandCloseIcon}
                     deep={deep}
                     text={text}
                     cellSpace={false}
@@ -72,10 +81,12 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
                     showCheckbox={this.props.showCheckbox}
                     onExpand={(e) => {
                         if (e.treeListItem) {
-                            if (e.treeListItem.show) {
+                            if (e.treeListItem.expanded) {
                                 this.showTreeListItems(e.treeListItem, false);
+                                this.expandTreeListItems(e.treeListItem);
                             } else {
                                 this.showTreeListItems(e.treeListItem, true);
+                                this.expandTreeListItems(e.treeListItem);
                             }
                             this.redrawing();
                         }
@@ -132,6 +143,11 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
         if (key == 'data' && newValue != oldValue) {
             this.treeListModelKey = 1;
             this.buildTreeStructs(newValue);
+            if (this.treeListItems) {
+                for (let item of this.treeListItems) {
+                    this.expandTreeListItems(item);
+                }
+            }
             this.tableItemModels = this.buildTableStructs(this.treeListItems);
             return true;
         }
@@ -195,7 +211,9 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
 
                 treeListItem.iconType = value[this.props.iconTypeKey || 'iconType'];
                 treeListItem.icon = value[this.props.iconKey || 'icon'];
-                treeListItem.leaf = value[this.props.leafKey || 'leaf'] || false;
+                treeListItem.leaf = !!value[this.props.leafKey || 'leaf'];
+                treeListItem.expanded = value[this.props.expandedKey || 'expanded'];
+                if (treeListItem.expanded == null) treeListItem.expanded = true;
 
                 if (deep == 1) {
                     this.treeListItems.push(treeListItem);
@@ -234,14 +252,33 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
     protected showTreeListItems(treeListItem: TreeListModel, show: boolean): void {
         treeListItem.show = show;
         if (treeListItem.tableItem) {
-            if (treeListItem.children && treeListItem.children.length > 0) {
-                let cs = treeListItem.children;
-                if (cs && cs.length > 0) {
-                    for (let item of cs) {
-                        if (item.tableItem) {
-                            item.tableItem.show = show;
+            treeListItem.expanded = show;
+        }
+    }
+
+    protected expandTreeListItems(treeListItem: TreeListModel): void {
+        if (treeListItem) {
+            if (treeListItem.expanded) {
+                if (treeListItem.children && treeListItem.children.length > 0) {
+                    let cs = treeListItem.children;
+                    if (cs && cs.length > 0) {
+                        for (let item of cs) {
+                            if (item.tableItem) {
+                                item.tableItem.show = true;
+                            }
+                            this.expandTreeListItems(item);
                         }
-                        this.showTreeListItems(item, show);
+                    }
+                }
+            } else {
+                if (treeListItem.children && treeListItem.children.length > 0) {
+                    let cs = treeListItem.children;
+                    if (cs && cs.length > 0) {
+                        for (let item of cs) {
+                            if (item.tableItem) {
+                                item.tableItem.show = false;
+                            }
+                        }
                     }
                 }
             }

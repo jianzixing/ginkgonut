@@ -18,6 +18,7 @@ export interface HtmlEditorProps extends ComponentProps {
     onDrawingEditor?: (dom: HTMLElement, options?: any) => CustomEditor;
     options?: any;
     onChange?: (value: string) => void;
+    onEditorPlugin?: (editor: any) => void;
     onEditorReady?: (editor: any) => void;
     editorAutoHeight?: boolean;
     uploadUrl?: string | Submit;
@@ -99,6 +100,9 @@ export default class HtmlEditor<P extends HtmlEditorProps> extends Component<P> 
                         }
                     };
                     ClassicEditor.builtinPlugins.push(CKEditorHeightPlugin);
+                    if (this.props.onEditorPlugin) {
+                        this.props.onEditorPlugin(ClassicEditor);
+                    }
 
                     let options = this.props.options || {};
                     if (this.props.editorAutoHeight) {

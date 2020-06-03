@@ -8,6 +8,10 @@ import "./TreeCell.scss";
 export interface TreeCellProps extends TableCellProps {
     text: string;
     status: "close" | "open" | "leaf";
+    expandType?: 'plus';
+    expandOpenIcon?: string;
+    expandCloseIcon?: string;
+    expandIconSize?: number | string;
     iconType?: string;
     icon?: string;
     deep?: number;
@@ -54,10 +58,33 @@ export default class TreeCell<P extends TreeCellProps> extends TableCell<P> {
             /*微调图标*/
             style: CSSProperties = {position: "relative", top: "1px"};
 
+        if (this.props.expandIconSize) {
+            style.fontSize = this.props.expandIconSize;
+        }
         if (status == "close") {
-            elbowEl = <Icon style={style} icon={IconTypes.caretRight}/>;
+            if (this.props.expandType == 'plus') {
+                style.fontSize = "14px";
+                elbowEl = <Icon style={style} icon={"plus-square"}/>;
+            } else if (this.props.expandType == null) {
+                if (this.props.expandCloseIcon) {
+                    elbowEl = <Icon style={style} icon={this.props.expandCloseIcon}/>;
+                } else {
+                    elbowEl = <Icon style={style} icon={IconTypes.caretRight}/>;
+                }
+            }
         } else if (status == "open") {
-            elbowEl = <Icon style={style} icon={IconTypes.caretDown}/>;
+            if (this.props.expandType == 'plus') {
+                if (!this.props.expandIconSize) {
+                    style.fontSize = "14px";
+                }
+                elbowEl = <Icon style={style} icon={"minus-square"}/>;
+            } else if (this.props.expandType == null) {
+                if (this.props.expandOpenIcon) {
+                    elbowEl = <Icon style={style} icon={this.props.expandOpenIcon}/>;
+                } else {
+                    elbowEl = <Icon style={style} icon={IconTypes.caretDown}/>;
+                }
+            }
         } else if (status == "leaf") {
             elbowCls = [TreeCell.treeCellClsElbow];
         }
