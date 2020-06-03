@@ -1,4 +1,5 @@
-import Ginkgo from "ginkgoes";
+import Ginkgo, {RefObject} from "ginkgoes";
+import Component from "../component/Component";
 
 let getServerFunction: (params: { className?: string, methodName?: string, url?: string }) => string = (params => {
     if (params.url) {
@@ -108,6 +109,8 @@ export class Submit {
     private extParams: { [key: string]: Object | undefined } | undefined;
     private callAnyway: () => void;
     private callProgressEvent: (e: ProgressEvent) => void;
+    private waitRef: RefObject<Component<any>> | Component<any>;
+    private waitText: string;
 
     constructor(apiName: string, methodName: string, method: any) {
         this.apiName = apiName;
@@ -129,6 +132,11 @@ export class Submit {
         this.fetch(undefined, succ, fail);
     };
 
+    wait(ref: RefObject<Component<any>> | Component<any>, text?: string) {
+        this.waitRef = ref;
+        this.waitText = text;
+    }
+
     /**
      * 拉取网络数据
      * @param module 当前请求的模板
@@ -140,9 +148,24 @@ export class Submit {
         let self = this;
         // "Content-Type", "application/x-www-form-urlencoded;"
         let formData = this.getFormData(module);
+        if (this.waitRef) {
+            if (this.waitRef['instance'] && this.waitRef['instance'] instanceof Component) {
+                this.waitRef['instance'].mask(this.waitText);
+            } else if (this.waitRef instanceof Component) {
+                this.waitRef.mask(this.waitText);
+            }
+        }
         // POST 字符串则可以接收
         Ginkgo.post(this.getUrl(), formData, {withCredentials: true, onprogress: this.callProgressEvent})
             .then(function (response) {
+                if (this.waitRef) {
+                    if (this.waitRef['instance'] && this.waitRef['instance'] instanceof Component) {
+                        this.waitRef['instance'].unmask();
+                    } else if (this.waitRef instanceof Component) {
+                        this.waitRef.unmask();
+                    }
+                }
+
                 let data: any = response;
                 if (typeof data != "object") {
                     try {

@@ -79,7 +79,7 @@ export default class WindowPanel<P extends WindowProps> extends Component<P> {
     protected originalY: number = 0;
     protected currentResizeType?: string;
     protected parentSize: { w: number, h: number } = {w: 0, h: 0};
-    protected mask = this.props.mask;
+    protected isMaskLayerVar = this.props.mask;
     protected isAllowResizable = true;
     protected isShowHeader = true;
 
@@ -623,7 +623,7 @@ export default class WindowPanel<P extends WindowProps> extends Component<P> {
         }
     }
 
-    isMask(): boolean {
+    isMaskLayer(): boolean {
         return this.props.maskLayer != false;
     }
 

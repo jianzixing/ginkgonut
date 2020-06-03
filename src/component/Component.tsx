@@ -8,6 +8,7 @@ import Ginkgo, {
 } from "ginkgoes";
 import "./Component.scss";
 import DataStore from "../store/DataStore";
+import Loading from "../loading/Loading";
 
 export interface ComponentProps extends GinkgoElement {
     permitGroup?: string;
@@ -72,6 +73,7 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
     protected height: number = this.props.height || 130;
     protected rootX: number;
     protected rootY: number;
+    protected maskEl;
 
     protected disableCompareProps: Array<string> = ["store"];
     protected boundsParentScrollEventEls: Array<Element>;
@@ -492,6 +494,17 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
             let dom = this.rootEl.dom as HTMLElement;
             return dom.offsetTop;
         }
+    }
+
+    mask(text?: string): void {
+        if (!this.maskEl) {
+            this.maskEl = <Loading key={"$loading_mask"} text={text}/>;
+        }
+        this.rootEl.append(this.maskEl);
+    }
+
+    unmask(): void {
+        this.rootEl.remove(this.maskEl);
     }
 
     isMount() {

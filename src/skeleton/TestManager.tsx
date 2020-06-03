@@ -1,4 +1,4 @@
-import Ginkgo, {GinkgoNode} from "ginkgoes";
+import Ginkgo, {GinkgoNode, RefObject} from "ginkgoes";
 import {AppManagerProps, AppManager} from "./AppPanel";
 import Toolbar from "../toolbar/Toolbar";
 import Button from "../button/Button";
@@ -12,9 +12,12 @@ export interface TestManagerProps extends AppManagerProps {
 }
 
 export default class TestManager extends AppManager<TestManagerProps> {
+    protected panelRef: RefObject<GridPanel<any>> = Ginkgo.createRef();
+
     render(): GinkgoNode {
         return (
-            <GridPanel key={"ddd"}
+            <GridPanel ref={this.panelRef}
+                       key={"ddd"}
                        paging={true}
                        fit={true}
                        columns={[
@@ -70,5 +73,10 @@ export default class TestManager extends AppManager<TestManagerProps> {
 
     componentDidMount() {
         // APIAdmin.getAdmins("abc").load();
+
+        this.panelRef.instance.mask();
+        setTimeout(() => {
+            this.panelRef.instance.unmask();
+        }, 5000);
     }
 }

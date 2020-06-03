@@ -16,7 +16,7 @@ export default class WindowManager {
                 WindowManager.windows.push({dom: parent, win: win, zIndex: 0});
 
                 if (parent) {
-                    if (win.isMask()) {
+                    if (win.isMaskLayer()) {
                         let maskArr = WindowManager.masks.filter(value => value.dom === parent);
                         let mask;
                         if (!maskArr || maskArr.length == 0) {
@@ -48,7 +48,7 @@ export default class WindowManager {
                     value.zIndex = index;
                     index--;
 
-                    if (win.isMask()) {
+                    if (win.isMaskLayer()) {
                         let parent = win.getParentElement();
                         let maskArr = WindowManager.masks.filter(value => value.dom === parent);
                         if (maskArr && maskArr.length > 0) {
