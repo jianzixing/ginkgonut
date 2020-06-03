@@ -158,11 +158,11 @@ export class Submit {
         // POST 字符串则可以接收
         Ginkgo.post(this.getUrl(), formData, {withCredentials: true, onprogress: this.callProgressEvent})
             .then(function (response) {
-                if (this.waitRef) {
-                    if (this.waitRef['instance'] && this.waitRef['instance'] instanceof Component) {
-                        this.waitRef['instance'].unmask();
-                    } else if (this.waitRef instanceof Component) {
-                        this.waitRef.unmask();
+                if (self.waitRef) {
+                    if (self.waitRef['instance'] && self.waitRef['instance'] instanceof Component) {
+                        self.waitRef['instance'].unmask();
+                    } else if (self.waitRef instanceof Component) {
+                        self.waitRef.unmask();
                     }
                 }
 
