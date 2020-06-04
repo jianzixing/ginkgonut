@@ -28,6 +28,11 @@ export interface DataStoreProps {
     root?: boolean;
     totalField?: string;
     dataField?: string;
+
+    isCheckSuccess?: boolean;
+    code?: string;
+    failMsg?: string;
+    successCode?: string | number;
 }
 
 export default class DataStore {
@@ -198,6 +203,17 @@ export default class DataStore {
                 let data = value;
                 if (typeof value == "string") {
                     data = JSON.parse(value);
+                }
+                if (this.props.isCheckSuccess || this.props.isCheckSuccess == null) {
+                    let code = data[this.props.code || "code"];
+                    let succ = this.props.successCode != null ? this.props.successCode : 100;
+                    let msg = data[this.props.failMsg || "msg"];
+                    if ((code + "") != (succ + "")) {
+                        import("../window/MessageBox")
+                            .then(value => {
+                                value.default.showAlert("请求数据出错", msg);
+                            });
+                    }
                 }
                 this.data = data;
                 this.setAllStoreJsonData(this.data);
