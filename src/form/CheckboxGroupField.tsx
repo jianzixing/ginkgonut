@@ -79,7 +79,7 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
     }
 
     setValue(value: any): void {
-        if (this.props.models) {
+        if (this.models) {
             let oldValue = this.getValue();
             this.setValueModel(value);
             this.redrawingFieldBody();
@@ -91,7 +91,7 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
     }
 
     private setValueModel(value: any) {
-        for (let m of this.props.models) {
+        for (let m of this.models) {
             m.checked = false;
         }
         let isSetValue = false;
@@ -111,7 +111,7 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
 
     private setValueSingle(value: any): boolean {
         let isSetValue = false;
-        for (let m of this.props.models) {
+        for (let m of this.models) {
             if (m.value == value || m.data == value) {
                 m.checked = true;
                 this.value.push(m);

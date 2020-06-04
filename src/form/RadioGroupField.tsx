@@ -75,7 +75,7 @@ export default class RadioGroupField<P extends RadioGroupFieldProps> extends For
     }
 
     setValue(value: any): void {
-        if (this.props.models) {
+        if (this.models) {
             let oldValue = this.getValue();
             this.setValueModel(value);
             this.redrawingFieldBody();
@@ -87,12 +87,12 @@ export default class RadioGroupField<P extends RadioGroupFieldProps> extends For
     }
 
     private setValueModel(value: any): void {
-        for (let m of this.props.models) {
+        for (let m of this.models) {
             m.selected = false;
         }
 
         let isSetValue = false;
-        for (let m of this.props.models) {
+        for (let m of this.models) {
             if (m.value == value || m.data == value) {
                 m.selected = true;
                 this.value = m;
