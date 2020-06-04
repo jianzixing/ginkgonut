@@ -1,4 +1,4 @@
-import Ginkgo, {CSSProperties, GinkgoElement, HTMLComponent} from "ginkgoes";
+import Ginkgo, {CSSProperties, GinkgoElement, GinkgoNode, HTMLComponent} from "ginkgoes";
 import Panel, {PanelProps} from "../panel/Panel";
 import Component, {ComponentProps} from "../component/Component";
 import {IconTypes} from "../icon/IconTypes";
@@ -94,6 +94,10 @@ export default class WindowPanel<P extends WindowProps> extends Component<P> {
             Ginkgo.render(props, document.body);
         (wrapper as any).wins = result;
         return wrapper;
+    }
+
+    public static showing(el: GinkgoNode | GinkgoElement[], props: WindowProps) {
+        return WindowPanel.open(<WindowPanel {...props || {}}>{el}</WindowPanel>)
     }
 
     constructor(props: P) {
