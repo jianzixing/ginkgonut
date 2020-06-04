@@ -43,6 +43,15 @@ export interface WindowProps extends ComponentProps, PanelProps {
     windowWrapper?: WindowWrapper;
 }
 
+export class Windows {
+    public static open(props: WindowProps) {
+        return WindowPanel.open(props);
+    }
+
+    public static showing(el: GinkgoNode | GinkgoElement[], props: WindowProps) {
+        return WindowPanel.showing(el, props);
+    }
+}
 
 export default class WindowPanel<P extends WindowProps> extends Component<P> {
     protected static windowManager: WindowManager = new WindowManager();
