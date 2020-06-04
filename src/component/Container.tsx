@@ -27,16 +27,17 @@ export default class Container<P extends ComponentProps> extends Component<P> {
 
     layoutParentSize() {
         let w, h;
-        if (this.props.width < 0 || !this.props.width) {
-            let parent = this.rootEl.dom.parentElement;
-            w = parent.offsetWidth;
-        }
-        if (this.props.height < 0 || !this.props.height) {
-            let parent = this.rootEl.dom.parentElement;
-            h = parent.offsetHeight;
-        }
-        if (w || h) {
-            this.setSize(w, h);
+        let parent = this.rootEl.dom.parentElement;
+        if (parent) {
+            if (this.props.width < 0 || !this.props.width) {
+                w = parent.offsetWidth;
+            }
+            if (this.props.height < 0 || !this.props.height) {
+                h = parent.offsetHeight;
+            }
+            if (w || h) {
+                this.setSize(w, h);
+            }
         }
     }
 }

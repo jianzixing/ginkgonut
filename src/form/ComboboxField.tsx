@@ -27,6 +27,8 @@ export interface ComboboxFieldProps extends TextFieldProps {
     displayField?: string;
     renderDisplayField?: (item: ComboboxModel, value: string) => GinkgoNode;
     selectData?: any;
+    queryField?: string;
+    remote?: boolean;
 }
 
 export default class ComboboxField<P extends ComboboxFieldProps> extends TextField<P>
@@ -77,8 +79,34 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
         }
     }
 
-    protected onInputChange(e) {
+    protected onInputFocus(e) {
+        super.onInputFocus(e);
+        this.onInputEvent(e);
+    }
 
+    protected onInputEvent(e) {
+        if (this.props.remote) {
+            let value = this.inputEl.value;
+            if (this.props.store) {
+                let store = this.props.store;
+                let p: any = {};
+                if (this.props.queryField) {
+                    p[this.props.queryField] = value;
+                } else {
+                    p['keyword'] = value;
+                }
+                try {
+                    if (this.isPickerShowing()) {
+                    } else {
+                        this.showPicker();
+                    }
+                } catch (e) {
+                }
+                store.load(p);
+            } else {
+                console.warn("ComboboxField remote load data , but store is empty.")
+            }
+        }
     }
 
     protected onSpinnerDownClick(e) {

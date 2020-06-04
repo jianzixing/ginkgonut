@@ -72,14 +72,11 @@ export default class TextField<P extends TextFieldProps> extends FormField<P> {
                 onChange={e => {
                     this.onInputChange(e);
                 }}
+                onInput={e => {
+                    this.onInputEvent(e);
+                }}
                 onFocus={e => {
-                    if (this.props.focusSelection) {
-                        this.fieldFocusBorder = true;
-                        this.redrawing();
-                        let input = this.inputEl.dom as HTMLInputElement;
-                        input.setSelectionRange(0, 0);
-                        input.setSelectionRange(0, ("" + this.value).length);
-                    }
+                    this.onInputFocus(e);
                 }}
                 onBlur={e => {
                     if (this.props.focusSelection) {
@@ -101,6 +98,20 @@ export default class TextField<P extends TextFieldProps> extends FormField<P> {
     protected onInputChange(e) {
         this.value = "" + this.inputEl.value;
         this.triggerOnChangeEvents(this, this.value);
+    }
+
+    protected onInputEvent(e) {
+
+    }
+
+    protected onInputFocus(e) {
+        if (this.props.focusSelection) {
+            this.fieldFocusBorder = true;
+            this.redrawing();
+            let input = this.inputEl.dom as HTMLInputElement;
+            input.setSelectionRange(0, 0);
+            input.setSelectionRange(0, ("" + this.value).length);
+        }
     }
 
     setValue(value: any): void {
