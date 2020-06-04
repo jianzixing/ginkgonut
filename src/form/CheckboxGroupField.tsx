@@ -15,6 +15,7 @@ export interface CheckboxGroupFieldProps extends FormFieldProps {
     itemWidth?: number | string;
     models?: Array<CheckboxGroupModel>;
     direction?: "horizontal" | "vertical";
+    value?: Array<number | string> | number | string;
 }
 
 export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> extends FormField<P> {
@@ -77,31 +78,34 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
         return <div className={CheckboxGroupField.checkboxGroupFieldBodyCls}>{items}</div>;
     }
 
-
     setValue(value: any): void {
         if (this.props.models) {
             let oldValue = this.getValue();
-            for (let m of this.props.models) {
-                m.checked = false;
-            }
-            let isSetValue = false;
-            if (value instanceof Array) {
-                for (let v of value) {
-                    let b = this.setValueSingle(v);
-                    if (b) isSetValue = true;
-                }
-            } else {
-                isSetValue = this.setValueSingle(value);
-            }
-
-            if (!isSetValue) {
-                this.value = [];
-            }
+            this.setValueModel(value);
             this.redrawingFieldBody();
             let newValue = this.getValue();
             if (!ObjectTools.objectEqualArray(oldValue, newValue, false)) {
                 this.triggerOnChangeEvents(this, newValue);
             }
+        }
+    }
+
+    private setValueModel(value: any) {
+        for (let m of this.props.models) {
+            m.checked = false;
+        }
+        let isSetValue = false;
+        if (value instanceof Array) {
+            for (let v of value) {
+                let b = this.setValueSingle(v);
+                if (b) isSetValue = true;
+            }
+        } else {
+            isSetValue = this.setValueSingle(value);
+        }
+
+        if (!isSetValue) {
+            this.value = [];
         }
     }
 

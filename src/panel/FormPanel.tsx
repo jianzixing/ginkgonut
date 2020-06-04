@@ -9,6 +9,7 @@ export interface FormPanelProps extends PanelProps {
     values?: { [key: string]: any };
     formValues?: { [key: string]: any };
     onSubmit?: (values: { [key: string]: any }, formData?: FormData) => void;
+    onChange?: (form: FormPanel<any>, values: { [key: string]: any }, formData?: FormData) => void;
 }
 
 export default class FormPanel<P extends FormPanelProps> extends Panel<P> {
@@ -73,6 +74,9 @@ export default class FormPanel<P extends FormPanelProps> extends Panel<P> {
     protected onFormFieldsChange(field: AbstractFormField<AbstractFormFieldProps>, value: any, oldValue: any) {
         if (this.formValues && field.props && field.props.name) {
             (this.formValues as any)[field.props.name] = value;
+            if (this.props.onChange) {
+                this.props.onChange(this, this.formValues, this.getFormData());
+            }
         }
     }
 

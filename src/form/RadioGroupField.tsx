@@ -14,6 +14,7 @@ export interface RadioGroupFieldProps extends FormFieldProps {
     itemWidth?: number | string;
     models?: Array<RadioGroupModel>;
     direction?: "horizontal" | "vertical";
+    value?: number | string;
 }
 
 export default class RadioGroupField<P extends RadioGroupFieldProps> extends FormField<P> {
@@ -73,31 +74,34 @@ export default class RadioGroupField<P extends RadioGroupFieldProps> extends For
         return <div className={RadioGroupField.radioGroupFieldBodyCls}>{items}</div>;
     }
 
-
     setValue(value: any): void {
         if (this.props.models) {
             let oldValue = this.getValue();
-            for (let m of this.props.models) {
-                m.selected = false;
-            }
-
-            let isSetValue = false;
-            for (let m of this.props.models) {
-                if (m.value == value || m.data == value) {
-                    m.selected = true;
-                    this.value = m;
-                    isSetValue = true;
-                    break;
-                }
-            }
-            if (!isSetValue) {
-                this.value = null;
-            }
+            this.setValueModel(value);
             this.redrawingFieldBody();
             let newValue = this.getValue();
             if (oldValue != newValue) {
                 this.triggerOnChangeEvents(this, newValue, oldValue);
             }
+        }
+    }
+
+    private setValueModel(value: any): void {
+        for (let m of this.props.models) {
+            m.selected = false;
+        }
+
+        let isSetValue = false;
+        for (let m of this.props.models) {
+            if (m.value == value || m.data == value) {
+                m.selected = true;
+                this.value = m;
+                isSetValue = true;
+                break;
+            }
+        }
+        if (!isSetValue) {
+            this.value = null;
         }
     }
 
