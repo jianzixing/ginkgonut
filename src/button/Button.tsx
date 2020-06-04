@@ -28,6 +28,8 @@ export interface ButtonProps extends ComponentProps {
     toggle?: boolean;
     menuType?: "normal" | "bottom" | "splitNormal" | "splitBottom";
     menuModels?: Array<MenuModel>;
+    onMenuItemClick?: (e: Event, value: MenuModel, menu?: Menu<MenuProps>) => void;
+    onMenuClose?: (menu: MenuProps) => void
     contentAlign?: "left" | "center" | "right";
     href?: string;
     target?: string;
@@ -235,12 +237,17 @@ export default class Button<P extends ButtonProps> extends Component<P> {
                         y={bounds.y + bounds.h}
                         items={this.props.menuModels}
                         onMenuItemClick={(e: Event, value: MenuModel, menu: Menu<MenuProps>) => {
-
+                            if (this.props.onMenuItemClick) {
+                                this.props.onMenuItemClick(e, value, menu);
+                            }
                         }}
                         onMenuClose={menu => {
                             this.setPressing(false);
                             this.clearBoundsParentScrollEvents();
                             Button.buttonMenus = Button.buttonMenus.filter(value => value.menu.component != menu);
+                            if (this.props.onMenuClose) {
+                                this.props.onMenuClose(menu);
+                            }
                         }}
                     />),
                 button: this

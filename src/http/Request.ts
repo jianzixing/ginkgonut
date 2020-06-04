@@ -204,6 +204,14 @@ export class Submit {
                 }
             })
             .catch(function (error) {
+                if (self.waitRef) {
+                    if (self.waitRef['instance'] && self.waitRef['instance'] instanceof Component) {
+                        self.waitRef['instance'].unmask();
+                    } else if (self.waitRef instanceof Component) {
+                        self.waitRef.unmask();
+                    }
+                }
+                
                 console.error("ajax load error", error);
                 let isShowError: any = true;
                 if (self.callAnyway) {

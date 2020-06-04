@@ -42,7 +42,7 @@ export interface MenuProps extends ComponentProps {
     x: number;
     y: number;
     items: Array<MenuModel>;
-    onMenuItemClick?: (e: Event, value: MenuModel, menu: Menu<MenuProps>) => void;
+    onMenuItemClick?: (e: Event, value: MenuModel, menu?: Menu<MenuProps>) => void;
     clickCloseMenu?: boolean;
     onMenuClose?: (menu: MenuProps) => void;
 }
