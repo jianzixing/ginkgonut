@@ -1,4 +1,4 @@
-import Ginkgo, {BindComponent, GinkgoElement, GinkgoNode, HTMLComponent, RefObject} from "ginkgoes";
+import Ginkgo, {BindComponent, CSSProperties, GinkgoElement, GinkgoNode, HTMLComponent, RefObject} from "ginkgoes";
 import Component from "../component/Component";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
@@ -9,6 +9,7 @@ import "./FormField.scss";
 
 export interface FormFieldProps extends AbstractFormFieldProps {
     fieldLabel?: string | GinkgoNode;
+    labelWidth?: number | string;
     // label是否有冒号
     colon?: boolean;
     labelAlign?: "left" | "center" | "right";
@@ -53,6 +54,7 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
     protected showError: boolean = false;
     protected fieldBorder: boolean = false;
     protected fieldFocusBorder: boolean = false;
+    protected fieldLabelWidth: number | string = this.props.labelWidth;
     protected isEnableDocumentClick = true;
     protected isEnableWindowResize: boolean = true;
     protected extRootClassNames: Array<string>;
@@ -148,8 +150,10 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
 
         let labelEls = null;
         if (label && label != '') {
+            let style: CSSProperties = {};
+            if (this.fieldLabelWidth) style.width = this.fieldLabelWidth;
             labelEls = (
-                <label className={labelCss}>
+                <label className={labelCss} style={style}>
                     {typeof label == "string" ? <span>{label}</span> : label}
                 </label>
             )

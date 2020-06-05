@@ -6,6 +6,7 @@ export interface DisplayFieldProps extends FormFieldProps {
     value?: any;
     displayField?: string;
     valueField?: string;
+    render?: (value: any) => GinkgoNode;
 }
 
 export default class DisplayField<P extends DisplayFieldProps> extends FormField<P> {
@@ -33,6 +34,10 @@ export default class DisplayField<P extends DisplayFieldProps> extends FormField
             text = this.value[this.props.displayField || "text"];
         } else if (this.value) {
             text = this.value;
+        }
+
+        if (this.props.render) {
+            return this.props.render(this.value);
         }
 
         if (typeof text == "object" && text['module']) {

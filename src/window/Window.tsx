@@ -282,8 +282,10 @@ export default class WindowPanel<P extends WindowProps> extends Component<P> {
         let width = this.width,
             height = this.height;
 
+        let rootDom = this.rootEl.dom as HTMLElement;
+        if (this.left == undefined) this.left = rootDom.offsetLeft;
+        if (this.top == undefined) this.top = rootDom.offsetTop;
         WindowPanel.windowManager.activeWindow(this);
-
         this.parentSize = this.getParentSize();
 
         if (this.props.resizable == true) {
