@@ -4,6 +4,11 @@ export interface AbstractFormFieldProps extends ComponentProps {
     name?: string;
     onChange?: (field: AbstractFormField<AbstractFormFieldProps>, value: any, oldValue?: any) => void;
     disabledFormChange?: boolean;
+    /**
+     * value属性的替换字段，如果一个数据中包含多个当前组件所需要的值
+     * 则可以使用这个字段作为替换，仅在FormPanel中有效
+     */
+    initField?: string;
 }
 
 export class AbstractFormField<P extends AbstractFormFieldProps> extends Component<P> {

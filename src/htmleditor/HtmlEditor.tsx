@@ -116,7 +116,7 @@ export default class HtmlEditor<P extends HtmlEditorProps> extends Component<P> 
                         editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
                             return new UploadAdapter(loader, this.props);
                         };
-                        if (this.props.value) {
+                        if (this.value) {
                             this.editor.setData(this.value);
                         }
                         editor.model.document.on('change:data', () => {
@@ -154,6 +154,8 @@ export default class HtmlEditor<P extends HtmlEditorProps> extends Component<P> 
     setValue(value?: string) {
         if (this.editor) {
             this.editor.setData(value);
+            this.value = value;
+        } else {
             this.value = value;
         }
     }

@@ -17,6 +17,7 @@ export interface ActionColumnItem {
     size?: number;
     key?: string | number;
     text?: string;
+    tips?: string;
     onActionClick?: (value: any, data: any) => void;
 }
 

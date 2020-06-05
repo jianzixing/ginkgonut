@@ -129,6 +129,9 @@ export default class FormPanel<P extends FormPanelProps> extends Panel<P> {
                 let name = component.getFieldName();
                 if (name) {
                     let value = values[name];
+                    if (component.props["initField"]) {
+                        value = values[component.props["initField"]];
+                    }
                     component.setValue(value);
 
                     let cv = component.getValue();
