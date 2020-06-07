@@ -23,6 +23,8 @@ export interface TreeListModel {
 
 export interface TreeProps extends ComponentProps {
     data?: Array<any>;
+    keyField?: string;
+    isInheritExpand?: boolean;
     childrenField?: string;
     onTreeItemClick?: (e: Event, data?: TableItemModel) => void;
     onTreeModelChange?: (tree: Tree<TreeProps>,
@@ -39,7 +41,6 @@ export interface TreeProps extends ComponentProps {
     leafKey?: string;
     expandedKey?: string;
     showCheckbox?: boolean;
-    isInheritExpand?: boolean;
     onCheckboxChange?: (item: TableItemModel, checked: boolean, checkItems?: Array<TableItemModel>) => void;
 }
 
@@ -202,6 +203,13 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
         }
         if (data && data instanceof Array) {
             let ls: Array<TreeListModel> = [];
+            let isIDKey = true;
+            for (let dataItem of data) {
+                if (dataItem['id'] == null) {
+                    isIDKey = false;
+                    break;
+                }
+            }
             data.map((value, index) => {
                 let childData = value[this.props.childrenField || "children"];
                 let children;
@@ -209,7 +217,13 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
                     let nextDeep = deep + 1;
                     children = this.buildTreeStructs(childData, nextDeep);
                 }
-                let key = "tree_cell_" + (this.treeListModelKey++);
+
+                let key = value[isIDKey ? 'id' : this.props.keyField];
+                if (key == null) {
+                    key = "tree_cell_" + (this.treeListModelKey++);
+                } else {
+                    key = "" + key;
+                }
                 let tableListItem: TableItemModel = {
                     key: key,
                     data: value
@@ -234,7 +248,8 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
 
                 if (this.oldTreeListItemMapping[key]
                     && this.oldTreeListItemMapping[key].expanded != treeListItem.expanded
-                    && this.props.isInheritExpand != false) {
+                    && this.props.isInheritExpand != false
+                    && (this.props.keyField || isIDKey)) {
                     treeListItem.expanded = this.oldTreeListItemMapping[key].expanded;
                 }
 
@@ -328,6 +343,30 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
             }
         }
         return true;
+    }
+
+    setTreeModelExpanded(keys: Array<string>) {
+        if (keys && keys.length > 0) {
+            for (let key of keys) {
+                let tlm = this.treeListItemMapping[key];
+                if (tlm) {
+                    this.setTreeModelParentExpanded(tlm);
+                }
+            }
+        }
+    }
+
+    private setTreeModelParentExpanded(item: TreeListModel) {
+        item.expanded = true;
+        if (item.parent) this.setTreeModelParentExpanded(item);
+    }
+
+    getTreeModels(): Array<TreeListModel> {
+        return this.treeListItems;
+    }
+
+    getTreeModelByKey(key: string): TreeListModel {
+        return this.treeListItemMapping[key];
     }
 
     protected getRootClassName(): string[] {
