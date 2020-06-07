@@ -40,6 +40,7 @@ export interface GridProps extends TableProps {
     /*列宽度保持表格总宽度*/
     fit?: boolean;
     onSelectChange?: (sel: Array<TableItemModel>, data?: { data: TableItemModel, type: number }) => void;
+    onParseData?: (data: any) => Array<TableItemModel>;
 }
 
 export default class Grid<P extends GridProps> extends Component<P> implements StoreProcessor {
@@ -89,18 +90,20 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
     }
 
     protected data2TableItemModels(data: any): Array<TableItemModel> | undefined {
-        if (this.props && this.props.models) {
+        if (this.props && this.props.models && this.props.models.length > 0) {
             return this.props.models;
         } else {
-            if (data && data instanceof Array) {
-                let arr = new Array<TableItemModel>();
+            if (this.props.onParseData) {
+                return this.props.onParseData(data);
+            } else if (data && data instanceof Array) {
+                let arr: Array<TableItemModel> = new Array<TableItemModel>();
                 data.map((value, index) => {
-                    arr.push({
+                    let item = {
                         key: "" + index,
                         data: value
-                    })
+                    };
+                    arr.push(item);
                 });
-
                 return arr;
             }
         }

@@ -204,7 +204,7 @@ export default class DataStore {
                 if (typeof value == "string") {
                     data = JSON.parse(value);
                 }
-                if (this.props.isCheckSuccess || this.props.isCheckSuccess == null) {
+                if (!this.props.root && (this.props.isCheckSuccess || this.props.isCheckSuccess == null)) {
                     let code = data[this.props.code || "code"];
                     let succ = this.props.successCode != null ? this.props.successCode : 100;
                     let msg = data[this.props.failMsg || "msg"];

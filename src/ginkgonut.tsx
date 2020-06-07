@@ -79,6 +79,7 @@ import Tree, {TreeProps, TreeListModel} from "./tree/Tree";
 import TreeCell, {TreeCellProps} from "./tree/TreeCell";
 import TreeGrid, {TreeGridProps} from "./tree/TreeGrid";
 import TreePanel, {TreePanelProps} from "./tree/TreePanel";
+import TreeGridPanel, {TreeGridPanelProps} from "./tree/TreeGridPanel";
 import Upload, {UploadModel, UploadProps} from "./upload/Upload";
 import MessageBox, {MessageBoxProps} from "./window/MessageBox";
 import WindowPanel, {WindowProps, WindowWrapper, Windows} from "./window/Window";
@@ -249,6 +250,8 @@ export {
     TreeGridProps,
     TreePanel,
     TreePanelProps,
+    TreeGridPanelProps,
+    TreeGridPanel,
     Upload,
     UploadModel,
     UploadProps,

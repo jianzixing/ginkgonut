@@ -8,6 +8,7 @@ import DataEmpty from "../empty/DataEmpty";
 import "./Tree.scss";
 
 export interface TreeListModel {
+    parent?: TreeListModel;
     /*树组件时表示当前的层级*/
     deep?: number;
     tableItem?: TableItemModel;
@@ -209,6 +210,12 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
                     show: true
                 };
 
+                if (children) {
+                    for (let ch of children) {
+                        ch.parent = treeListItem;
+                    }
+                }
+
                 treeListItem.iconType = value[this.props.iconTypeKey || 'iconType'];
                 treeListItem.icon = value[this.props.iconKey || 'icon'];
                 treeListItem.leaf = !!value[this.props.leafKey || 'leaf'];
@@ -249,40 +256,43 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
      * @param treeListItem
      * @param show
      */
-    protected showTreeListItems(treeListItem: TreeListModel, show: boolean): void {
-        treeListItem.show = show;
+    protected showTreeListItems(treeListItem: TreeListModel, expanded: boolean): void {
+        treeListItem.show = expanded;
         if (treeListItem.tableItem) {
-            treeListItem.expanded = show;
+            treeListItem.expanded = expanded;
         }
     }
 
     protected expandTreeListItems(treeListItem: TreeListModel): void {
         if (treeListItem) {
-            if (treeListItem.expanded) {
-                if (treeListItem.children && treeListItem.children.length > 0) {
-                    let cs = treeListItem.children;
-                    if (cs && cs.length > 0) {
-                        for (let item of cs) {
-                            if (item.tableItem) {
+            if (treeListItem.children && treeListItem.children.length > 0) {
+                let cs = treeListItem.children;
+                if (cs && cs.length > 0) {
+                    for (let item of cs) {
+                        let parentExpand: boolean = this.isParentExpand(item);
+                        if (item.tableItem) {
+                            if (parentExpand) {
                                 item.tableItem.show = true;
-                            }
-                            this.expandTreeListItems(item);
-                        }
-                    }
-                }
-            } else {
-                if (treeListItem.children && treeListItem.children.length > 0) {
-                    let cs = treeListItem.children;
-                    if (cs && cs.length > 0) {
-                        for (let item of cs) {
-                            if (item.tableItem) {
+                            } else {
                                 item.tableItem.show = false;
                             }
                         }
+                        this.expandTreeListItems(item);
                     }
                 }
             }
         }
+    }
+
+    protected isParentExpand(treeListItem: TreeListModel): boolean {
+        if (treeListItem.parent) {
+            if (treeListItem.parent.expanded == false) {
+                return false;
+            } else {
+                return this.isParentExpand(treeListItem.parent);
+            }
+        }
+        return true;
     }
 
     protected getRootClassName(): string[] {

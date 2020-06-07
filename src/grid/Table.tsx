@@ -93,7 +93,7 @@ export default class Table<P extends TableProps> extends Component<P> {
             tableItemModels: Array<TableItemModel> | undefined = this.props.tableItemModels,
             columns: Array<TableColumnModel> = this.props.columns,
             bodyCls = [Table.tableClsBody];
-
+        console.log(tableItemModels ? tableItemModels.length : 0, "--")
         if (plugin && plugin.body) {
             plugin.body.setComponent(this);
             items.push(plugin.body.renderBody(this.props, bodyCls));
@@ -101,80 +101,86 @@ export default class Table<P extends TableProps> extends Component<P> {
             if (tableItemModels && tableItemModels.length > 0) {
                 tableItemModels.map((value, index) => {
                     if (plugin && plugin.row) {
-                        plugin.row.setComponent(this);
-                        items.push(plugin.row.renderRow(this.props, value, index));
+                        if (value.show != false) {
+                            plugin.row.setComponent(this);
+                            items.push(plugin.row.renderRow(this.props, value, index));
+                        }
                     } else {
                         let {feature} = this.props;
                         if (feature && feature.grouping.enabled) {
-                            if (!this.tableFeatureGroup) {
-                                this.tableFeatureGroup = new TableFeatureGroup();
+                            if (value.show != false) {
+                                if (!this.tableFeatureGroup) {
+                                    this.tableFeatureGroup = new TableFeatureGroup();
+                                }
+
+                                this.tableFeatureGroup.renderItems(
+                                    this.props, items, value, this, this.themePrefix
+                                );
                             }
-
-                            this.tableFeatureGroup.renderItems(
-                                this.props, items, value, this, this.themePrefix
-                            );
                         } else {
-                            items.push(
-                                <TableRow
-                                    tableItem={value}
-                                    disableClickSelected={this.props.disableClickSelected}
-                                    enableToggleSelected={this.props.enableToggleSelected}
-                                    hidden={value.show == false}
-                                    zebra={this.props.zebra && index % 2 == 1}
-                                    border={this.props.tableRowBorder}
-                                    selected={value.selected}
-                                    cellSpace={this.props.tableCellBorder}
-                                    plugin={plugin}
-                                    columns={columns}
-                                    index={index}
-                                    onSelected={(e, data: TableItemModel, multiSelect) => {
-                                        if (tableItemModels) {
-                                            if (!multiSelect && this.props.enableToggleSelected != true) {
-                                                tableItemModels.map((v) => {
-                                                    v.selected = false;
-                                                });
-                                            }
-                                            data.selected = true;
-                                            this.redrawing();
+                            if (value.show != false) {
+                                items.push(
+                                    <TableRow
+                                        key={value.key != null ? value.key : "row_" + index}
+                                        tableItem={value}
+                                        disableClickSelected={this.props.disableClickSelected}
+                                        enableToggleSelected={this.props.enableToggleSelected}
+                                        zebra={this.props.zebra && index % 2 == 1}
+                                        border={this.props.tableRowBorder}
+                                        selected={value.selected}
+                                        cellSpace={this.props.tableCellBorder}
+                                        plugin={plugin}
+                                        columns={columns}
+                                        index={index}
+                                        onSelected={(e, data: TableItemModel, multiSelect) => {
+                                            if (tableItemModels) {
+                                                if (!multiSelect && this.props.enableToggleSelected != true) {
+                                                    tableItemModels.map((v) => {
+                                                        v.selected = false;
+                                                    });
+                                                }
+                                                data.selected = true;
+                                                this.redrawing();
 
-                                            if (this.props.onSelected) {
+                                                if (this.props.onSelected) {
+                                                    let sels = [];
+                                                    if (tableItemModels) {
+                                                        tableItemModels.map((v) => {
+                                                            if (v.selected) sels.push(v);
+                                                        });
+                                                    }
+                                                    this.props.onSelected(e, data, sels);
+                                                }
+                                            }
+                                        }}
+                                        onDeselected={(e, data: TableItemModel, multiSelect) => {
+                                            if (this.props.enableToggleSelected == true || multiSelect == true) {
+                                                data.selected = false;
+                                                this.redrawing();
+                                            }
+
+                                            if (this.props.onDeselected) {
                                                 let sels = [];
                                                 if (tableItemModels) {
                                                     tableItemModels.map((v) => {
                                                         if (v.selected) sels.push(v);
                                                     });
                                                 }
-                                                this.props.onSelected(e, data, sels);
+                                                this.props.onDeselected(e, data, sels);
                                             }
-                                        }
-                                    }}
-                                    onDeselected={(e, data: TableItemModel, multiSelect) => {
-                                        if (this.props.enableToggleSelected == true || multiSelect == true) {
-                                            data.selected = false;
-                                            this.redrawing();
-                                        }
-
-                                        if (this.props.onDeselected) {
-                                            let sels = [];
-                                            if (tableItemModels) {
-                                                tableItemModels.map((v) => {
-                                                    if (v.selected) sels.push(v);
-                                                });
+                                        }}
+                                        onClick={(e, data: TableItemModel) => {
+                                            if (this.props.onItemClick) {
+                                                this.props.onItemClick(e, {data: data});
                                             }
-                                            this.props.onDeselected(e, data, sels);
-                                        }
-                                    }}
-                                    onClick={(e, data: TableItemModel) => {
-                                        if (this.props.onItemClick) {
-                                            this.props.onItemClick(e, {data: data});
-                                        }
-                                    }}
-                                    onActionClick={(e, data: TableItemModel, actionItem) => {
-                                        if (this.props.onItemClick) {
-                                            this.props.onItemClick(e, {data: data ? data.data : null, actionItem})
-                                        }
-                                    }}/>
-                            );
+                                        }}
+                                        onActionClick={(e, data: TableItemModel, actionItem) => {
+                                            if (this.props.onItemClick) {
+                                                this.props.onItemClick(e, {data: data ? data.data : null, actionItem})
+                                            }
+                                        }}/>
+                                );
+                            }
                         }
                     }
                 });

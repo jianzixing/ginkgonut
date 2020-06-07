@@ -152,7 +152,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                             els.push(
                                 <TableCell
                                     type={column.type}
-                                    key={"" + index}
+                                    key={"cell_" + column.dataIndex + index}
                                     column={column}
                                     style={cellStyle}
                                     className={className}

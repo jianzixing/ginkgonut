@@ -1,5 +1,7 @@
 import MemberManager from "./MemberManager";
+import GoodsGroupManager from "./GoodsGroupManager";
 
 export const ViewMapping = {
-    "MemberManager": MemberManager
+    "MemberManager": MemberManager,
+    "GoodsGroupManager": GoodsGroupManager
 }
