@@ -25,6 +25,10 @@ export interface TreeProps extends ComponentProps {
     data?: Array<any>;
     childrenField?: string;
     onTreeItemClick?: (e: Event, data?: TableItemModel) => void;
+    onTreeModelChange?: (tree: Tree<TreeProps>,
+                         items: Array<TreeListModel>,
+                         trees?: { [key: string]: TreeListModel }) => void;
+    onStoreData?: (data: any) => any;
 
     expandType?: 'plus';
     expandOpenIcon?: string;
@@ -35,6 +39,7 @@ export interface TreeProps extends ComponentProps {
     leafKey?: string;
     expandedKey?: string;
     showCheckbox?: boolean;
+    isInheritExpand?: boolean;
     onCheckboxChange?: (item: TableItemModel, checked: boolean, checkItems?: Array<TableItemModel>) => void;
 }
 
@@ -44,6 +49,7 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
     protected treeListItems: Array<TreeListModel> = [];
     protected tableItemModels: Array<TableItemModel> = [];
     protected treeListItemMapping: { [key: string]: TreeListModel } = {};
+    protected oldTreeListItemMapping: { [key: string]: TreeListModel } = {};
     protected defaultTreeColumn = [{dataIndex: "text"}];
     protected treeListModelKey: number = 1;
 
@@ -150,6 +156,10 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
                 }
             }
             this.tableItemModels = this.buildTableStructs(this.treeListItems);
+
+            if (this.props.onTreeModelChange) {
+                this.props.onTreeModelChange(this, this.treeListItems, this.treeListItemMapping);
+            }
             return true;
         }
     }
@@ -186,6 +196,7 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
 
     protected buildTreeStructs(data: Array<any> | undefined, deep: number = 1): Array<TreeListModel> | undefined {
         if (deep == 1) {
+            this.oldTreeListItemMapping = this.treeListItemMapping;
             this.treeListItems = [];
             this.treeListItemMapping = {};
         }
@@ -220,7 +231,16 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
                 treeListItem.icon = value[this.props.iconKey || 'icon'];
                 treeListItem.leaf = !!value[this.props.leafKey || 'leaf'];
                 treeListItem.expanded = value[this.props.expandedKey || 'expanded'];
-                if (treeListItem.expanded == null) treeListItem.expanded = true;
+
+                if (this.oldTreeListItemMapping[key]
+                    && this.oldTreeListItemMapping[key].expanded != treeListItem.expanded
+                    && this.props.isInheritExpand != false) {
+                    treeListItem.expanded = this.oldTreeListItemMapping[key].expanded;
+                }
+
+                if (treeListItem.expanded == null) {
+                    treeListItem.expanded = true;
+                }
 
                 if (deep == 1) {
                     this.treeListItems.push(treeListItem);
@@ -228,7 +248,13 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
                 this.treeListItemMapping[key] = treeListItem;
                 ls.push(treeListItem);
             });
+            if (deep == 1) {
+                this.oldTreeListItemMapping = {};
+            }
             return ls;
+        }
+        if (deep == 1) {
+            this.oldTreeListItemMapping = {};
         }
         return undefined;
     }
@@ -260,6 +286,15 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
         treeListItem.show = expanded;
         if (treeListItem.tableItem) {
             treeListItem.expanded = expanded;
+
+            if (treeListItem.children && treeListItem.children.length > 0) {
+                let cs = treeListItem.children;
+                if (cs && cs.length > 0) {
+                    for (let item of cs) {
+                        item.tableItem.created = true;
+                    }
+                }
+            }
         }
     }
 

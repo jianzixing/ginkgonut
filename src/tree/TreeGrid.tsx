@@ -21,7 +21,10 @@ export default class TreeGrid<P extends TreeGridProps> extends Tree<P> {
                     }
                 }}
                 onParseData={(data) => {
-                    this.treeListItemMapping = {};
+                    if (this.props.onStoreData) {
+                        let c = this.props.onStoreData(data);
+                        if (c) data = c;
+                    }
                     this.buildTreeStructs(data);
                     let items = this.buildTableStructs(this.treeListItems);
                     if (this.treeListItems) {

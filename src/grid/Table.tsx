@@ -65,6 +65,7 @@ export interface TableItemModel {
     // 数据修改时使用,比如单元格修改
     record?: TableRecord;
     show?: boolean;
+    created?: boolean;
 }
 
 
@@ -101,14 +102,14 @@ export default class Table<P extends TableProps> extends Component<P> {
             if (tableItemModels && tableItemModels.length > 0) {
                 tableItemModels.map((value, index) => {
                     if (plugin && plugin.row) {
-                        if (value.show != false) {
+                        if (this.isShowRow(value)) {
                             plugin.row.setComponent(this);
                             items.push(plugin.row.renderRow(this.props, value, index));
                         }
                     } else {
                         let {feature} = this.props;
                         if (feature && feature.grouping.enabled) {
-                            if (value.show != false) {
+                            if (this.isShowRow(value)) {
                                 if (!this.tableFeatureGroup) {
                                     this.tableFeatureGroup = new TableFeatureGroup();
                                 }
@@ -118,11 +119,12 @@ export default class Table<P extends TableProps> extends Component<P> {
                                 );
                             }
                         } else {
-                            if (value.show != false) {
+                            if (this.isShowRow(value)) {
                                 items.push(
                                     <TableRow
                                         key={value.key != null ? value.key : "row_" + index}
                                         tableItem={value}
+                                        hidden={value.show == false}
                                         disableClickSelected={this.props.disableClickSelected}
                                         enableToggleSelected={this.props.enableToggleSelected}
                                         zebra={this.props.zebra && index % 2 == 1}
@@ -194,6 +196,13 @@ export default class Table<P extends TableProps> extends Component<P> {
                 {items}
             </div>
         )
+    }
+
+    protected isShowRow(item: TableItemModel) {
+        if (item.show != false || item.created) {
+            return true;
+        }
+        return false;
     }
 
     protected compareUpdate(key: string, newValue: any, oldValue: any): boolean {
