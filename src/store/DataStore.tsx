@@ -33,6 +33,8 @@ export interface DataStoreProps {
     code?: string;
     failMsg?: string;
     successCode?: string | number;
+
+    onStoreData?: (data: any) => any;
 }
 
 export default class DataStore {
@@ -215,6 +217,11 @@ export default class DataStore {
                             });
                     }
                 }
+
+                if (this.props.onStoreData) {
+                    data = this.props.onStoreData(data);
+                }
+
                 this.data = data;
                 this.setAllStoreJsonData(this.data);
             }

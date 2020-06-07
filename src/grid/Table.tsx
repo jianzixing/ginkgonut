@@ -93,7 +93,7 @@ export default class Table<P extends TableProps> extends Component<P> {
             tableItemModels: Array<TableItemModel> | undefined = this.props.tableItemModels,
             columns: Array<TableColumnModel> = this.props.columns,
             bodyCls = [Table.tableClsBody];
-        console.log(tableItemModels ? tableItemModels.length : 0, "--")
+
         if (plugin && plugin.body) {
             plugin.body.setComponent(this);
             items.push(plugin.body.renderBody(this.props, bodyCls));

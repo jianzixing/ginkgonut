@@ -12,7 +12,6 @@ export default class TreeGrid<P extends TreeGridProps> extends Tree<P> {
     }
 
     drawing() {
-        console.log("000")
         return (
             <Grid
                 {...this.buildGridProps()}
