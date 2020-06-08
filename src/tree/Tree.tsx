@@ -346,19 +346,30 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
     }
 
     setTreeModelExpanded(keys: Array<string>) {
-        if (keys && keys.length > 0) {
+        if (keys && keys.length > 0 && this.treeListItems && this.treeListItems.length > 0) {
+            let has = false;
             for (let key of keys) {
                 let tlm = this.treeListItemMapping[key];
                 if (tlm) {
                     this.setTreeModelParentExpanded(tlm);
+                    this.showTreeListItems(tlm, true);
+                    has = true;
                 }
+            }
+            if (has) {
+                for (let item of this.treeListItems) {
+                    this.expandTreeListItems(item);
+                }
+                this.redrawing();
             }
         }
     }
 
     private setTreeModelParentExpanded(item: TreeListModel) {
         item.expanded = true;
-        if (item.parent) this.setTreeModelParentExpanded(item);
+        if (item.parent) {
+            this.setTreeModelParentExpanded(item.parent);
+        }
     }
 
     getTreeModels(): Array<TreeListModel> {

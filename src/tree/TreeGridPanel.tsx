@@ -12,13 +12,12 @@ export default class TreeGridPanel<P extends TreeGridPanelProps> extends Panel<P
 
     protected drawingPanelChild() {
         let newProps: any = {...this.props};
-        newProps.ref = component => {
-            this.treeGridRef.instance = component;
+        return (<TreeGrid {...newProps} ref={component => {
+            this.treeGridRef.instance = component as TreeGrid<any>;
             if (newProps.treeGridRef) {
                 newProps.treeGridRef.instance = component;
             }
-        };
-        return (<TreeGrid {...newProps}/>)
+        }}/>)
     }
 
     updateTree(): void {

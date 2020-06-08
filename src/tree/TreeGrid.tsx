@@ -52,7 +52,8 @@ export default class TreeGrid<P extends TreeGridProps> extends Tree<P> {
             data: this.props.data,
             plugin: {cell: cell},
             ...this.props,
-            models: this.tableItemModels
+            models: this.tableItemModels,
+            ref: undefined
         }
     }
 }
