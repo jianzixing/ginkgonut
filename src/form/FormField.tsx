@@ -20,6 +20,8 @@ export interface FormFieldProps extends AbstractFormFieldProps {
     regex?: RegExp;
     regexText?: string;
     fixMinWidth?: boolean;
+    showRequireText?: boolean;
+    requireText?: string;
 }
 
 /**
@@ -152,9 +154,16 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
         if (label && label != '') {
             let style: CSSProperties = {};
             if (this.fieldLabelWidth) style.width = this.fieldLabelWidth;
+            let mustEl;
+            if (this.props.allowBlank == false && this.props.showRequireText != false) {
+                mustEl = <span style={{color: 'red'}}>
+                    {this.props.requireText ? this.props.requireText : "*"}
+                </span>;
+            }
             labelEls = (
                 <label className={labelCss} style={style}>
                     {typeof label == "string" ? <span>{label}</span> : label}
+                    {mustEl}
                 </label>
             )
         }

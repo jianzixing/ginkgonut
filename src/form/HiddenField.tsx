@@ -2,7 +2,7 @@ import Ginkgo, {InputComponent, RefObject} from "ginkgoes";
 import {AbstractFormField, AbstractFormFieldProps} from "./AbstractFormField";
 
 export interface HiddenFieldProps extends AbstractFormFieldProps {
-
+    value?: any;
 }
 
 export default class HiddenField<P extends HiddenFieldProps> extends AbstractFormField<P> {
@@ -32,9 +32,7 @@ export default class HiddenField<P extends HiddenFieldProps> extends AbstractFor
     }
 
     getValue(): any {
-        if (this.inputRef && this.inputRef.instance) {
-            return this.inputRef.instance.value;
-        }
+        return this.value;
     }
 
     getRowValue(): any {

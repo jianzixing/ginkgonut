@@ -44,6 +44,7 @@ export default class DataStore {
 
     protected pagingParam: Object;
     protected status = 0;
+    protected isLoadFinish = false;
     protected isAutoLoaded = false;
 
     constructor(props: DataStoreProps) {
@@ -118,6 +119,10 @@ export default class DataStore {
         }
     }
 
+    isLoaded(): boolean {
+        return this.isLoadFinish;
+    }
+
     load(ext?: Object): void {
         try {
             if (this.props.type == "ajax") {
@@ -166,6 +171,7 @@ export default class DataStore {
 
                     promise.then(value => {
                         this.status = 0;
+                        this.isLoadFinish = true;
                         this.setStoreData(value);
                         this.processor && this.processor.map(value => {
                             value && value.storeAfterLoad && value.storeAfterLoad()
@@ -188,6 +194,7 @@ export default class DataStore {
                 let api = this.props.api;
                 if (typeof api == "string") {
                     let value = localStorage.getItem(api);
+                    this.isLoadFinish = true;
                     this.setStoreData(value);
                     this.processor && this.processor.map(value => {
                         value && value.storeAfterLoad && value.storeAfterLoad()

@@ -56,7 +56,7 @@ export default class TagField<P extends TagFieldProps> extends ComboboxField<P> 
                             e.preventDefault();
                             this.closePicker();
                         }}>
-                        <div className={TagField.tagFieldTagNameCls}>{v.text}</div>
+                        <div className={TagField.tagFieldTagNameCls}>{v.text || <span>&nbsp;</span>}</div>
                         <Icon className={TagField.tagFieldTagIconCls}
                               icon={IconTypes.close}
                               onClick={e => {
@@ -86,10 +86,10 @@ export default class TagField<P extends TagFieldProps> extends ComboboxField<P> 
                    onInput={e => {
                        this.tagInputValue = this.tagInputRef.instance.value + "";
                        this.redrawingFieldBody();
-                       this.onInputChange(this.tagInputValue, false);
+                       this.onInputShowPicker(this.tagInputValue, false);
                    }}
                    onFocus={e => {
-                       this.onInputChange(this.tagInputValue, true);
+                       this.onInputShowPicker(this.tagInputValue, true);
                    }}
                    onKeyDown={e => {
                        if (e.keyCode == 13) {
@@ -116,37 +116,36 @@ export default class TagField<P extends TagFieldProps> extends ComboboxField<P> 
         }
     }
 
-    protected onInputChange(value?: string, load?: boolean) {
-        if (this.props.remote) {
-            if (this.props.store) {
-                if (this.tagInputValue != this.tagOldInputValue) {
-                    let store = this.props.store;
-                    let p: any = {};
-                    if (this.props.queryField) {
-                        p[this.props.queryField] = value;
-                    } else {
-                        p['keyword'] = value;
-                    }
-                    try {
-                        if (this.isPickerShowing()) {
-                        } else {
-                            this.showPicker();
-                        }
-                    } catch (e) {
-                    }
-                    store.load(p);
-                    this.tagOldInputValue = this.tagInputValue;
+    protected onInputShowPicker(value?: string, load?: boolean) {
+        if (this.props.store && this.props.remote != false) {
+            if (this.tagInputValue != this.tagOldInputValue) {
+                let store = this.props.store;
+                let p: any = {};
+                if (this.props.queryField) {
+                    p[this.props.queryField] = value;
                 } else {
-                    if (load) {
-                        if (!this.isPickerShowing()) {
-                            this.showPicker();
-                        }
+                    p['keyword'] = value;
+                }
+                try {
+                    if (this.isPickerShowing()) {
+                    } else {
+                        this.showPicker();
+                    }
+                } catch (e) {
+                }
+                store.load(p);
+                this.tagOldInputValue = this.tagInputValue;
+            } else {
+                if (load) {
+                    if (!this.isPickerShowing()) {
+                        this.showPicker();
                     }
                 }
-            } else {
-                console.warn("TagField remote load data , but store is empty.")
             }
         } else {
+            if (this.props.remote && !this.props.store) {
+                console.warn("TagField remote load data , but store is empty.")
+            }
             this.isFilterModels = true;
             try {
                 if (this.isPickerShowing()) {
@@ -157,6 +156,11 @@ export default class TagField<P extends TagFieldProps> extends ComboboxField<P> 
             } catch (e) {
             }
             this.isFilterModels = false;
+
+            if (this.props.store && this.props.store.isLoaded() == false) {
+                let store = this.props.store;
+                store.load();
+            }
         }
     }
 

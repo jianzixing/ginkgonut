@@ -48,6 +48,7 @@ export class AbstractFormField<P extends AbstractFormFieldProps> extends Compone
         if (!this.props.disabledFormChange) {
             if (this.onChangeEvents.indexOf(event) == -1) {
                 this.onChangeEvents.push(event);
+                event(this, this.getValue());
             }
         }
     }
