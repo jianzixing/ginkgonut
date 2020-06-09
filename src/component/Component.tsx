@@ -78,6 +78,13 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
     protected disableCompareProps: Array<string> = ["store"];
     protected boundsParentScrollEventEls: Array<Element>;
 
+    constructor(props?: any) {
+        super(props);
+
+        this.getRootClassName = this.getRootClassName.bind(this);
+        this.getRootStyle = this.getRootStyle.bind(this);
+    }
+
     componentWillMount(): void {
         this.setTheme();
     }
@@ -240,8 +247,8 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
 
         return (
             <div
-                className={this.getRootClassName.bind(this)}
-                style={this.getRootStyle.bind(this)}
+                className={this.getRootClassName}
+                style={this.getRootStyle}
                 ref={"rootEl"}
                 {...events}
             >
