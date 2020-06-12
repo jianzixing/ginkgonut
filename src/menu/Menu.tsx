@@ -30,7 +30,10 @@ export interface MenuModel {
     text: string;
     /* custom field */
     type?: string;
+    icon?: string;
     iconType?: string;
+    iconStyle?: CSSProperties;
+    iconSelectedStyle?: CSSProperties;
     selected?: boolean;
     /* custom field */
     data?: any,
@@ -56,6 +59,7 @@ export default class Menu<P extends MenuProps> extends Component<P> {
     protected static menuClsBody;
     protected static menuClsItem;
     protected static menuClsIcon;
+    protected static menuClsIconImage;
     protected static menuClsText;
     protected static menuClsSelected;
     protected static menuClsMore;
@@ -109,6 +113,7 @@ export default class Menu<P extends MenuProps> extends Component<P> {
         Menu.menuClsBody = this.getThemeClass("menu-body");
         Menu.menuClsItem = this.getThemeClass("menu-item");
         Menu.menuClsIcon = this.getThemeClass("menu-icon");
+        Menu.menuClsIconImage = this.getThemeClass("menu-icon-image");
         Menu.menuClsText = this.getThemeClass("menu-text");
         Menu.menuClsSelected = this.getThemeClass("menu-selected");
         Menu.menuClsMore = this.getThemeClass("menu-more");
@@ -132,8 +137,23 @@ export default class Menu<P extends MenuProps> extends Component<P> {
                             <Icon icon={IconTypes.caretRight}/>
                         </div>);
                 }
+
+                let iconStyle = value.iconStyle;
+                if (value.iconSelectedStyle && value.selected) {
+                    iconStyle = value.iconSelectedStyle;
+                }
                 if (value.iconType) {
-                    iconType = <Icon icon={value.iconType}/>
+                    iconType = <Icon
+                        className={Menu.menuClsIconImage}
+                        icon={value.iconType}
+                        style={iconStyle}
+                    />
+                } else if (value.icon) {
+                    iconType = <img
+                        className={Menu.menuClsIconImage}
+                        src={value.icon}
+                        style={iconStyle}
+                    />
                 }
                 if (value.disabled) {
                     css.push(Menu.menuClsDisabled);

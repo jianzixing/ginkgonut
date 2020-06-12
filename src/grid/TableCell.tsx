@@ -49,6 +49,9 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
     protected static tableCellClsRoot;
     protected static tableCellClsBody;
     protected static tableCellClsPadding;
+    protected static tableCellClsAlignLeft;
+    protected static tableCellClsAlignCenter;
+    protected static tableCellClsAlignRight;
     protected static tableCellClsRowNumber;
     protected static tableCellClsCheckbox;
     protected static tableCellClsLine;
@@ -71,6 +74,9 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
         TableCell.tableCellClsRoot = this.getThemeClass("table-cell");
         TableCell.tableCellClsBody = this.getThemeClass("table-cell-body-el");
         TableCell.tableCellClsPadding = this.getThemeClass("table-cell-body-el-padding");
+        TableCell.tableCellClsAlignLeft = this.getThemeClass("table-cell-align-left");
+        TableCell.tableCellClsAlignCenter = this.getThemeClass("table-cell-align-center");
+        TableCell.tableCellClsAlignRight = this.getThemeClass("table-cell-align-right");
         TableCell.tableCellClsRowNumber = this.getThemeClass("table-cell-rownumber");
         TableCell.tableCellClsCheckbox = this.getThemeClass("table-cell-checkbox");
         TableCell.tableCellClsLine = this.getThemeClass("table-cell-line");
@@ -91,6 +97,13 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
             this.onEditing = true;
         }
         let children = this.buildCellChildren();
+        if (column.textAlign == "center") {
+            cls.push(TableCell.tableCellClsAlignCenter);
+        } else if (column.textAlign == "right") {
+            cls.push(TableCell.tableCellClsAlignRight);
+        } else {
+            cls.push(TableCell.tableCellClsAlignLeft);
+        }
 
         let elements = [
             <div

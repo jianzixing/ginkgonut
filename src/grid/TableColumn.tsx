@@ -22,7 +22,7 @@ export interface TableColumnModel {
     show?: boolean;
     checked?: boolean;
     sort?: "asc" | "desc";
-    textAlign?: "left" | "center";
+    textAlign?: "left" | "center" | "right";
     /*宽度占比*/
     flex?: number;
     // 由于width会根据fit值改变所以保存最原始的width值

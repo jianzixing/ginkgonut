@@ -13,6 +13,18 @@
     &.x-table-cell-body-el-padding {
       padding: 7px 10px 6px;
     }
+
+    &.x-table-cell-align-left {
+      text-align: left;
+    }
+
+    &.x-table-cell-align-center {
+      text-align: center;
+    }
+
+    &.x-table-cell-align-right {
+      text-align: right;
+    }
   }
 
   &.x-table-cell-rownumber {
