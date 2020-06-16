@@ -17,7 +17,7 @@ export interface TabModel {
     icon?: string;
     iconType?: string;
     action?: boolean;
-    content?: GinkgoNode;
+    content?: (model: TabModel) => GinkgoNode | GinkgoNode;
     data?: any;
     closable?: boolean;
 }
@@ -171,10 +171,17 @@ export default class TabPanel<P extends TabPanelProps> extends Container<P> {
                 if (tab.model.action != true) {
                     contentCls.push(TabPanel.tabPanelClsHidden);
                 }
+
+                let tabContent;
+                if (tab.model && tab.model.content && typeof tab.model.content == "function") {
+                    tabContent = tab.model.content(tab.model);
+                } else if (tab.model && tab.model.content) {
+                    tabContent = tab.model.content;
+                }
                 tabItemNodes.push(
                     <div ref={refItem}
                          className={contentCls}>
-                        {tab.model && tab.model.content ? tab.model.content : undefined}
+                        {tabContent}
                     </div>);
                 tab.ref = refItem;
                 index++;
