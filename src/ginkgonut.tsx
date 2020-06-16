@@ -13,7 +13,14 @@ import AbsoluteLayout, {
     AbsoluteLayoutProps
 } from "./layout/AbsoluteLayout";
 import BorderLayout, {BorderLayoutItem, BorderLayoutItemProps, BorderLayoutProps} from "./layout/BorderLayout";
-import FormLayout, {FormLayoutTitle, FormLayoutProps, FormLayoutTitleProps} from "./layout/FormLayout";
+import FormLayout, {
+    FormLayoutTitle,
+    FormLayoutProps,
+    FormLayoutTitleProps,
+    FormLayoutItemProps,
+    FormLayoutItem,
+    FormLayoutItemSetting
+} from "./layout/FormLayout";
 
 
 import Icon, {IconProps} from "./icon/Icon";
@@ -211,6 +218,9 @@ export {
     FormLayoutTitle,
     FormLayoutProps,
     FormLayoutTitleProps,
+    FormLayoutItemProps,
+    FormLayoutItem,
+    FormLayoutItemSetting,
 
     Loading,
     LoadingProps,

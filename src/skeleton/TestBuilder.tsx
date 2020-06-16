@@ -1,7 +1,7 @@
 import Ginkgo, {GinkgoNode, RefObject} from "ginkgoes";
 import {AppManager, AppManagerProps} from "./AppPanel";
 import FormPanel from "../panel/FormPanel";
-import FormLayout, {FormLayoutTitle} from "../layout/FormLayout";
+import FormLayout, {FormLayoutItem, FormLayoutTitle} from "../layout/FormLayout";
 import TextField from "../form/TextField";
 import NumberTextField from "../form/NumberTextField";
 import ComboboxField, {ComboboxModel} from "../form/ComboboxField";
@@ -22,7 +22,6 @@ import Button from "../button/Button";
 import {IconTypes} from "../icon/IconTypes";
 import HiddenField from "../form/HiddenField";
 import SelectField from "../form/SelectField";
-import HtmlEditor from "../htmleditor/HtmlEditor";
 import HtmlEditorField from "../form/HtmlEditorField";
 import DisplayImageGroup from "../image/DisplayImageGroup";
 
@@ -84,6 +83,10 @@ export default class TestBuilder<P extends TestBuilderProps> extends AppManager<
                        }}>
                 <FormLayoutTitle text={"基本信息 - (属性模板关联SKU信息)"} iconType={IconTypes.boxOpen}/>
                 <HiddenField/>
+                <FormLayoutItem setting={[{width: 500}]}>
+                    <TextField name={"t1"} fieldLabel={"T1"} placeholder={"user id"}/>
+                    <TextField name={"t2"} fieldLabel={"T2"} placeholder={"user id"}/>
+                </FormLayoutItem>
                 <FileUploadField fieldLabel={"avatar"} uploadType={"preview"} uploadProps={{multi: true}}
                                  isSyncUpload={true}/>
                 <TextField name={"login_field"} fieldLabel={"Login Field"} placeholder={"user id"}/>

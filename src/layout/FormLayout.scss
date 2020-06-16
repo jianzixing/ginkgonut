@@ -52,6 +52,35 @@
   &.x-form-layout-scroll-y {
     overflow-y: scroll;
   }
+
+  .x-form-layout-cusitem {
+    display: table;
+    width: 100%;
+    overflow: hidden;
+
+    .x-form-layout-cusitem-column {
+      display: table-cell;
+      overflow: hidden;
+
+      .x-form-layout-cusitem-align {
+        display: inline-block;
+        text-align: left;
+        overflow: hidden;
+      }
+
+      &.x-form-layout-cusitem-left {
+        text-align: left;
+      }
+
+      &.x-form-layout-cusitem-right {
+        text-align: right;
+      }
+
+      &.x-form-layout-cusitem-center {
+        text-align: center;
+      }
+    }
+  }
 }
 
 

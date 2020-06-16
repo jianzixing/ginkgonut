@@ -78,6 +78,9 @@ export default class FormLayout extends Container<FormLayoutProps> {
                             isHidden = true;
                         }
                     }
+                    if (c instanceof FormLayoutItem) {
+
+                    }
                     if (!isHidden) {
                         newChild.push(c);
                     }
@@ -312,6 +315,98 @@ export class FormLayoutTitle<P extends FormLayoutTitleProps> extends Component<P
     protected getRootClassName(): string[] {
         let arr = super.getRootClassName();
         arr.push(FormLayoutTitle.formLayoutTitleCls);
+        return arr;
+    }
+}
+
+export interface FormLayoutItemProps extends ComponentProps {
+    // 间距
+    spacingH?: number;
+    setting?: Array<FormLayoutItemSetting>;
+}
+
+export interface FormLayoutItemSetting {
+    width?: number;
+    align?: 'left' | 'center' | 'right';
+    alignField?: 'left' | 'center' | 'right';
+    style?: CSSProperties;
+}
+
+export class FormLayoutItem<P extends FormLayoutItemProps> extends Component<P> {
+    protected static formLayoutItemCls;
+    protected static formItemFieldCls;
+    protected static formLayoutItemColumnCls;
+    protected static formLayoutItemAlignCls;
+    protected static formLayoutItemLeftCls;
+    protected static formLayoutItemCenterCls;
+    protected static formLayoutItemRightCls;
+
+    protected buildClassNames(themePrefix: string) {
+        super.buildClassNames(themePrefix);
+
+        FormLayoutItem.formLayoutItemCls = this.getThemeClass("form-layout-cusitem");
+        FormLayoutItem.formItemFieldCls = this.getThemeClass("form-item-field");
+        FormLayoutItem.formLayoutItemColumnCls = this.getThemeClass("form-layout-cusitem-column");
+        FormLayoutItem.formLayoutItemAlignCls = this.getThemeClass("form-layout-cusitem-align");
+        FormLayoutItem.formLayoutItemLeftCls = this.getThemeClass("form-layout-cusitem-left");
+        FormLayoutItem.formLayoutItemCenterCls = this.getThemeClass("form-layout-cusitem-center");
+        FormLayoutItem.formLayoutItemRightCls = this.getThemeClass("form-layout-cusitem-right");
+    }
+
+    protected drawing(): GinkgoNode | GinkgoElement[] {
+        let children = this.props.children;
+        let spacingH = this.props.spacingH || 10;
+        let setting = this.props.setting;
+        if (this.children) {
+            for (let c of this.children) {
+                if (c instanceof FormField) {
+                    c.addRootClassName(FormLayoutItem.formItemFieldCls);
+                }
+            }
+        }
+        let chs = [];
+        if (children) {
+            let i = 0;
+            let sh = spacingH / 2;
+            for (let c of children) {
+                let sti: FormLayoutItemSetting;
+                if (setting && setting.length > i) {
+                    sti = setting[i];
+                }
+
+                let cls = [FormLayoutItem.formLayoutItemColumnCls];
+                if (sti && sti.align == "left") cls.push(FormLayoutItem.formLayoutItemCenterCls);
+                if (sti && sti.align == "center") cls.push(FormLayoutItem.formLayoutItemLeftCls);
+                if (sti && sti.align == "right") cls.push(FormLayoutItem.formLayoutItemRightCls)
+
+                let bodyStyle: CSSProperties = {};
+                let alignStyle: CSSProperties = {};
+                if (children.length >= 2) {
+                    if (i == 0) alignStyle.marginRight = sh;
+                    else if (i == children.length - 1) alignStyle.marginLeft = sh;
+                    else {
+                        alignStyle.marginLeft = sh;
+                        alignStyle.marginRight = sh;
+                    }
+                }
+                if (sti && sti.alignField == "left") alignStyle.textAlign = "left";
+                if (sti && sti.alignField == "center") alignStyle.textAlign = "center";
+                if (sti && sti.alignField == "right") alignStyle.textAlign = "right"
+                if (sti && sti.style) alignStyle = {...alignStyle, ...sti.style};
+                if (sti && sti.width) bodyStyle.width = sti.width;
+
+                let alignEl = <div className={FormLayoutItem.formLayoutItemAlignCls}
+                                   style={alignStyle}>{c}</div>
+                chs.push(<div className={cls} style={bodyStyle}>{alignEl}</div>);
+                i++;
+            }
+        }
+        return chs;
+    }
+
+    protected getRootClassName(): string[] {
+        let arr = super.getRootClassName();
+        arr.push(FormLayoutItem.formLayoutItemCls);
         return arr;
     }
 }

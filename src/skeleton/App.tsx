@@ -20,14 +20,14 @@ setRequestServer(params => {
         return params.url;
     }
     if (params.className && params.methodName) {
-        return "http://localhost:8080/admin/" + params.className.toLowerCase() + "/" + params.methodName.toLowerCase() + ".jhtml";
+        return "http://localhost:8081/admin/" + params.className.toLowerCase() + "/" + params.methodName.toLowerCase() + ".jhtml";
     }
 })
 
 export function getImageDownload(f: string) {
     if (f) {
         if (f && f.startsWith("http://")) return f;
-        return "http://localhost:8080/web/image/load.jhtml?f=" + f;
+        return "http://localhost:8081/web/image/load.jhtml?f=" + f;
     }
     return undefined;
 }
