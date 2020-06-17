@@ -108,7 +108,11 @@ export default class HtmlEditor<P extends HtmlEditorProps> extends Component<P> 
                     if (this.props.editorAutoHeight) {
                         options.minHeight = (this.props.height - (this.props.editToolbarHeight || 42)) + "px";
                     } else {
-                        options.height = (this.props.height - (this.props.editToolbarHeight || 42)) + "px";
+                        if (!this.props.height) {
+                            options.height = "calc(100% - 42px)";
+                        } else {
+                            options.height = (this.props.height - (this.props.editToolbarHeight || 42)) + "px";
+                        }
                     }
 
                     ClassicEditor.create(dom, options).then(editor => {
@@ -126,10 +130,33 @@ export default class HtmlEditor<P extends HtmlEditorProps> extends Component<P> 
                             this.props.onEditorReady(editor);
                         }
                         console.log("ckeditor init complete");
+
+                        if (!this.props.height) this.setEditorHeight();
                     }).catch(error => {
                         console.error(error);
                     });
                 }
+            }
+        }
+    }
+
+    private setEditorHeight() {
+        let root = this.rootEl.dom as HTMLElement;
+        if (root) {
+            let editorDom = root.querySelector('.ck.ck-content.ck-editor__editable') as HTMLElement;
+            if (editorDom) {
+                let parent = editorDom;
+                let i = 0
+                while (parent != root) {
+                    if (i == 0) {
+                        parent.style.height = "calc(100% - 42px)";
+                    } else {
+                        parent.style.height = '100%';
+                    }
+                    parent = parent.parentElement;
+                    i++;
+                }
+                parent.style.height = '100%';
             }
         }
     }
