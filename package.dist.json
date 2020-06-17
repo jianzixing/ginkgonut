@@ -38,6 +38,7 @@
     "webpack-dev-server": "^3.10.1"
   },
   "peerDependencies": {
-    "ginkgoes": ">=0.0.13"
+    "ginkgoes": ">=0.0.21",
+    "@ckeditor/ckeditor5-build-classic": ">=19.0.1"
   }
 }
