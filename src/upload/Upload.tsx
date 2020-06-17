@@ -140,6 +140,7 @@ export default class Upload<P extends UploadProps> extends Component<P> {
                                               onClick={e => {
                                                   this.props.onChange && this.props.onChange(this.items);
                                                   let promise: Promise<{}>, rsv;
+                                                  let isNotAsync = false;
                                                   if (this.props.onAsyncFile) {
                                                       promise = this.props.onAsyncFile(item, "del");
                                                   }
@@ -147,6 +148,7 @@ export default class Upload<P extends UploadProps> extends Component<P> {
                                                       promise = new Promise((resolve, reject) => {
                                                           rsv = resolve;
                                                       });
+                                                      isNotAsync = true;
                                                   }
 
                                                   promise.then(value => {
@@ -157,7 +159,7 @@ export default class Upload<P extends UploadProps> extends Component<P> {
 
                                                   });
 
-                                                  if (!this.props.onAsyncFile) {
+                                                  if (!this.props.onAsyncFile || isNotAsync) {
                                                       rsv(item);
                                                   }
                                               }}/>

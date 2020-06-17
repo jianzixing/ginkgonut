@@ -153,7 +153,7 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
             if (type == "del") {
                 let url = this.props.deleteUrl;
                 if (url == null) {
-                    throw new Error("FileUploadField if isSyncUpload=true must set deleteUrl");
+                    return undefined;
                 }
                 if (url instanceof Submit) {
                     url = url.getParamUrl();
