@@ -1,5 +1,5 @@
 import Ginkgo, {CSSProperties, GinkgoElement, GinkgoNode, RefObject} from "ginkgoes";
-import WindowPanel, {WindowProps} from "./Window";
+import WindowPanel, {WindowProps, WindowWrapper} from "./Window";
 import Button, {ButtonProps} from "../button/Button";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
@@ -17,6 +17,8 @@ export interface MessageBoxProps extends WindowProps, ProgressProps {
     buttons?: Array<ButtonProps>;
 }
 
+// 全局对话框实例只允许有一个
+let globalMessageBox: WindowWrapper;
 export default class MessageBox<P extends MessageBoxProps> extends WindowPanel<P> {
     protected static messageBoxCls;
     protected static messageBoxBodyCls;
@@ -43,7 +45,13 @@ export default class MessageBox<P extends MessageBoxProps> extends WindowPanel<P
     };
 
     public static show(props: MessageBoxProps) {
-        return WindowPanel.open(props);
+        if (globalMessageBox) {
+            globalMessageBox.close();
+            globalMessageBox = null;
+        }
+        let wrapper: WindowWrapper = WindowPanel.open(props);
+        globalMessageBox = wrapper;
+        return wrapper;
     }
 
     public static showAlert(title: string, content: string) {
