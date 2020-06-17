@@ -441,6 +441,7 @@ export default class Panel<P extends PanelProps> extends Container<P> {
             if (component instanceof Toolbar) {
                 if (this.getWidth() > 0) {
                     component.setWidth(this.getWidth());
+                    component.redrawing();
                 }
             }
         }, this);
