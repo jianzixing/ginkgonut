@@ -14,6 +14,7 @@ export class CustomEditor {
 }
 
 export interface HtmlEditorProps extends ComponentProps {
+    fitParent?: boolean;
     editToolbarHeight?: number;
     onDrawingEditor?: (dom: HTMLElement, options?: any) => CustomEditor;
     options?: any;
@@ -108,7 +109,7 @@ export default class HtmlEditor<P extends HtmlEditorProps> extends Component<P> 
                     if (this.props.editorAutoHeight) {
                         options.minHeight = (this.props.height - (this.props.editToolbarHeight || 42)) + "px";
                     } else {
-                        if (!this.props.height) {
+                        if (this.props.fitParent) {
                             options.height = "calc(100% - 42px)";
                         } else {
                             options.height = (this.props.height - (this.props.editToolbarHeight || 42)) + "px";
@@ -131,7 +132,7 @@ export default class HtmlEditor<P extends HtmlEditorProps> extends Component<P> 
                         }
                         console.log("ckeditor init complete");
 
-                        if (!this.props.height) this.setEditorHeight();
+                        if (this.props.fitParent) this.setEditorHeight();
                     }).catch(error => {
                         console.error(error);
                     });
