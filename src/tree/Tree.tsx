@@ -24,6 +24,7 @@ export interface TreeListModel {
 export interface TreeProps extends ComponentProps {
     data?: Array<any>;
     keyField?: string;
+    displayField?: string;
     isInheritExpand?: boolean;
     childrenField?: string;
     onTreeItemClick?: (e: Event, data?: TableItemModel) => void;
@@ -51,7 +52,7 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
     protected tableItemModels: Array<TableItemModel> = [];
     protected treeListItemMapping: { [key: string]: TreeListModel } = {};
     protected oldTreeListItemMapping: { [key: string]: TreeListModel } = {};
-    protected defaultTreeColumn = [{dataIndex: "text"}];
+    protected defaultTreeColumn = [{dataIndex: this.props.displayField || "text"}];
     protected treeListModelKey: number = 1;
 
     renderCell(tableRow: TableRow<TableRowProps>,

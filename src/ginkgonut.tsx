@@ -37,6 +37,7 @@ import HtmlEditor, {HtmlEditorProps} from "./htmleditor/HtmlEditor";
 import {AbstractFormField, AbstractFormFieldProps} from "./form/AbstractFormField";
 import FormField, {FormFieldProps} from "./form/FormField";
 import ComboboxField, {ComboboxFieldProps, ComboboxModel} from "./form/ComboboxField";
+import TreeComboboxField, {TreeComboboxFieldProps} from "./form/TreeComboboxField";
 import TextField, {TextFieldProps} from "./form/TextField";
 import CascaderField, {CascaderModel, CascaderFieldProps} from "./form/CascaderField";
 import CheckboxField, {CheckboxFieldProps} from "./form/CheckboxField";
@@ -127,6 +128,8 @@ export {
     FormFieldProps,
     ComboboxField,
     ComboboxFieldProps,
+    TreeComboboxField,
+    TreeComboboxFieldProps,
     ComboboxModel,
     TextField,
     TextFieldProps,

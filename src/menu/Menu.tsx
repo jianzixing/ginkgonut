@@ -27,7 +27,7 @@ export class MenuShowing {
 }
 
 export interface MenuModel {
-    text: string;
+    text: GinkgoNode;
     /* custom field */
     type?: string;
     icon?: string;

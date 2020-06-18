@@ -29,6 +29,8 @@ export interface ComboboxFieldProps extends TextFieldProps {
     selectData?: any;
     queryField?: string;
     remote?: boolean;
+
+    picker?: (data: any, fns: any) => GinkgoNode;
 }
 
 export default class ComboboxField<P extends ComboboxFieldProps> extends TextField<P>
@@ -44,6 +46,7 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
 
     protected comboboxValue: ComboboxModel;
     protected cacheSetValue: any;
+    protected data = this.props.data;
     protected models?: Array<ComboboxModel> = this.props.models;
     protected pickerBindRef: RefObject<BindComponent> = Ginkgo.createRef();
     protected isLoading?: boolean = false;
@@ -125,57 +128,88 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
     }
 
     protected buildFieldPicker(): GinkgoNode {
-        if (this.props.data && !this.props.models) {
-            this.models = this.data2Models(this.props.data);
-        }
-
-        let models = this.filterPickerModels(this.models);
-        let list = null, style: CSSProperties = {};
-
-        if (this.isLoading) {
-            list = (
-                <Loading/>
-            );
-            style.height = 80;
+        if (this.props.picker) {
+            let list = null, style: CSSProperties = {};
+            if (this.isLoading) {
+                list = (
+                    <Loading/>
+                );
+                style.height = 80;
+            } else {
+                let self = this;
+                list = this.props.picker(this.data, {
+                    onSelectData(sel: ComboboxModel) {
+                        self.onItemClick(null, sel);
+                    },
+                    closePicker() {
+                        self.closePicker();
+                    }
+                });
+                if (list == null) {
+                    list = (
+                        <DataEmpty/>
+                    )
+                }
+            }
+            return (
+                <div
+                    className={ComboboxField.comboboxFieldPicker}
+                    style={style}>
+                    {list}
+                </div>)
         } else {
-            let items = [];
-            if (models) {
-                for (let dt of models) {
-                    let cls = [ComboboxField.comboboxFieldPickerItem];
-                    if (dt.selected) {
-                        cls.push(ComboboxField.comboboxFieldPickerSelected);
-                        if (this.inputEl) this.inputEl.value = dt.text;
-                    }
+            if (this.props.data && !this.props.models) {
+                this.models = this.data2Models(this.props.data);
+            }
 
-                    let text: any = dt.text;
-                    if (this.props.renderDisplayField) {
-                        text = this.props.renderDisplayField(dt, text);
+            let models = this.filterPickerModels(this.models);
+            let list = null, style: CSSProperties = {};
+
+            if (this.isLoading) {
+                list = (
+                    <Loading/>
+                );
+                style.height = 80;
+            } else {
+                let items = [];
+                if (models) {
+                    for (let dt of models) {
+                        let cls = [ComboboxField.comboboxFieldPickerItem];
+                        if (dt.selected) {
+                            cls.push(ComboboxField.comboboxFieldPickerSelected);
+                            if (this.inputEl) this.inputEl.value = dt.text;
+                        }
+
+                        let text: any = dt.text;
+                        if (this.props.renderDisplayField) {
+                            text = this.props.renderDisplayField(dt, text);
+                        }
+                        items.push(<li className={cls} onClick={(e) => {
+                            this.onItemClick(e, dt);
+                        }}>{text}</li>);
                     }
-                    items.push(<li className={cls} onClick={(e) => {
-                        this.onItemClick(e, dt);
-                    }}>{text}</li>);
+                }
+
+                if (items && items.length > 0) {
+                    list = (
+                        <ul className={ComboboxField.comboboxFieldPickerList}>
+                            {items}
+                        </ul>
+                    );
+                } else {
+                    list = (
+                        <DataEmpty/>
+                    )
                 }
             }
 
-            if (items && items.length > 0) {
-                list = (
-                    <ul className={ComboboxField.comboboxFieldPickerList}>
-                        {items}
-                    </ul>
-                );
-            } else {
-                list = (
-                    <DataEmpty/>
-                )
-            }
+            return (
+                <div
+                    className={ComboboxField.comboboxFieldPicker}
+                    style={style}>
+                    {list}
+                </div>)
         }
-
-        return (
-            <div
-                className={ComboboxField.comboboxFieldPicker}
-                style={style}>
-                {list}
-            </div>)
     }
 
     protected filterPickerModels(models: Array<ComboboxModel>) {
@@ -225,12 +259,14 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
         this.isLoading = false;
         this.loadCount++;
         if (data && data instanceof Array) {
+            this.data = data;
             this.models = this.data2Models(data);
             if (this.pickerBindRef && this.pickerBindRef.instance) {
                 this.redrawingPickerBody();
             }
         } else {
             this.models = [];
+            this.data = [];
             if (this.pickerBindRef && this.pickerBindRef.instance) {
                 this.redrawingPickerBody();
             }

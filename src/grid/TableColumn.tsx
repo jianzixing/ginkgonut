@@ -11,7 +11,7 @@ import "./TableColumn.scss";
 export interface TableColumnModel {
     type?: tableCellTypes;
     width?: number;
-    title?: string;
+    title?: GinkgoNode;
 
     dataIndex?: string;
     dataSplit?: string;

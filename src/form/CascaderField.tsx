@@ -48,6 +48,9 @@ export default class CascaderField<P extends CascaderFieldProps> extends Combobo
     }
 
     protected buildFieldPicker(): GinkgoNode {
+        if (this.props.picker) {
+            console.warn("CascaderField can't support picker props");
+        }
         if (this.props.data && !this.props.models) {
             this.models = this.data2Models(this.props.data);
         } else if (this.models) {

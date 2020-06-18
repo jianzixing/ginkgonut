@@ -24,6 +24,7 @@ import HiddenField from "../form/HiddenField";
 import SelectField from "../form/SelectField";
 import HtmlEditorField from "../form/HtmlEditorField";
 import DisplayImageGroup from "../image/DisplayImageGroup";
+import TreeComboboxField from "../form/TreeComboboxField";
 
 export interface TestBuilderProps extends AppManagerProps {
 
@@ -87,6 +88,19 @@ export default class TestBuilder<P extends TestBuilderProps> extends AppManager<
                     <TextField name={"t1"} fieldLabel={"T1"} placeholder={"user id"}/>
                     <TextField name={"t2"} fieldLabel={"T2"} placeholder={"user id"}/>
                 </FormLayoutItem>
+                <TreeComboboxField name={'t3'} fieldLabel={"Tree Combobox"} data={[
+                    {text: 'aaa',children:[{text:'a1'},{text:'a2'}]},
+                    {text: 'aaa',children:[{text:'a1'},{text:'a2'}]},
+                    {text: 'aaa',children:[{text:'a1'},{text:'a2'}]},
+                    {text: 'aaa',children:[{text:'a1'},{text:'a2'}]},
+                    {text: 'aaa',children:[{text:'a1'},{text:'a2'}]},
+                    {text: 'aaa',children:[{text:'a1'},{text:'a2'}]},
+                    {text: 'aaa',children:[{text:'a1'},{text:'a2'}]},
+                    {text: 'aaa',children:[{text:'a1'},{text:'a2'}]},
+                    {text: 'bbb'},
+                    {text: 'ccc'},
+                    {text: 'ddd'}
+                ]}/>
                 <FileUploadField fieldLabel={"avatar"} uploadType={"preview"} uploadProps={{multi: true}}
                                  isSyncUpload={true}/>
                 <TextField name={"login_field"} fieldLabel={"Login Field"} placeholder={"user id"}/>
