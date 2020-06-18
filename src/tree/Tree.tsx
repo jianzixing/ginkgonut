@@ -52,7 +52,6 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
     protected tableItemModels: Array<TableItemModel> = [];
     protected treeListItemMapping: { [key: string]: TreeListModel } = {};
     protected oldTreeListItemMapping: { [key: string]: TreeListModel } = {};
-    protected defaultTreeColumn = [{dataIndex: this.props.displayField || "text"}];
     protected treeListModelKey: number = 1;
 
     renderCell(tableRow: TableRow<TableRowProps>,
@@ -184,12 +183,15 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
     }
 
     protected buildTableProps(): TableProps {
+        let cellPlugin: any = {};
+        let dataIndex = this.props.displayField || "text";
+        cellPlugin[dataIndex] = this;
         return {
             zebra: false,
-            columns: this.defaultTreeColumn,
+            columns: [{dataIndex: dataIndex}],
             tableRowBorder: false,
             tableItemModels: this.tableItemModels,
-            plugin: {cell: {text: this}},
+            plugin: {cell: cellPlugin},
             width: this.props.width,
             height: this.props.height,
             ignoreCalcWidth: true

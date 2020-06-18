@@ -268,7 +268,7 @@ export default class Menu<P extends MenuProps> extends Component<P> {
 
     getRootStyle(): CSSProperties {
         let style = super.getRootStyle();
-        style.zIndex = 100000;
+        style.zIndex = 999;
         style.left = this.props.x || 0;
         style.top = this.props.y || 0;
         return style;

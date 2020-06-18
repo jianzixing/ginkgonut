@@ -1,11 +1,11 @@
 import Ginkgo, {CSSProperties, GinkgoElement, GinkgoNode, InputComponent, RefObject} from "ginkgoes";
 import ComboboxField, {ComboboxFieldProps, ComboboxModel} from "./ComboboxField";
-import Tree from "../tree/Tree";
+import Tree, {TreeProps} from "../tree/Tree";
 import Loading from "../loading/Loading";
 import DataEmpty from "../empty/DataEmpty";
 
 export interface TreeComboboxFieldProps extends ComboboxFieldProps {
-    
+    treeProps?: TreeProps;
 }
 
 export default class TreeComboboxField<P extends TreeComboboxFieldProps> extends ComboboxField<P> {
@@ -26,14 +26,16 @@ export default class TreeComboboxField<P extends TreeComboboxFieldProps> extends
             style.height = 80;
         } else {
             if (this.data && this.data instanceof Array && this.data.length > 0) {
-                list = <Tree data={this.data}
-                             displayField={this.props.displayField}
-                             onTreeItemClick={(e, data) => {
-                                 let model = this.data2Models([data.data]);
-                                 if (model && model.length > 0) {
-                                     this.onItemClick(e, model[0]);
-                                 }
-                             }}></Tree>;
+                list = <Tree
+                    {...this.props.treeProps || {}}
+                    data={this.data}
+                    displayField={this.props.displayField}
+                    onTreeItemClick={(e, data) => {
+                        let model = this.data2Models([data.data]);
+                        if (model && model.length > 0) {
+                            this.onItemClick(e, model[0]);
+                        }
+                    }}></Tree>;
             } else {
                 list = (
                     <DataEmpty/>
