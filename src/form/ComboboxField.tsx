@@ -25,6 +25,7 @@ export interface ComboboxFieldProps extends TextFieldProps {
     data?: Array<any>;
     valueField?: string;
     displayField?: string;
+    onSelected?: (model: ComboboxModel) => void;
     renderDisplayField?: (item: ComboboxModel, value: string) => GinkgoNode;
     selectData?: any;
     queryField?: string;
@@ -222,6 +223,9 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
             this.inputEl.value = this.comboboxValue.text;
             super.value = this.comboboxValue.text;
             this.triggerOnChangeEvents(this, this.getValue());
+        }
+        if (this.props.onSelected) {
+            this.props.onSelected(sel);
         }
         this.closePicker();
     }
