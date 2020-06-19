@@ -59,12 +59,14 @@ export default class TextField<P extends TextFieldProps> extends FormField<P> {
         if (readonlys) attrs = {readonly: readonlys};
         if (this.props.type) attrs['type'] = this.props.type;
 
+        let value = this.value;
+        if (this.value == null) value = '';
         return (
             <input
                 ref={c => this.inputEl = c}
                 onKeyUp={this.onInputKeyUp.bind(this)}
                 className={TextField.textFieldInputCls}
-                value={this.value || ""}
+                value={value}
                 type={"text"}
                 {...attrs}
                 autocomplete="off"
