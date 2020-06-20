@@ -99,4 +99,37 @@ export default class ObjectTools {
         }
         return false;
     }
+
+    public static combineArray(arrs: Array<Array<any>>): Array<any> {
+        if (arrs && arrs.length > 1) {
+            let a1 = arrs[0];
+            let a2 = arrs[1];
+            let a3 = [];
+            for (let i1 of a1) {
+                for (let i2 of a2) {
+                    let a5;
+                    if (i1 instanceof Array) {
+                        a5 = i1;
+                    } else {
+                        a5 = [i1];
+                    }
+                    if (i2 instanceof Array) {
+                        i2.map(v => a5.push(v));
+                    } else {
+                        a5.push(i2);
+                    }
+                    a3.push(a5);
+                }
+            }
+            let nextArr = arrs.filter((value, index) => index >= 2);
+            if (nextArr && nextArr.length > 0) {
+                nextArr.splice(0, 0, a3);
+                return this.combineArray(nextArr);
+            } else {
+                return a3;
+            }
+        } else {
+            return arrs;
+        }
+    }
 }
