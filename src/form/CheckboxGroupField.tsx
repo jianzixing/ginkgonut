@@ -34,16 +34,42 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
         CheckboxGroupField.checkboxGroupFieldItemBodyCls = this.getThemeClass("checkboxgroup-item-body");
     }
 
+    protected compareUpdate(key: string, newValue: any, oldValue: any): boolean {
+        if (key == 'models' && this.models != newValue) {
+            this.models = newValue;
+            return true;
+        }
+        return false;
+    }
+
+    protected isInValue(v: CheckboxGroupModel): boolean {
+        let is = false;
+        if (this.value) {
+            for (let v1 of this.value) {
+                if (v1 != null && v1 == v) return true;
+                if (v1.value != null && v1.value == v.value) return true;
+                if (v1.data != null && v1.data == v.data) return true;
+            }
+        }
+        return is;
+    }
+
     protected drawingFieldBody() {
         let items = [];
         if (this.models) {
             for (let m of this.models) {
-                if (m.checked) this.value.push(m);
+                if (m.checked && !this.isInValue(m)) {
+                    this.value.push(m);
+                }
                 let style = {};
                 if (this.props.direction == "vertical") {
                     style["width"] = "100%";
                 } else {
-                    style["width"] = 100 / this.models.length + "%";
+                    if (this.props.itemWidth) {
+                        style["width"] = this.props.itemWidth;
+                    } else {
+                        style["width"] = 100 / this.models.length + "%";
+                    }
                 }
                 items.push(
                     <div className={CheckboxGroupField.checkboxGroupFieldItemCls} style={style}>
@@ -52,16 +78,17 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
                                            checked={m.checked ? true : false}
                                            disabledFormChange={true}
                                            fixMinWidth={false}
-                                           width={this.props.itemWidth > 0 ? this.props.itemWidth : undefined}
                                            onChange={e => {
                                                let oldValue = [];
                                                this.value.map(i => {
                                                    if (i.value) oldValue.push(i.value)
                                                });
                                                if (e.value) {
-                                                   this.value.push(m);
+                                                   if (!this.isInValue(m)) this.value.push(m);
                                                } else {
-                                                   this.value = this.value.filter(value => value != m);
+                                                   this.value = this.value.filter(value => {
+                                                       return !this.isInValue(value);
+                                                   });
                                                }
                                                let newValues = [];
                                                this.value.map(i => {
@@ -114,7 +141,9 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
         for (let m of this.models) {
             if (m.value == value || m.data == value) {
                 m.checked = true;
-                this.value.push(m);
+                if (!this.isInValue(m)) {
+                    this.value.push(m);
+                }
                 isSetValue = true;
             }
         }
