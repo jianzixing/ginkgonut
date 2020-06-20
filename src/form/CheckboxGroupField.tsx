@@ -1,4 +1,4 @@
-import Ginkgo, {InputComponent} from "ginkgoes";
+import Ginkgo, {GinkgoNode, InputComponent} from "ginkgoes";
 import FormField, {FormFieldProps} from "./FormField";
 import CheckboxField from "./CheckboxField";
 import "./CheckboxGroupField.scss";
@@ -6,7 +6,7 @@ import ObjectTools from "../tools/ObjectTools";
 
 export interface CheckboxGroupModel {
     value?: number | string;
-    text: string;
+    text: GinkgoNode;
     checked?: boolean;
     data?: any;
 }

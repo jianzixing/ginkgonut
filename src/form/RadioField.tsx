@@ -25,11 +25,18 @@ export default class RadioField<P extends RadioFieldProps> extends FormField<P> 
     }
 
     protected drawingFieldBody() {
+        let label;
+        if (typeof this.props.text == "string" || this.props.text == null) {
+            label = <label className={RadioField.radioItemTextCls}>{this.props.text || ""}</label>;
+        } else {
+            label = this.props.text;
+        }
+
         return (
             <div className={RadioField.radioItemCls} onClick={this.onFieldClick.bind(this)}>
                 <Icon className={RadioField.radioItemIconCls}
                       icon={this.value ? IconTypes.dotCircle : IconTypes.circle}/>
-                <label className={RadioField.radioItemTextCls}>{this.props.text || ""}</label>
+                {label}
             </div>
         );
     }

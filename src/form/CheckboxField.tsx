@@ -35,8 +35,10 @@ export default class CheckboxField<P extends CheckboxFieldProps> extends FormFie
     protected drawingFieldBody() {
         let cls = [CheckboxField.checkboxItemCls];
         let label;
-        if (this.props.text) {
+        if (typeof this.props.text == "string" || this.props.text == null) {
             label = <label className={CheckboxField.checkboxItemTextCls}>{this.props.text || ""}</label>;
+        } else {
+            label = this.props.text;
         }
 
         return (

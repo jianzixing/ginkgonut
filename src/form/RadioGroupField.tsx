@@ -1,11 +1,11 @@
-import Ginkgo, {InputComponent} from "ginkgoes";
+import Ginkgo, {GinkgoNode, InputComponent} from "ginkgoes";
 import FormField, {FormFieldProps} from "./FormField";
 import RadioField from "./RadioField";
 import "./RadioGroupField.scss";
 
 export interface RadioGroupModel {
     value?: number | string;
-    text: string;
+    text: GinkgoNode;
     selected?: boolean;
     data?: any;
 }

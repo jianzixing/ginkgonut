@@ -10,6 +10,7 @@ import "./FormField.scss";
 export interface FormFieldProps extends AbstractFormFieldProps {
     fieldLabel?: string | GinkgoNode;
     labelWidth?: number | string;
+    labelStyle?: CSSProperties;
     // label是否有冒号
     colon?: boolean;
     labelAlign?: "left" | "center" | "right";
@@ -121,6 +122,8 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
         let labelCss = [FormField.formFieldLabelCls],
             bodyInnerCss = [FormField.formFieldBodyInnerCls, Component.componentClsEnabledSelect];
 
+        let labelAlign = this.props.labelAlign;
+        let labelVAlign = this.props.labelVAlign;
         let label = this.props.fieldLabel;
         if (label && this.props.colon && typeof label == "string") {
             label += ":";
@@ -137,22 +140,29 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
             bcn.map(value => bodyInnerCss.push(value));
         }
 
-        if (this.props.labelAlign && this.props.labelAlign == "center") {
+        if (label && typeof label != "string" && labelVAlign == null) {
+            labelVAlign = "top";
+        }
+        if (labelAlign && labelAlign == "center") {
             labelCss.push(FormField.labelAlignCenterCls);
         }
-        if (this.props.labelAlign && this.props.labelAlign == "right") {
+        if (labelAlign && labelAlign == "right") {
             labelCss.push(FormField.labelAlignRightCls);
         }
-        if (this.props.labelVAlign && this.props.labelVAlign == "top") {
+        if (labelVAlign && labelVAlign == "top") {
             labelCss.push(FormField.labelAlignTopCls);
         }
-        if (this.props.labelVAlign && this.props.labelVAlign == "bottom") {
+        if (labelVAlign && labelVAlign == "bottom") {
             labelCss.push(FormField.labelAlignBottomCls);
         }
 
         let labelEls = null;
         if (label && label != '') {
-            let style: CSSProperties = {};
+            let style: CSSProperties = {...this.props.labelStyle || {}};
+            if (typeof label != "string" && !this.props.labelStyle) {
+                style.paddingTop = 0;
+                style.paddingBottom = 0;
+            }
             if (this.fieldLabelWidth) style.width = this.fieldLabelWidth;
             let mustEl;
             if (this.props.allowBlank == false && this.props.showRequireText != false) {
