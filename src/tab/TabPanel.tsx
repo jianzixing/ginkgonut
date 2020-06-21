@@ -20,6 +20,7 @@ export interface TabModel {
     content?: (model: TabModel) => GinkgoNode | GinkgoNode;
     data?: any;
     closable?: boolean;
+    disabled?: boolean;
 }
 
 interface TabModelWrapper {
@@ -58,6 +59,7 @@ export default class TabPanel<P extends TabPanelProps> extends Container<P> {
     protected static tabPanelClsHeaderBodyItemClose;
     protected static tabPanelClsHeaderBodyItemIcon;
     protected static tabPanelClsHeaderBodyItemText;
+    protected static tabPanelClsHeaderBodyItemDisabled;
     protected static tabPanelClsInner;
     protected static tabPanelClsInnerContent;
     protected static tabPanelClsHidden;
@@ -91,6 +93,7 @@ export default class TabPanel<P extends TabPanelProps> extends Container<P> {
         TabPanel.tabPanelClsHeaderBodyItemClose = this.getThemeClass("tabpanel-header-item-close");
         TabPanel.tabPanelClsHeaderBodyItemIcon = this.getThemeClass("tabpanel-header-icon");
         TabPanel.tabPanelClsHeaderBodyItemText = this.getThemeClass("tabpanel-header-text");
+        TabPanel.tabPanelClsHeaderBodyItemDisabled = this.getThemeClass("tabpanel-header-disabled");
         TabPanel.tabPanelClsInner = this.getThemeClass("tabpanel-inner");
         TabPanel.tabPanelClsInnerContent = this.getThemeClass("tabpanel-inner-content");
         TabPanel.tabPanelClsHidden = this.getThemeClass("tabpanel-hidden");
@@ -132,6 +135,9 @@ export default class TabPanel<P extends TabPanelProps> extends Container<P> {
                     iconEl = (
                         <div className={TabPanel.tabPanelClsHeaderBodyItemIcon}><img src={tab.model.icon}/></div>);
                 }
+                if (tab.model.disabled) {
+                    tbRCls.push(TabPanel.tabPanelClsHeaderBodyItemDisabled);
+                }
 
                 tabsEls.push(
                     <div
@@ -139,11 +145,13 @@ export default class TabPanel<P extends TabPanelProps> extends Container<P> {
                         className={tbRCls.join(" ")}
                         style={style}
                         onClick={(e) => {
-                            this.tabs.map(value => value.model.action = false);
-                            tab.model.action = true;
-                            this.onTabClickSetting(tab);
-                            this.redrawing();
-                            this.layout();
+                            if (tab.model.disabled != true) {
+                                this.tabs.map(value => value.model.action = false);
+                                tab.model.action = true;
+                                this.onTabClickSetting(tab);
+                                this.redrawing();
+                                this.layout();
+                            }
                         }}
                     >
                         <div className={TabPanel.tabPanelClsHeaderBodyItemInner}>

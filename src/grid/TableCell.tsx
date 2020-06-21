@@ -222,8 +222,12 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
             let value = this.editingFieldRef.instance.getValue();
             if (this.value != value) {
                 this.value = value;
-                if (this.props.data && this.props.column && this.props.column.dataIndex) {
-                    this.props.data[this.props.column.dataIndex] = this.value;
+                if (this.props.data && this.props.column) {
+                    if (this.props.column.dataIndex) {
+                        this.props.data[this.props.column.dataIndex] = this.value;
+                    } else {
+                        console.warn("missing dataIndex can't set value to data");
+                    }
                 }
                 if (this.props.onValueChange) {
                     this.props.onValueChange(this.props.data, this.value);

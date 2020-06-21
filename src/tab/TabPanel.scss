@@ -106,6 +106,12 @@
               color: #919191;
             }
           }
+
+          &.x-tabpanel-header-disabled {
+            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+            opacity: 0.5;
+            pointer-events: none;
+          }
         }
       }
     }
