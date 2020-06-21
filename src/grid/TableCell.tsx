@@ -86,6 +86,7 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
     protected drawing(): GinkgoElement | undefined | GinkgoElement[] {
         let cls, record = this.props.record, column = this.props.column;
         let editing = column ? column.editing : undefined;
+        let textAlign = column.textAlign;
 
         if (this.props.hasPadding && !this.onEditing) {
             cls = [TableCell.tableCellClsBody, TableCell.tableCellClsPadding];
@@ -96,10 +97,15 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
         if (editing && editing.showEvent == "show") {
             this.onEditing = true;
         }
+
+        if (this.props.type == "checkbox" && textAlign == null) {
+            textAlign = "center";
+        }
+
         let children = this.buildCellChildren();
-        if (column.textAlign == "center") {
+        if (textAlign == "center") {
             cls.push(TableCell.tableCellClsAlignCenter);
-        } else if (column.textAlign == "right") {
+        } else if (textAlign == "right") {
             cls.push(TableCell.tableCellClsAlignRight);
         } else {
             cls.push(TableCell.tableCellClsAlignLeft);

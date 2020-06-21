@@ -141,10 +141,12 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                     let value = ObjectTools.valueFromTemplate(data, column.dataIndex);
                     if (value == null && column.dataDefault != null) value = column.dataDefault;
 
+                    // 通过插件渲染
                     if (pluginCells && pluginCells[column.dataIndex]) {
                         cellEl = pluginCells[column.dataIndex].renderCell(this, column, value, index);
                         els.push(cellEl);
                     } else {
+                        // 渲染数字列
                         if (column.type == "rownumber") {
                             cellStyle.width = getCellWidth(column) + "px";
                             column.width = getCellWidth(column);
@@ -167,7 +169,9 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                     {(this.props.index || 0) + 1}
                                 </TableCell>
                             )
-                        } else if (column.type == "checkbox") {
+                        }
+                        // 渲染选择列
+                        else if (column.type == "checkbox") {
                             cellStyle.width = getCellWidth(column) + "px";
                             column.width = getCellWidth(column);
                             els.push(
@@ -205,7 +209,9 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                     }/>
                                 </TableCell>
                             )
-                        } else if (column.type == "actioncolumn") {
+                        }
+                        // 渲染操作列
+                        else if (column.type == "actioncolumn") {
                             let icons = [];
                             if (column.render) {
                                 try {
@@ -274,7 +280,9 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                     {icons}
                                 </div>
                             </TableCell>)
-                        } else {
+                        }
+                        // 渲染标准列
+                        else {
                             let cellValue = value;
                             if (column.render) {
                                 try {

@@ -118,7 +118,7 @@ export default class TextField<P extends TextFieldProps> extends FormField<P> {
 
     setValue(value: any): void {
         if (this.inputEl) {
-            if (value) {
+            if (value != null) {
                 if (typeof value === "object") {
                     value = JSON.stringify(value);
                 }
