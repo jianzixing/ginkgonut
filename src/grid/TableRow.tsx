@@ -47,6 +47,8 @@ export interface TableRowProps extends ComponentProps {
         row?: TableRowPlugin,
         cell?: { [dataIndex: string]: TableCellPlugin }
     };
+    /*如果是可编辑单元格则可以设置是否自动提交*/
+    autoCommit?: boolean;
 }
 
 export class TableRecord {
@@ -352,6 +354,9 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
 
     protected onTableCellValueChange(column: TableColumnModel, model: TableItemModel) {
         this.redrawing();
+        if (this.props.autoCommit != false) {
+            model && model.record && model.record.commit();
+        }
         if (column.editing && column.editing.onChange) {
             column.editing.onChange(model);
         }

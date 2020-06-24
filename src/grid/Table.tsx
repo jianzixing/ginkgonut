@@ -56,6 +56,8 @@ export interface TableProps extends ComponentProps {
         row?: TableRowPlugin,
         cell?: { [dataIndex: string]: TableCellPlugin }
     };
+    /*如果是可编辑单元格则可以设置是否自动提交*/
+    autoCommit?: boolean;
 }
 
 export interface TableItemModel {
@@ -134,6 +136,7 @@ export default class Table<P extends TableProps> extends Component<P> {
                                         plugin={plugin}
                                         columns={columns}
                                         index={index}
+                                        autoCommit={this.props.autoCommit}
                                         onSelected={(e, data: TableItemModel, multiSelect) => {
                                             if (tableItemModels) {
                                                 if (!multiSelect && this.props.enableToggleSelected != true) {
