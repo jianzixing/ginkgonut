@@ -18,6 +18,8 @@ export default class GridPanel<P extends GridPanelProps> extends Panel<P> {
     protected gridWidth: number;
     protected gridHeight: number;
 
+    public grid: Grid<any>;
+
     protected buildClassNames(themePrefix: string): void {
         super.buildClassNames(themePrefix);
 
@@ -33,6 +35,7 @@ export default class GridPanel<P extends GridPanelProps> extends Panel<P> {
                     height={this.gridHeight}
                     ref={(c: Grid<any>) => {
                         this.gridRef.instance = c;
+                        this.grid = c;
                         c.setOnAutoHeight((authHeight: number) => {
                             this.setGridPanelSize(null, authHeight);
                             let height = authHeight;
@@ -102,6 +105,12 @@ export default class GridPanel<P extends GridPanelProps> extends Panel<P> {
     getSelects(): Array<TableItemModel> {
         if (this.gridRef && this.gridRef.instance) {
             return this.gridRef.instance.getSelects();
+        }
+    }
+
+    getTableItemModels(): Array<TableItemModel> {
+        if (this.gridRef && this.gridRef.instance) {
+            return this.gridRef.instance.getTableItemModels();
         }
     }
 }

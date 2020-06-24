@@ -306,6 +306,10 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
         return arr;
     }
 
+    getTableItemModels(): Array<TableItemModel> {
+        return this.tableItemModels;
+    }
+
     protected onTableScroll(e: Event) {
         let columnsEl: TableColumnGroup<TableColumnGroupProps> | null = this.columnsRef,
             tableEl = this.tableRef.instance ? this.tableRef.instance.dom : undefined;
