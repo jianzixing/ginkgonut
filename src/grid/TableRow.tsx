@@ -26,6 +26,7 @@ export interface CellEditing {
     field?: GinkgoElement;
     fieldType?: "check";
     onValue?: (column: TableColumnModel, data: any, value: any) => any;
+    onChange?: (model: TableItemModel) => void;
 }
 
 export interface TableRowProps extends ComponentProps {
@@ -163,7 +164,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                     value={value}
                                     record={record}
                                     onValueChange={(cellData, cellValue) => {
-                                        this.redrawing();
+                                        this.onTableCellValueChange(column, tableItem);
                                     }}
                                 >
                                     {(this.props.index || 0) + 1}
@@ -201,7 +202,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                         }
                                     }}
                                     onValueChange={(cellData, cellValue) => {
-                                        this.redrawing();
+                                        this.onTableCellValueChange(column, tableItem);
                                     }}
                                 >
                                     <Icon icon={
@@ -273,7 +274,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                 record={record}
                                 cellSpace={this.props.cellSpace}
                                 onValueChange={(cellData, cellValue) => {
-                                    this.redrawing();
+                                    this.onTableCellValueChange(column, tableItem);
                                 }}
                             >
                                 <div className={TableRow.tableClsRowActions}>
@@ -322,7 +323,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                 record={record}
                                 cellSpace={this.props.cellSpace}
                                 onValueChange={(cellData, cellValue) => {
-                                    this.redrawing();
+                                    this.onTableCellValueChange(column, tableItem);
                                 }}
                             >
                                 {
@@ -347,6 +348,13 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
             this.setSelected(newValue || false);
         }
         return false;
+    }
+
+    protected onTableCellValueChange(column: TableColumnModel, model: TableItemModel) {
+        this.redrawing();
+        if (column.editing && column.editing.onChange) {
+            column.editing.onChange(model);
+        }
     }
 
     protected onCommitRecord() {

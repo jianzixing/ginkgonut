@@ -220,6 +220,7 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
             && this.editingFieldRef.instance
             && this.editingFieldRef.instance instanceof AbstractFormField) {
             let value = this.editingFieldRef.instance.getValue();
+
             if (this.value != value) {
                 this.value = value;
                 if (this.props.data && this.props.column) {
