@@ -199,6 +199,17 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
 
     protected compareAfterUpdate?(props: P, oldProps: P): boolean;
 
+    /**
+     * 如果只是修改了数组的内部数据如果调用update则判断对象一致则不会重绘，
+     * 调用staticUpdate方法可以重新处理数据并重绘
+     *
+     * @param key
+     */
+    staticUpdate(key: string) {
+        this.compareUpdate(key, this.props[key], null);
+        this.redrawing();
+    }
+
     redrawing(callAfter: boolean = true) {
         this.rootEl && this.rootEl.reloadStyleSheets();
         this.rootEl && this.rootEl.overlap(this.drawing());

@@ -76,6 +76,8 @@ export default class Table<P extends TableProps> extends Component<P> {
     protected static tableClsBody;
 
     protected tableFeatureGroup?: TableFeatureGroup;
+    protected tableItemModels = this.props.tableItemModels;
+    protected columns: Array<TableColumnModel> = this.props.columns;
 
     defaultProps = {
         zebra: true,
@@ -93,8 +95,8 @@ export default class Table<P extends TableProps> extends Component<P> {
         let plugin = this.props.plugin,
 
             items: Array<GinkgoNode> = [],
-            tableItemModels: Array<TableItemModel> | undefined = this.props.tableItemModels,
-            columns: Array<TableColumnModel> = this.props.columns,
+            tableItemModels: Array<TableItemModel> | undefined = this.tableItemModels,
+            columns: Array<TableColumnModel> = this.columns,
             bodyCls = [Table.tableClsBody];
 
         if (plugin && plugin.body) {
@@ -209,8 +211,12 @@ export default class Table<P extends TableProps> extends Component<P> {
     }
 
     protected compareUpdate(key: string, newValue: any, oldValue: any): boolean {
+        if (key == "tableItemModels" && newValue != oldValue) {
+            this.tableItemModels = newValue;
+        }
         if (key == "columns" && newValue != oldValue) {
-
+            this.columns = newValue;
+            return true;
         }
         return false;
     }
