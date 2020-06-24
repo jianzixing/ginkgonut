@@ -421,10 +421,24 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
         }
     }
 
-    getSize(): { width: number, height: number } {
+    getSize(): {
+        width: number,
+        height: number,
+        clientWidth?: number,
+        clientHeight?: number,
+        scrollWidth?: number,
+        scrollHeight?: number
+    } {
         if (this.rootEl && this.rootEl.dom) {
             let dom = this.rootEl.dom as HTMLElement;
-            return {width: dom.offsetWidth, height: dom.offsetHeight};
+            return {
+                width: dom.offsetWidth,
+                height: dom.offsetHeight,
+                clientWidth: dom.clientWidth,
+                clientHeight: dom.clientHeight,
+                scrollWidth: dom.scrollWidth,
+                scrollHeight: dom.scrollHeight
+            };
         }
     }
 

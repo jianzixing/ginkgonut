@@ -31,7 +31,18 @@ export default class GridPanel<P extends GridPanelProps> extends Panel<P> {
                     {...this.props}
                     width={this.gridWidth}
                     height={this.gridHeight}
-                    ref={this.gridRef}
+                    ref={(c: Grid<any>) => {
+                        this.gridRef.instance = c;
+                        c.setOnAutoHeight((authHeight: number) => {
+                            this.setGridPanelSize(null, authHeight);
+                            let height = authHeight;
+                            if (this.headerEl) {
+                                let headerEl = this.headerEl.dom as HTMLElement;
+                                height += headerEl.offsetHeight;
+                            }
+                            this.setHeight(height);
+                        });
+                    }}
                 />
             </div>
         ];
@@ -39,7 +50,6 @@ export default class GridPanel<P extends GridPanelProps> extends Panel<P> {
 
     protected onAfterDrawing() {
         super.onAfterDrawing();
-
         this.setGridPanelSize();
     }
 
@@ -73,14 +83,14 @@ export default class GridPanel<P extends GridPanelProps> extends Panel<P> {
         return toolbars;
     }
 
-    private setGridPanelSize() {
+    private setGridPanelSize(width?: number, height?: number) {
         if (this.gridPanelBodyRef && this.gridPanelBodyRef.instance
             && this.gridRef && this.gridRef.instance) {
             let dom = this.gridPanelBodyRef.instance.dom as HTMLElement;
             let grid = this.gridRef.instance;
             this.gridWidth = dom.offsetWidth;
             this.gridHeight = dom.offsetHeight;
-            grid.setSize(this.gridWidth, this.gridHeight);
+            grid.setSize(width ? width : this.gridWidth, height ? height : this.gridHeight);
         }
     }
 

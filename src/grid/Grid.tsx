@@ -39,6 +39,8 @@ export interface GridProps extends TableProps {
     models?: Array<TableItemModel>;
     /*列宽度保持表格总宽度*/
     fit?: boolean;
+    /*自动计算高度*/
+    autoHeight?: boolean;
     onSelectChange?: (sel: Array<TableItemModel>, data?: { data: TableItemModel, type: number }) => void;
     onParseData?: (data: any) => Array<TableItemModel>;
 }
@@ -55,6 +57,7 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
     protected columnsRef: TableColumnGroup<TableColumnGroupProps>;
     protected tableRef: RefObject<HTMLComponent> = Ginkgo.createRef();
     protected tableComponentRef: Table<any>;
+    protected onAutoHeight: (autoHeight: number) => void;
 
     protected hasGridResizeCls = false;
     protected tableItemModels?: Array<TableItemModel> | undefined;
@@ -209,11 +212,13 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
     protected onAfterDrawing() {
         super.onAfterDrawing();
         this.calTableWidth();
+        this.calGridHeight();
     }
 
     onSizeChange(width: number, height: number): void {
         super.onSizeChange(width, height);
         this.calTableWidth();
+        this.calGridHeight();
     }
 
     protected calTableWidth() {
@@ -237,6 +242,27 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
         let tableRef = this.tableRef.instance.dom as HTMLElement;
         this.tableClientWidth = totalWidth + (tableRef.offsetWidth - tableRef.clientWidth);
         this.redrawing(false);
+    }
+
+    protected calGridHeight() {
+        if (this.props.autoHeight) {
+            let columnSize = this.columnsRef.getSize();
+            let tableSize = this.tableComponentRef.getSize();
+            let tableParent = this.tableRef.instance.dom as HTMLElement;
+
+            let columnHeight = columnSize.height + (columnSize.height - columnSize.clientHeight);
+            let tableHeight = tableSize.height + (tableParent.offsetHeight - tableParent.clientHeight);
+            let autoHeight = columnHeight + tableHeight;
+            if (this.onAutoHeight) {
+                this.onAutoHeight(autoHeight);
+            } else {
+                this.setHeight(columnHeight + tableHeight);
+            }
+        }
+    }
+
+    setOnAutoHeight(fn: (authHeight: number) => void) {
+        this.onAutoHeight = fn;
     }
 
     protected onColumnChange(type: string, data: TableColumnModel) {
