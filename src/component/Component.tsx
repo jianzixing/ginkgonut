@@ -249,7 +249,7 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
             <div
                 className={this.getRootClassName}
                 style={this.getRootStyle}
-                ref={"rootEl"}
+                ref={c => this.rootEl = c}
                 {...events}
             >
 
