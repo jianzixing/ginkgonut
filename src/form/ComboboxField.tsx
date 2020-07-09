@@ -347,7 +347,9 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
             }
         }
         if (this.comboboxValue) {
-            this.inputEl.value = this.comboboxValue.text || "";
+            if (this.inputEl) {
+                this.inputEl.value = this.comboboxValue.text || "";
+            }
         }
         let newValue = this.getValue();
         if (oldValue != newValue) {

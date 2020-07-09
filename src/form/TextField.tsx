@@ -132,7 +132,10 @@ export default class TextField<P extends TextFieldProps> extends FormField<P> {
     }
 
     getValue(): any {
-        return this.inputEl.value;
+        if (this.inputEl) {
+            return this.inputEl.value;
+        }
+        return null;
     }
 
     getRowValue(): any {
