@@ -7,6 +7,7 @@ import "./RadioField.scss";
 export interface RadioFieldProps extends FormFieldProps {
     text?: string;
     selected?: boolean;
+    selectByIcon?: boolean;
 }
 
 export default class RadioField<P extends RadioFieldProps> extends FormField<P> {
@@ -33,9 +34,19 @@ export default class RadioField<P extends RadioFieldProps> extends FormField<P> 
         }
 
         return (
-            <div className={RadioField.radioItemCls} onClick={this.onFieldClick.bind(this)}>
+            <div className={RadioField.radioItemCls}
+                 onClick={e => {
+                     if (!this.props.selectByIcon) {
+                         this.onFieldClick(e);
+                     }
+                 }}>
                 <Icon className={RadioField.radioItemIconCls}
-                      icon={this.value ? IconTypes.dotCircle : IconTypes.circle}/>
+                      icon={this.value ? IconTypes.dotCircle : IconTypes.circle}
+                      onClick={e => {
+                          if (this.props.selectByIcon) {
+                              this.onFieldClick(e);
+                          }
+                      }}/>
                 {label}
             </div>
         );

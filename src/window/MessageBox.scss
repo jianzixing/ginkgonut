@@ -15,17 +15,22 @@
     }
 
     .x-message-box-content {
-      .x-message-box-icon {
-        display: block;
-        float: left;
-        font-size: 44px;
-        margin-right: 10px;
-        color: gray;
+      display: table;
+
+      .x-message-box-icon-box {
+        display: table-cell;
+
+        .x-message-box-icon {
+          display: block;
+          font-size: 44px;
+          padding-right: 10px;
+          color: gray;
+        }
       }
 
       .x-message-box-text {
-        display: block;
-        float: left;
+        display: table-cell;
+        vertical-align: top;
       }
     }
 

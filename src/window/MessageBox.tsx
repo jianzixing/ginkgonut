@@ -22,6 +22,7 @@ let globalMessageBox: WindowWrapper;
 export default class MessageBox<P extends MessageBoxProps> extends WindowPanel<P> {
     protected static messageBoxCls;
     protected static messageBoxBodyCls;
+    protected static messageBoxIconBoxCls;
     protected static messageBoxIconCls;
     protected static messageBoxTextCls;
     protected static messageBoxContentCls;
@@ -83,6 +84,7 @@ export default class MessageBox<P extends MessageBoxProps> extends WindowPanel<P
 
         MessageBox.messageBoxCls = this.getThemeClass("message-box");
         MessageBox.messageBoxBodyCls = this.getThemeClass("message-box-body");
+        MessageBox.messageBoxIconBoxCls = this.getThemeClass("message-box-icon-box");
         MessageBox.messageBoxIconCls = this.getThemeClass("message-box-icon");
         MessageBox.messageBoxTextCls = this.getThemeClass("message-box-text");
         MessageBox.messageBoxContentCls = this.getThemeClass("message-box-content");
@@ -128,7 +130,9 @@ export default class MessageBox<P extends MessageBoxProps> extends WindowPanel<P
                                  onClick={this.onNoClick.bind(this)}/>);
             content.push(
                 <div className={MessageBox.messageBoxContentCls}>
-                    <Icon className={MessageBox.messageBoxIconCls} icon={IconTypes.questionCircle}/>
+                    <div className={MessageBox.messageBoxIconBoxCls}>
+                        <Icon className={MessageBox.messageBoxIconCls} icon={IconTypes.questionCircle}/>
+                    </div>
                     <div className={MessageBox.messageBoxTextCls}>
                         <span>{this.props.content}</span>
                     </div>

@@ -9,6 +9,7 @@ export interface CheckboxFieldProps extends FormFieldProps {
     checked?: boolean;
     checkAlign?: "left" | "center" | "right";
     itemStyle?: CSSProperties;
+    selectByIcon?: boolean;
 }
 
 export default class CheckboxField<P extends CheckboxFieldProps> extends FormField<P> {
@@ -42,9 +43,19 @@ export default class CheckboxField<P extends CheckboxFieldProps> extends FormFie
         }
 
         return (
-            <div className={cls} onClick={this.onFieldClick.bind(this)} style={this.props.itemStyle}>
+            <div className={cls}
+                 onClick={e => {
+                     if (!this.props.selectByIcon) {
+                         this.onFieldClick(e);
+                     }
+                 }} style={this.props.itemStyle}>
                 <Icon className={CheckboxField.checkboxItemIconCls}
-                      icon={this.value ? IconTypes._extCheckedSel : IconTypes._extCheckedUnset}/>
+                      icon={this.value ? IconTypes._extCheckedSel : IconTypes._extCheckedUnset}
+                      onClick={e => {
+                          if (this.props.selectByIcon) {
+                              this.onFieldClick(e);
+                          }
+                      }}/>
                 {label}
             </div>
         );

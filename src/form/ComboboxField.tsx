@@ -284,7 +284,9 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
     }
 
     setValue(value: any): void {
-        if (!this.models || this.models.length == 0) {
+        if ((!this.models || this.models.length == 0)
+            && typeof value != "object"
+            && value != null) {
             if (this.props.data && !this.props.models) {
                 this.models = this.data2Models(this.props.data);
             }

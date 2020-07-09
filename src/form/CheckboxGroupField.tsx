@@ -16,6 +16,7 @@ export interface CheckboxGroupFieldProps extends FormFieldProps {
     models?: Array<CheckboxGroupModel>;
     direction?: "horizontal" | "vertical";
     value?: Array<number | string> | number | string;
+    selectByIcon?: boolean;
 }
 
 export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> extends FormField<P> {
@@ -78,6 +79,7 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
                                            checked={m.checked ? true : false}
                                            disabledFormChange={true}
                                            fixMinWidth={false}
+                                           selectByIcon={this.props.selectByIcon}
                                            onChange={e => {
                                                let oldValue = [];
                                                this.value.map(i => {

@@ -15,6 +15,7 @@ export interface RadioGroupFieldProps extends FormFieldProps {
     models?: Array<RadioGroupModel>;
     direction?: "horizontal" | "vertical";
     value?: number | string;
+    selectByIcon?: boolean;
 }
 
 export default class RadioGroupField<P extends RadioGroupFieldProps> extends FormField<P> {
@@ -55,6 +56,7 @@ export default class RadioGroupField<P extends RadioGroupFieldProps> extends For
                                         selected={m.selected ? true : false}
                                         disabledFormChange={true}
                                         fixMinWidth={false}
+                                        selectByIcon={this.props.selectByIcon}
                                         onChange={e => {
                                             let oldValue = this.value ? this.value.value : undefined;
                                             for (let m2 of this.models) {
