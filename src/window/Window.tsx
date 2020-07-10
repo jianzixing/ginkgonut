@@ -34,7 +34,7 @@ export interface WindowProps extends ComponentProps, PanelProps {
     onWindowClose?: (e: Event) => void;
     x?: number;
     y?: number;
-    zIndex?: number; // 1-99999
+    zIndex?: number; // 1000-99999
     floating?: boolean; // position = absolute
     center?: boolean;
     onMaskClick?: (e: Event) => void;

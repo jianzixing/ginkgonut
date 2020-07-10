@@ -122,7 +122,7 @@
   background-color: #ffffff;
   border: 1px solid #d0d0d0;
   box-sizing: border-box;
-  z-index: 999;
+  z-index: 999999;
 }
 
 .x-field-picker-shadow {
@@ -130,7 +130,7 @@
   position: absolute;
   overflow: hidden;
   box-shadow: rgb(136, 136, 136) 0px 0px 6px;
-  z-index: 998;
+  z-index: 999998;
 }
 
 input, textarea::-webkit-input-placeholder { /* WebKit browsers*/
