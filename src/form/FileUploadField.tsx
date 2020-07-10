@@ -40,6 +40,8 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
     protected fieldBorder = true;
     protected value: FileList;
 
+    protected models: Array<UploadModel>;
+
     protected buildClassNames(themePrefix: string): void {
         super.buildClassNames(themePrefix);
 
@@ -222,6 +224,13 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
         return undefined;
     }
 
+    componentDidMount() {
+        super.componentDidMount();
+        if (this.uploadRef && this.uploadRef.instance) {
+            this.uploadRef.instance.update("models", this.models);
+        }
+    }
+
     setValue(value: string | FileList | string[]): void {
         let uploadType = this.props.uploadType;
         if (uploadType == null || uploadType == "default") {
@@ -249,6 +258,7 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
                     });
                     key++;
                 }
+                this.models = models;
                 if (this.uploadRef && this.uploadRef.instance) {
                     this.uploadRef.instance.update("models", models);
                 }
@@ -260,6 +270,7 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
                     data: value,
                     status: "finish"
                 })
+                this.models = models;
                 if (this.uploadRef && this.uploadRef.instance) {
                     this.uploadRef.instance.update("models", models);
                 }
@@ -281,6 +292,7 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
                             status: "ready"
                         });
 
+                        self.models = models;
                         if (self.uploadRef && self.uploadRef.instance) {
                             self.uploadRef.instance.update("models", models);
                         }
