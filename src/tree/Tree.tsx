@@ -182,7 +182,7 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
 
     drawing() {
         if (this.tableItemModels && this.tableItemModels.length > 0) {
-            return (
+            return [
                 <Table
                     {...this.buildTableProps()}
                     onItemClick={(e, data) => {
@@ -190,8 +190,9 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
                             this.props.onTreeItemClick(e, data.data);
                         }
                     }}
-                />
-            )
+                />,
+                this.isLoading ? <Loading text={this.props.loadingText}/> : undefined
+            ]
         } else {
             if (this.isLoading) {
                 return <Loading text={this.props.loadingText}/>;
