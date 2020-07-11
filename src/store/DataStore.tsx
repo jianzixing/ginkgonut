@@ -42,7 +42,7 @@ export default class DataStore {
     protected processor: Array<StoreProcessor>;
     protected data: any;
 
-    protected pagingParam: Object;
+    protected extParam: Object;
     protected status = 0;
     protected isLoadFinish = false;
     protected isAutoLoaded = false;
@@ -60,8 +60,8 @@ export default class DataStore {
         };
     }
 
-    setPagingParam(pagingParam: Object): void {
-        this.pagingParam = pagingParam;
+    setParam(param: Object): void {
+        this.extParam = param;
     }
 
     addProcessor(processor: StoreProcessor): void {
@@ -128,7 +128,7 @@ export default class DataStore {
             if (this.props.type == "ajax") {
                 let params = {
                     ...(this.props.params || {}),
-                    ...(this.pagingParam || {}),
+                    ...(this.extParam || {}),
                     ...(ext || {})
                 };
                 if (module) params[this.props.moduleName || '_page'] = this.props.module;

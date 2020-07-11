@@ -6,6 +6,8 @@ import TreeCell from "./TreeCell";
 import {TableColumnModel} from "../grid/TableColumn";
 import DataEmpty from "../empty/DataEmpty";
 import "./Tree.scss";
+import {StoreProcessor} from "../store/DataStore";
+import Loading from "../loading/Loading";
 
 export interface TreeListModel {
     parent?: TreeListModel;
@@ -25,6 +27,7 @@ export interface TreeProps extends ComponentProps {
     data?: Array<any>;
     keyField?: string;
     displayField?: string;
+    root?: TreeListModel;
     isInheritExpand?: boolean;
     childrenField?: string;
     onTreeItemClick?: (e: Event, data?: TableItemModel) => void;
@@ -43,9 +46,10 @@ export interface TreeProps extends ComponentProps {
     expandedKey?: string;
     showCheckbox?: boolean;
     onCheckboxChange?: (item: TableItemModel, checked: boolean, checkItems?: Array<TableItemModel>) => void;
+    loadingText?: string;
 }
 
-export default class Tree<P extends TreeProps> extends Component<P> implements TableCellPlugin {
+export default class Tree<P extends TreeProps> extends Component<P> implements TableCellPlugin, StoreProcessor {
     protected static treeCls;
 
     protected treeListItems: Array<TreeListModel> = [];
@@ -53,6 +57,7 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
     protected treeListItemMapping: { [key: string]: TreeListModel } = {};
     protected oldTreeListItemMapping: { [key: string]: TreeListModel } = {};
     protected treeListModelKey: number = 1;
+    protected isLoading = false;
 
     renderCell(tableRow: TableRow<TableRowProps>,
                columnModel: TableColumnModel,
@@ -149,19 +154,29 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
 
     compareUpdate(key: string, newValue: any, oldValue: any): boolean {
         if (key == 'data' && newValue != oldValue) {
-            this.treeListModelKey = 1;
-            this.buildTreeStructs(newValue);
-            if (this.treeListItems) {
-                for (let item of this.treeListItems) {
-                    this.expandTreeListItems(item);
-                }
-            }
-            this.tableItemModels = this.buildTableStructs(this.treeListItems);
-
-            if (this.props.onTreeModelChange) {
-                this.props.onTreeModelChange(this, this.treeListItems, this.treeListItemMapping);
-            }
+            this.processNewTreeData(newValue);
             return true;
+        }
+    }
+
+    protected processNewTreeData(newValue) {
+        this.treeListModelKey = 1;
+        if (this.props.root) {
+            let cf = this.props.childrenField || "children";
+            let root: any = {...this.props.root};
+            root[cf] = newValue;
+            newValue = [root];
+        }
+        this.buildTreeStructs(newValue);
+        if (this.treeListItems) {
+            for (let item of this.treeListItems) {
+                this.expandTreeListItems(item);
+            }
+        }
+        this.tableItemModels = this.buildTableStructs(this.treeListItems);
+
+        if (this.props.onTreeModelChange) {
+            this.props.onTreeModelChange(this, this.treeListItems, this.treeListItemMapping);
         }
     }
 
@@ -178,7 +193,11 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
                 />
             )
         } else {
-            return <DataEmpty/>
+            if (this.isLoading) {
+                return <Loading text={this.props.loadingText}/>;
+            } else {
+                return <DataEmpty/>
+            }
         }
     }
 
@@ -206,13 +225,7 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
         }
         if (data && data instanceof Array) {
             let ls: Array<TreeListModel> = [];
-            let isIDKey = true;
-            for (let dataItem of data) {
-                if (dataItem['id'] == null) {
-                    isIDKey = false;
-                    break;
-                }
-            }
+            let isIDKey = this.hasIDInData(data);
             data.map((value, index) => {
                 let childData = value[this.props.childrenField || "children"];
                 let children;
@@ -221,33 +234,10 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
                     children = this.buildTreeStructs(childData, nextDeep);
                 }
 
-                let key = value[isIDKey ? 'id' : this.props.keyField];
-                if (key == null) {
-                    key = "tree_cell_" + (this.treeListModelKey++);
-                } else {
-                    key = "" + key;
-                }
-                let tableListItem: TableItemModel = {
-                    key: key,
-                    data: value
-                };
-                let treeListItem: TreeListModel = {
-                    deep: deep,
-                    tableItem: tableListItem,
-                    children: children,
-                    show: true
-                };
-
-                if (children) {
-                    for (let ch of children) {
-                        ch.parent = treeListItem;
-                    }
-                }
-
-                treeListItem.iconType = value[this.props.iconTypeKey || 'iconType'];
-                treeListItem.icon = value[this.props.iconKey || 'icon'];
-                treeListItem.leaf = !!value[this.props.leafKey || 'leaf'];
-                treeListItem.expanded = value[this.props.expandedKey || 'expanded'];
+                let treeListItem = this.buildTreeListItem(value, isIDKey);
+                let key = treeListItem.tableItem.key;
+                treeListItem.deep = deep;
+                treeListItem.children = children;
 
                 if (this.oldTreeListItemMapping[key]
                     && this.oldTreeListItemMapping[key].expanded != treeListItem.expanded
@@ -258,6 +248,12 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
 
                 if (treeListItem.expanded == null) {
                     treeListItem.expanded = true;
+                }
+
+                if (children) {
+                    for (let ch of children) {
+                        ch.parent = treeListItem;
+                    }
                 }
 
                 if (deep == 1) {
@@ -275,6 +271,45 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
             this.oldTreeListItemMapping = {};
         }
         return undefined;
+    }
+
+    protected buildTreeListItem(value, isIDKey?: boolean): TreeListModel {
+        let key = value[isIDKey ? 'id' : this.props.keyField];
+        if (key == null) {
+            key = "tree_cell_" + (this.treeListModelKey++);
+        } else {
+            key = "" + key;
+        }
+        let tableListItem: TableItemModel = {
+            key: key,
+            data: value
+        };
+        let treeListItem: TreeListModel = {
+            tableItem: tableListItem,
+            show: true
+        };
+
+        treeListItem.iconType = value[this.props.iconTypeKey || 'iconType'];
+        treeListItem.icon = value[this.props.iconKey || 'icon'];
+        treeListItem.leaf = !!value[this.props.leafKey || 'leaf'];
+        treeListItem.expanded = value[this.props.expandedKey || 'expanded'];
+
+        return treeListItem;
+    }
+
+    protected hasIDInData(data) {
+        let isIDKey = true;
+        if (data) {
+            for (let dataItem of data) {
+                if (dataItem['id'] == null) {
+                    isIDKey = false;
+                    break;
+                }
+            }
+        } else {
+            return false;
+        }
+        return isIDKey;
     }
 
     protected buildTableStructs(treeListItems: Array<TreeListModel>): Array<TableItemModel> | undefined {
@@ -387,5 +422,16 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
         let arr = super.getRootClassName();
         arr.push(Tree.treeCls);
         return arr;
+    }
+
+    storeBeforeLoad?(): void {
+        this.isLoading = true;
+        this.redrawing();
+    }
+
+    storeLoaded(data: Object | Object[], total?: number, originData?: any): void {
+        this.isLoading = false;
+        this.processNewTreeData(data);
+        this.redrawing();
     }
 }

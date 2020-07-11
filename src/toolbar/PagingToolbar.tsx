@@ -130,7 +130,7 @@ export default class PagingToolbar<P extends PagingToolbarProps> extends Toolbar
     protected loading() {
         let store = this.props.store;
         if (store) {
-            store.setPagingParam(this.getStoreParam());
+            store.setParam(this.getStoreParam());
             store.load();
         }
     }

@@ -131,6 +131,11 @@ export default class Button<P extends ButtonProps> extends Component<P> {
             href = this.props.href,
             target = this.props.target;
 
+        if (this.props.menuModels
+            && this.props.menuModels.length > 0
+            && !menuType) {
+            menuType = "normal";
+        }
         if (text) {
             iconCls.push(Button.buttonClsIconRight);
         }
