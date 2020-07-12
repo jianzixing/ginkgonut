@@ -35,6 +35,8 @@ export interface UploadProps extends ComponentProps {
     showUploadIcon?: boolean;
     itemWidth?: number;
     itemHeight?: number;
+    showImagePadding?: boolean;
+    showBorder?: boolean;
 }
 
 export default class Upload<P extends UploadProps> extends Component<P> {
@@ -44,6 +46,7 @@ export default class Upload<P extends UploadProps> extends Component<P> {
     protected static uploadAddItemIconCls;
     protected static uploadAddItemTextCls;
     protected static uploadItemCls;
+    protected static uploadItemBorderCls;
     protected static uploadItemImgCls;
     protected static uploadItemReuploadCls;
     protected static uploadItemMaskCls;
@@ -72,6 +75,7 @@ export default class Upload<P extends UploadProps> extends Component<P> {
         Upload.uploadAddItemTextCls = this.getThemeClass("upload-add-text");
         Upload.uploadAddItemInputCls = this.getThemeClass("upload-add-input");
         Upload.uploadItemCls = this.getThemeClass("upload-item");
+        Upload.uploadItemBorderCls = this.getThemeClass("upload-item-border");
         Upload.uploadItemImgCls = this.getThemeClass("upload-item-img");
         Upload.uploadItemReuploadCls = this.getThemeClass("upload-item-reupload");
         Upload.uploadItemMaskCls = this.getThemeClass("upload-item-mask");
@@ -111,6 +115,9 @@ export default class Upload<P extends UploadProps> extends Component<P> {
         } else {
             if (this.items) {
                 let cls = [Upload.uploadItemCls];
+                if (this.props.showBorder != false) {
+                    cls.push(Upload.uploadItemBorderCls);
+                }
                 if (reupload) {
                     cls.push(Upload.uploadItemReuploadCls);
                 }
@@ -125,15 +132,16 @@ export default class Upload<P extends UploadProps> extends Component<P> {
                                 onChange={this.onUploadFileChange.bind(this)}/>
                         );
                     }
+                    let style = {};
+                    if (this.props.itemWidth) style['width'] = this.props.itemWidth;
+                    if (this.props.itemHeight) style['height'] = this.props.itemHeight;
+                    if (this.props.showImagePadding == false) style['padding'] = 0;
                     let mangerEl;
                     if (multi && item.status == "finish") {
                         let cls = [Upload.uploadItemMaskCls];
                         if (item.showMask) {
                             cls.push(Upload.uploadItemMaskShowCls);
                         }
-                        let style = {};
-                        if (this.props.itemWidth) style['width'] = this.props.itemWidth;
-                        if (this.props.itemHeight) style['height'] = this.props.itemHeight;
                         mangerEl = (
                             <div className={cls} style={style}>
                                 <div className={Upload.uploadItemMaskBodyCls}>
@@ -204,6 +212,26 @@ export default class Upload<P extends UploadProps> extends Component<P> {
                         !src.startsWith("data:image/")) {
                         src = this.props.onImageSrc(src, item);
                     }
+                    let imageStyle = {}, borderWidth = this.props.showBorder == false ? 0 : 2;
+                    if (this.props.showImagePadding != false) {
+                        if (this.props.itemWidth) {
+                            imageStyle['width'] = this.props.itemWidth - 8 * 2 - borderWidth;
+                            imageStyle['max-width'] = 'none';
+                        }
+                        if (this.props.itemHeight) {
+                            imageStyle['height'] = this.props.itemHeight - 8 * 2 - borderWidth;
+                            imageStyle['max-height'] = 'none';
+                        }
+                    } else {
+                        if (this.props.itemWidth) {
+                            imageStyle['width'] = this.props.itemWidth - borderWidth;
+                            imageStyle['max-width'] = 'none';
+                        }
+                        if (this.props.itemHeight) {
+                            imageStyle['height'] = this.props.itemHeight - borderWidth;
+                            imageStyle['max-height'] = 'none';
+                        }
+                    }
                     items.push(
                         <div key={item.key} className={cls}
                              onMouseEnter={e => {
@@ -214,9 +242,10 @@ export default class Upload<P extends UploadProps> extends Component<P> {
                              onMouseLeave={e => {
                                  for (let item of this.items) item.showMask = false;
                                  this.redrawing();
-                             }}>
+                             }}
+                             style={style}>
                             <div className={Upload.uploadItemImgCls}>
-                                <img src={src}/>
+                                <img src={src} style={imageStyle}/>
                                 {mangerEl}
                                 {errorEl}
                             </div>
@@ -231,9 +260,14 @@ export default class Upload<P extends UploadProps> extends Component<P> {
                 let style = {};
                 if (this.props.itemWidth) style['width'] = this.props.itemWidth;
                 if (this.props.itemHeight) style['height'] = this.props.itemHeight;
+                if (this.props.showImagePadding) style['padding'] = 0;
+                let addCls = [Upload.uploadItemCls, Upload.uploadAddItemCls];
+                if (this.props.showBorder != false) {
+                    addCls.push(Upload.uploadItemBorderCls);
+                }
                 items.push(
                     <div key={"upload_add"}
-                         className={[Upload.uploadItemCls, Upload.uploadAddItemCls]}
+                         className={addCls}
                          style={style}>
                         <div className={Upload.uploadAddItemBodyCls}>
                             {this.props.showUploadIcon == false ? undefined :
