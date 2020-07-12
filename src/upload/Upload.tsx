@@ -32,6 +32,9 @@ export interface UploadProps extends ComponentProps {
     buttonText?: string;
     buttonIcon?: string;
     buttonIconType?: string;
+    showUploadIcon?: boolean;
+    itemWidth?: number;
+    itemHeight?: number;
 }
 
 export default class Upload<P extends UploadProps> extends Component<P> {
@@ -128,8 +131,11 @@ export default class Upload<P extends UploadProps> extends Component<P> {
                         if (item.showMask) {
                             cls.push(Upload.uploadItemMaskShowCls);
                         }
+                        let style = {};
+                        if (this.props.itemWidth) style['width'] = this.props.itemWidth;
+                        if (this.props.itemHeight) style['height'] = this.props.itemHeight;
                         mangerEl = (
-                            <div className={cls}>
+                            <div className={cls} style={style}>
                                 <div className={Upload.uploadItemMaskBodyCls}>
                                     <div className={Upload.uploadItemMaskInnerCls}>
                                         <Icon icon={IconTypes.eye}
@@ -222,11 +228,18 @@ export default class Upload<P extends UploadProps> extends Component<P> {
             if (multi || items.length == 0) {
                 let attr: any = {};
                 if (multi) attr.multiple = true;
+                let style = {};
+                if (this.props.itemWidth) style['width'] = this.props.itemWidth;
+                if (this.props.itemHeight) style['height'] = this.props.itemHeight;
                 items.push(
-                    <div key={"upload_add"} className={[Upload.uploadItemCls, Upload.uploadAddItemCls]}>
+                    <div key={"upload_add"}
+                         className={[Upload.uploadItemCls, Upload.uploadAddItemCls]}
+                         style={style}>
                         <div className={Upload.uploadAddItemBodyCls}>
-                            <Icon className={Upload.uploadAddItemIconCls} icon={IconTypes.plus}/>
-                            <span className={Upload.uploadAddItemTextCls}>
+                            {this.props.showUploadIcon == false ? undefined :
+                                <Icon className={Upload.uploadAddItemIconCls} icon={IconTypes.plus}/>}
+                            <span className={Upload.uploadAddItemTextCls}
+                                  style={this.props.showUploadIcon == false ? {marginTop: 0} : undefined}>
                                 {this.props.buttonText || "Upload"}
                             </span>
                         </div>
@@ -268,6 +281,7 @@ export default class Upload<P extends UploadProps> extends Component<P> {
         let newFiles = [];
         if (fileList && fileList.length > 0) {
             let self = this;
+            if (this.items == null) this.items = [];
             for (let i = 0; i < fileList.length; i++) {
                 let file = fileList.item(i);
                 let name = file.name;
