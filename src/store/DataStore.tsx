@@ -64,6 +64,25 @@ export default class DataStore {
         this.extParam = param;
     }
 
+    getParam(): Object {
+        let params = {
+            ...(this.props.params || {}),
+            ...(this.extParam || {})
+        };
+        if (module) params[this.props.moduleName || '_page'] = this.props.module;
+        if (params) {
+            for (let k in params) {
+                if (params[k] == null) delete params[k];
+            }
+        }
+        if (this.props.api instanceof Submit) {
+            let api = this.props.api;
+            let newParams = {...api.getParams() || {}, ...params,}
+            params = newParams;
+        }
+        return params;
+    }
+
     addProcessor(processor: StoreProcessor): void {
         if (!this.processor) this.processor = [];
         if (this.processor.indexOf(processor) == -1) {
