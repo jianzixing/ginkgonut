@@ -136,9 +136,9 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
             let data = record.record;
             columns.map((column, index) => {
                 if (column.show != false) {
-                    let cellStyle: CSSProperties = column.style || {};
+                    let cellBodyWidth: number;
                     let className = column.className;
-                    if (column.width) cellStyle.width = column.width + "px";
+                    if (column.width) cellBodyWidth = column.width;
                     let cellEl;
                     let pluginCells = plugin ? plugin.cell : undefined;
                     let value = ObjectTools.valueFromTemplate(data, column.dataIndex);
@@ -151,7 +151,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                     } else {
                         // 渲染数字列
                         if (column.type == "rownumber") {
-                            cellStyle.width = getCellWidth(column) + "px";
+                            cellBodyWidth = getCellWidth(column);
                             column.width = getCellWidth(column);
 
                             els.push(
@@ -159,7 +159,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                     type={column.type}
                                     key={"cell_" + column.dataIndex + index}
                                     column={column}
-                                    style={cellStyle}
+                                    width={cellBodyWidth}
                                     className={className}
                                     cellSpace={this.props.cellSpace}
                                     data={data}
@@ -175,14 +175,14 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                         }
                         // 渲染选择列
                         else if (column.type == "checkbox") {
-                            cellStyle.width = getCellWidth(column) + "px";
+                            cellBodyWidth = getCellWidth(column);
                             column.width = getCellWidth(column);
                             els.push(
                                 <TableCell
                                     type={column.type}
                                     key={"" + index}
                                     column={column}
-                                    style={cellStyle}
+                                    width={cellBodyWidth}
                                     className={className}
                                     cellSpace={this.props.cellSpace}
                                     data={data}
@@ -268,7 +268,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                 type={column.type}
                                 key={"" + index}
                                 column={column}
-                                style={cellStyle}
+                                width={cellBodyWidth}
                                 className={className}
                                 hasPadding={false}
                                 data={data}
@@ -318,7 +318,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                             els.push(<TableCell
                                 key={"" + index}
                                 column={column}
-                                style={cellStyle}
+                                width={cellBodyWidth}
                                 className={className}
                                 data={data}
                                 value={value}
