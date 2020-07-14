@@ -15,7 +15,7 @@ export interface TableColumnModel {
 
     dataIndex?: string;
     dataSplit?: string;
-    dataDefault?: string;
+    dataDefault?: GinkgoNode;
     format?: string; // if type==datetime
     items?: Array<ActionColumnItem>; // type=="actioncolumn" 时有效
 
