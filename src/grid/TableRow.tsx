@@ -102,6 +102,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
     protected static tableClsRowBorder;
     protected static tableClsRowActions;
     protected static tableClsRowActionItem;
+    protected static tableClsRowActionItemText;
 
     protected isOnSelected = this.props.selected;
     protected isEnableHovered = true;
@@ -117,6 +118,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
         TableRow.tableClsRowBorder = this.getThemeClass("table-row-border");
         TableRow.tableClsRowActions = this.getThemeClass("table-row-actions");
         TableRow.tableClsRowActionItem = this.getThemeClass("action-item");
+        TableRow.tableClsRowActionItemText = this.getThemeClass("action-item-text");
     }
 
     protected drawing(): GinkgoElement | undefined | null {
@@ -252,11 +254,12 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                                 </div>)
                                         } else if (item.text) {
                                             icons.push(
-                                                <div className={TableRow.tableClsRowActionItem}
-                                                     style={style}
-                                                     onClick={e => {
-                                                         this.onActionClick(e, item, column, data, value);
-                                                     }}>
+                                                <div
+                                                    className={[TableRow.tableClsRowActionItem, TableRow.tableClsRowActionItemText]}
+                                                    style={style}
+                                                    onClick={e => {
+                                                        this.onActionClick(e, item, column, data, value);
+                                                    }}>
                                                     <span>{item.text}</span>
                                                 </div>)
                                         }

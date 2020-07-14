@@ -111,13 +111,6 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
             cls.push(TableCell.tableCellClsAlignLeft);
         }
 
-        if (this.props.cellSpace) {
-            cls.push(TableCell.tableCellClsLine);
-        }
-
-        let style = {};
-        if (this.width) style['width'] = this.width;
-
         let elements = [
             <div
                 className={cls.join(" ")}
@@ -127,7 +120,6 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
                         e.preventDefault();
                     }
                 }}
-                style={style}
             >
                 {children}
             </div>
@@ -268,12 +260,14 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
         if (this.props.type == "checkbox") {
             arr.push(TableCell.tableCellClsCheckbox);
         }
+        if (this.props.cellSpace) {
+            arr.push(TableCell.tableCellClsLine);
+        }
         return arr;
     }
 
     protected getRootStyle(): CSSProperties {
         let style = super.getRootStyle();
-        style.width = undefined;
         return style;
     }
 }

@@ -45,6 +45,10 @@
       cursor: pointer;
       vertical-align: middle;
 
+      &.x-action-item-text {
+        font-size: 13px;
+      }
+
       &:last-child {
         margin-right: 0px;
       }
