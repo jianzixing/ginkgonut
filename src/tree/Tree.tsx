@@ -45,6 +45,8 @@ export interface TreeProps extends ComponentProps {
     leafKey?: string;
     expandedKey?: string;
     showCheckbox?: boolean;
+    // 选择模式 1子全部选中父才选中 2子只要有一个选择父就选中
+    checkboxMode?: "normal" | "anysel";
     onCheckboxChange?: (item: TableItemModel, checked: boolean, checkItems?: Array<TableItemModel>) => void;
     loadingText?: string;
 }
@@ -107,6 +109,7 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
                     onCheck={(item, sel) => {
                         if (item) {
                             this.setItemChecked(item, sel);
+                            this.setItemCheckedParent(item);
                             this.redrawing();
 
                             if (this.props.onCheckboxChange) {
@@ -127,6 +130,28 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
                 for (let c of children) {
                     this.setItemChecked(c, checked);
                 }
+            }
+        }
+    }
+
+    protected setItemCheckedParent(item: TreeListModel) {
+        let parent = item.parent;
+        if (parent && parent.children) {
+            let all = true, has = false;
+            for (let c of parent.children) {
+                if (c.checked != true) {
+                    all = false;
+                }
+                if (c.checked == true) {
+                    has = true;
+                }
+            }
+            if (all || (this.props.checkboxMode == "anysel" && has == true)) {
+                parent.checked = true;
+                this.setItemCheckedParent(parent);
+            } else {
+                parent.checked = false;
+                this.setItemCheckedParent(parent);
             }
         }
     }
