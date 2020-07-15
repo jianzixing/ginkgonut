@@ -83,6 +83,11 @@ export default class Button<P extends ButtonProps> extends Component<P> {
         isAction: true
     };
 
+    constructor(props) {
+        super(props);
+
+        this.checkPressState = this.checkPressState.bind(this);
+    }
 
     protected buildClassNames(themePrefix: string) {
         super.buildClassNames(themePrefix);
@@ -261,6 +266,21 @@ export default class Button<P extends ButtonProps> extends Component<P> {
         this.setPressing(true);
     }
 
+    protected checkPressState() {
+        document.removeEventListener("mouseup", this.checkPressState);
+        if (this.isOnPressing) {
+            let isShowMenu = false;
+            if (Button.buttonMenus && Button.buttonMenus.length > 0) {
+                for (let bm of Button.buttonMenus) {
+                    if (bm.button == this) isShowMenu = true;
+                }
+            }
+            if (!isShowMenu) {
+                this.setPressing(false);
+            }
+        }
+    }
+
     private closeButtonMenus() {
         if (Button.buttonMenus) {
             Button.buttonMenus.map(value => {
@@ -321,6 +341,7 @@ export default class Button<P extends ButtonProps> extends Component<P> {
         if (!this.props.disabled) {
             if (this.props.toggle != true) {
                 this.setPressing(true);
+                document.addEventListener("mouseup", this.checkPressState);
             }
         }
     }

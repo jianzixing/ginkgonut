@@ -111,6 +111,8 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
             cls.push(TableCell.tableCellClsAlignLeft);
         }
 
+        let style = {};
+        if (this.width) style['width'] = this.width;
         let elements = [
             <div
                 className={cls.join(" ")}
@@ -120,6 +122,7 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
                         e.preventDefault();
                     }
                 }}
+                style={style}
             >
                 {children}
             </div>
