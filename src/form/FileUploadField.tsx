@@ -305,29 +305,25 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
 
     getValue(): FileList | Array<File> | Array<string> | string {
         let uploadType = this.props.uploadType;
-        if (uploadType == null || uploadType == "default") {
-            return this.value;
-        } else {
-            if (this.uploadRef && this.uploadRef.instance) {
-                let items = this.uploadRef.instance.getItems();
-                if (items && items.length > 0) {
-                    let arr = [];
-                    for (let item of items) {
-                        if (this.props.isSyncUpload) {
-                            arr.push(item.data);
-                        } else {
-                            arr.push(item.file);
-                        }
+        if (this.uploadRef && this.uploadRef.instance) {
+            let items = this.uploadRef.instance.getItems();
+            if (items && items.length > 0) {
+                let arr = [];
+                for (let item of items) {
+                    if (this.props.isSyncUpload) {
+                        arr.push(item.data);
+                    } else {
+                        arr.push(item.file);
                     }
-                    if (uploadType == "avatar") {
-                        if (arr && arr.length > 0) {
-                            return arr[0];
-                        } else {
-                            return null;
-                        }
-                    }
-                    return arr;
                 }
+                if (uploadType == "avatar" || uploadType == "default" || uploadType == null) {
+                    if (arr && arr.length > 0) {
+                        return arr[0];
+                    } else {
+                        return null;
+                    }
+                }
+                return arr;
             }
         }
     }

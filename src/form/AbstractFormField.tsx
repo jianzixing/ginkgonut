@@ -16,7 +16,10 @@ export class AbstractFormField<P extends AbstractFormFieldProps> extends Compone
 
     protected compareAfterUpdate(props: P, oldProps: P): boolean {
         if (props['value'] != oldProps['value']) {
-            this.setValue(props['value']);
+            let promise = Promise.resolve();
+            promise.then(() => {
+                this.setValue(props['value']);
+            })
         }
         return false;
     }

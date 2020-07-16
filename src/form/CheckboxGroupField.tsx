@@ -17,6 +17,7 @@ export interface CheckboxGroupFieldProps extends FormFieldProps {
     direction?: "horizontal" | "vertical";
     value?: Array<number | string> | number | string;
     selectByIcon?: boolean;
+    onSelected?: (field: CheckboxGroupField<any>, value: CheckboxGroupModel, isCheck: boolean) => void;
 }
 
 export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> extends FormField<P> {
@@ -83,7 +84,7 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
                                            onChange={e => {
                                                let oldValue = [];
                                                this.value.map(i => {
-                                                   if (i.value) oldValue.push(i.value)
+                                                   if (i.value != null) oldValue.push(i.value)
                                                });
                                                if (e.value) {
                                                    if (!this.isInValue(m)) this.value.push(m);
@@ -94,11 +95,14 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
                                                }
                                                let newValues = [];
                                                this.value.map(i => {
-                                                   if (i.value) newValues.push(i.value);
+                                                   if (i.value != null) newValues.push(i.value);
                                                })
                                                this.triggerOnChangeEvents(this,
                                                    newValues.length > 0 ? newValues : undefined,
                                                    oldValue.length > 0 ? oldValue : undefined);
+                                               if (this.props.onSelected) {
+                                                   this.props.onSelected(this, m, !!e.value);
+                                               }
                                            }}/>
                         </div>
                     </div>)

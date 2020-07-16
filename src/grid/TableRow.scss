@@ -1,5 +1,6 @@
 .x-table-row {
-  display: block;
+  display: table;
+  table-layout: fixed;
   color: #404040;
   background-color: #fff;
   border: 0px solid #e9e9e9;
@@ -27,8 +28,7 @@
   }
 
   .x-cells-el {
-    display: table;
-    table-layout: fixed;
+    display: table-row;
     background-color: inherit;
   }
 
