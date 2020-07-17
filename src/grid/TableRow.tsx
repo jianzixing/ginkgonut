@@ -19,6 +19,7 @@ export interface ActionColumnItem {
     text?: string;
     tooltip?: string;
     onActionClick?: (value: any, data: any) => void;
+    isShowing?: (value: any, data: any) => boolean;
 }
 
 export interface CellEditing {
@@ -229,6 +230,11 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                 let items = column.items;
                                 if (items && items.length > 0) {
                                     for (let item of items) {
+                                        if (item.isShowing) {
+                                            if (item.isShowing(value, data) == false) {
+                                                continue;
+                                            }
+                                        }
                                         let style: CSSProperties = {};
                                         if (item.style) style = {...item.style};
                                         if (item.color) style['color'] = item.color;
