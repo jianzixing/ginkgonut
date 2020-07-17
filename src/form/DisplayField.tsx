@@ -44,7 +44,7 @@ export default class DisplayField<P extends DisplayFieldProps> extends FormField
             return (text)
         } else {
             return (
-                <span setInnerHTML={text}></span>
+                <span setInnerHTML={"" + text}></span>
             )
         }
     }
