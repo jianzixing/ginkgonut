@@ -4,6 +4,7 @@ import Container from "./component/Container";
 import CookieTools from "./tools/CookieTools";
 import ObjectTools from "./tools/ObjectTools";
 import DateTools from "./tools/DateTools";
+import FormatTools from "./tools/FormatTools";
 
 import {Request, Requests, Submit, setRequestServer, RequestDecoratorConfig} from "./http/Request";
 
@@ -98,6 +99,7 @@ export {
     CookieTools,
     ObjectTools,
     DateTools,
+    FormatTools,
 
     Component,
     ComponentProps,
