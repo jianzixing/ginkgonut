@@ -15,6 +15,7 @@ export interface MessageBoxProps extends WindowProps, ProgressProps {
     content?: GinkgoNode;
     multiLineInput?: boolean;
     buttons?: Array<ButtonProps>;
+    value?: string;
 }
 
 // 全局对话框实例只允许有一个
@@ -65,6 +66,20 @@ export default class MessageBox<P extends MessageBoxProps> extends WindowPanel<P
         return MessageBox.show(<MessageBox type={"confirm"}
                                            title={title}
                                            content={content}
+                                           onOkClick={(e, value) => {
+                                               onOkClick && onOkClick(e)
+                                           }}
+                                           onCancelClick={e => onCancelClick && onCancelClick(e)}/>)
+    }
+
+    public static showPrompt(title: string, content: string,
+                             onOkClick: (e) => void,
+                             value?: string,
+                             onCancelClick?: (e) => void) {
+        return MessageBox.show(<MessageBox type={"prompt"}
+                                           title={title}
+                                           content={content}
+                                           value={value}
                                            onOkClick={(e, value) => {
                                                onOkClick && onOkClick(e)
                                            }}
@@ -145,10 +160,15 @@ export default class MessageBox<P extends MessageBoxProps> extends WindowPanel<P
                                  onClick={this.onNoClick.bind(this)}/>);
 
             content.push(<span className={MessageBox.messageBoxPromptTextCls}>{this.props.content}</span>);
+            let defaultValue = this.props.value;
             if (this.props.multiLineInput) {
-                content.push(<TextAreaField ref={this.inputRef} className={MessageBox.messageBoxPromptInputCls}/>)
+                content.push(<TextAreaField ref={this.inputRef}
+                                            className={MessageBox.messageBoxPromptInputCls}
+                                            {...defaultValue ? {value: defaultValue} : {}}/>)
             } else {
-                content.push(<TextField ref={this.inputRef} className={MessageBox.messageBoxPromptInputCls}/>);
+                content.push(<TextField ref={this.inputRef}
+                                        className={MessageBox.messageBoxPromptInputCls}
+                                        {...defaultValue ? {value: defaultValue} : {}}/>);
             }
         } else if (this.props.type == "progress") {
             content.push(<span className={MessageBox.messageBoxProgressTextCls}>{this.props.content}</span>);
