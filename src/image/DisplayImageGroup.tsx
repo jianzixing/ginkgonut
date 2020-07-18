@@ -7,12 +7,15 @@ export interface DisplayImageGroupModel {
     url: string;
     link?: string;
     style?: CSSProperties;
+    type?: "center" | "fit" | "stretch";
+    alt?: string;
 }
 
 export interface DisplayImageGroupProps extends ComponentProps {
     models: Array<DisplayImageGroupModel>;
     itemWidth?: number;
     itemHeight?: number;
+    type?: "center" | "fit" | "stretch";
 }
 
 export default class DisplayImageGroup<P extends DisplayImageGroupProps> extends Component<P> {
@@ -34,7 +37,10 @@ export default class DisplayImageGroup<P extends DisplayImageGroupProps> extends
                               style={m.style || {}}>
                     <DisplayImage width={this.props.itemWidth}
                                   height={this.props.itemHeight}
-                                  src={m.url} link={m.link}/>
+                                  src={m.url}
+                                  link={m.link}
+                                  type={m.type || this.props.type}
+                                  alt={m.alt}/>
                 </div>);
             }
             return arr;

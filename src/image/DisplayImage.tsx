@@ -1,12 +1,14 @@
 import Ginkgo, {CSSProperties, GinkgoElement, GinkgoNode, HTMLComponent, RefObject} from "ginkgoes";
 import Component, {ComponentProps} from "../component/Component";
 import "./DisplayImage.scss";
+import {Tooltip} from "../ginkgonut";
 
 export interface DisplayImageProps extends ComponentProps {
     type?: "center" | "fit" | "stretch";
     src: string;
     empty?: string;
     link?: string;
+    alt?: GinkgoNode;
 }
 
 export default class DisplayImage<P extends DisplayImageProps> extends Component<P> {
@@ -18,6 +20,10 @@ export default class DisplayImage<P extends DisplayImageProps> extends Component
 
     protected value = this.props.src;
     protected imgRef: RefObject<HTMLComponent> = Ginkgo.createRef();
+
+    protected xy: { x: number, y: number } = {x: 0, y: 0};
+    protected handler;
+    protected toolTip;
 
     set src(src: string) {
         this.value = src;
@@ -35,17 +41,68 @@ export default class DisplayImage<P extends DisplayImageProps> extends Component
     }
 
     protected drawing(): GinkgoNode | GinkgoElement[] {
+        let alt = this.props.alt;
         if (this.props.link) {
             return (
                 <a className={DisplayImage.imageHrefCls} href={this.props.link} target={"_blank"}>
-                    <img ref={this.imgRef} className={DisplayImage.imagePicCls} src={this.value || this.props.empty}/>
+                    <img ref={this.imgRef}
+                         className={DisplayImage.imagePicCls}
+                         src={this.value || this.props.empty}
+                         alt={typeof alt == "string" ? alt : ""}/>
                 </a>
             )
         } else {
             return (
-                <img ref={this.imgRef} className={DisplayImage.imagePicCls} src={this.value || this.props.empty}/>
+                <img ref={this.imgRef}
+                     className={DisplayImage.imagePicCls}
+                     src={this.value || this.props.empty}
+                     alt={typeof alt == "string" ? alt : ""}/>
             )
         }
+    }
+
+    componentDidMount() {
+        super.componentDidMount();
+        let alt = this.props.alt;
+        if (alt) {
+            let dom = this.rootEl.dom;
+            if (dom) {
+                dom.addEventListener("mousemove", (evt: any) => {
+                    this.xy.x = evt.pageX;
+                    this.xy.y = evt.pageY;
+                })
+            }
+        }
+    }
+
+    protected onMouseEnter(e: Event) {
+        super.onMouseEnter(e);
+
+        let alt = this.props.alt;
+        if (alt) {
+            if (this.handler) {
+                clearTimeout(this.handler);
+                this.handler = null;
+            }
+            this.handler = setTimeout(() => {
+                this.toolTip = Tooltip.show(<Tooltip x={this.xy.x}
+                                                     y={this.xy.y}
+                                                     alignAdjust={16}
+                                                     position={"mouse"}>
+                    <span>{alt}</span>
+                </Tooltip>)
+            }, 200);
+        }
+    }
+
+    protected onMouseLeave(e: Event) {
+        super.onMouseLeave(e);
+
+        if (this.toolTip) {
+            this.toolTip.close();
+        }
+        clearTimeout(this.handler);
+        this.handler = null;
     }
 
     protected compareUpdate(key: string, newValue: any, oldValue: any): boolean {

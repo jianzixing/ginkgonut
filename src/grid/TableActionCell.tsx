@@ -58,7 +58,6 @@ export default class TableActionCell<P extends TableActionCellProps> extends Com
                 this.handler = null;
             }
             this.handler = setTimeout(() => {
-                let bounds = this.getBounds();
                 this.toolTip = Tooltip.show(<Tooltip x={this.xy.x}
                                                      y={this.xy.y}
                                                      alignAdjust={16}
