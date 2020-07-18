@@ -65,10 +65,10 @@ export default class Tooltip<P extends TooltipProps> extends Component<P> {
 
     protected authorRef: RefObject<HTMLComponent> = Ginkgo.createRef();
 
-    public static show(props: TooltipProps, el: HTMLElement | Component<any> | HTMLComponent): TooltipManager {
+    public static show(props: TooltipProps, el?: HTMLElement | Component<any> | HTMLComponent): TooltipManager {
         let has = showingTooltips.filter(value => value.el == el);
         if (!has || has.length == 0) {
-            if (props.position != "mouse") {
+            if (props.position != "mouse" && el) {
                 let bounds;
                 if (el instanceof Component) {
                     bounds = el.getBounds();
@@ -191,8 +191,8 @@ export default class Tooltip<P extends TooltipProps> extends Component<P> {
                         rootDom.style.left = x + (targetWidth / 2 - left) - w1 / 2 + "px";
                         rootDom.style.top = y - targetHeight - w1 / 2 + "px";
                     } else if (position == "mouse") {
-                        rootDom.style.left = x + 20 + "px";
-                        rootDom.style.top = y + 20 + "px";
+                        rootDom.style.left = x + alignAdjust + "px";
+                        rootDom.style.top = y + alignAdjust + "px";
                     }
 
                 } else if (this.props.align == "left") {
@@ -203,8 +203,8 @@ export default class Tooltip<P extends TooltipProps> extends Component<P> {
                         rootDom.style.left = x - w2 - w1 + "px";
                         rootDom.style.top = y + (targetHeight / 2 - top) - h1 / 2 + "px";
                     } else if (position == "mouse") {
-                        rootDom.style.left = x + 20 + "px";
-                        rootDom.style.top = y + 20 + "px";
+                        rootDom.style.left = x + alignAdjust + "px";
+                        rootDom.style.top = y + alignAdjust + "px";
                     }
 
                 } else if (this.props.align == "right") {
@@ -215,8 +215,8 @@ export default class Tooltip<P extends TooltipProps> extends Component<P> {
                         rootDom.style.left = x + targetWidth + w1 + "px";
                         rootDom.style.top = y + (targetHeight / 2 - top) - h1 / 2 + "px";
                     } else if (position == "mouse") {
-                        rootDom.style.left = x + 20 + "px";
-                        rootDom.style.top = y + 20 + "px";
+                        rootDom.style.left = x + alignAdjust + "px";
+                        rootDom.style.top = y + alignAdjust + "px";
                     }
 
                 } else {
@@ -227,8 +227,8 @@ export default class Tooltip<P extends TooltipProps> extends Component<P> {
                         rootDom.style.left = x + (targetWidth / 2 - left) - w1 / 2 + "px";
                         rootDom.style.top = y + targetHeight + w1 / 2 + "px";
                     } else if (position == "mouse") {
-                        rootDom.style.left = x + 20 + "px";
-                        rootDom.style.top = y + 20 + "px";
+                        rootDom.style.left = x + alignAdjust + "px";
+                        rootDom.style.top = y + alignAdjust + "px";
                     }
                 }
             }

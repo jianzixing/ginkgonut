@@ -8,6 +8,7 @@ import {TableColumnModel} from "./TableColumn";
 import "./TableRow.scss";
 import ObjectTools from "../tools/ObjectTools";
 import DateTools from "../tools/DateTools";
+import TableActionCell from "./TableActionCell";
 
 export interface ActionColumnItem {
     icon?: string;
@@ -102,8 +103,6 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
     protected static tableClsRowCells;
     protected static tableClsRowBorder;
     protected static tableClsRowActions;
-    protected static tableClsRowActionItem;
-    protected static tableClsRowActionItemText;
 
     protected isOnSelected = this.props.selected;
     protected isEnableHovered = true;
@@ -118,8 +117,6 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
         TableRow.tableClsRowCells = this.getThemeClass("cells-el");
         TableRow.tableClsRowBorder = this.getThemeClass("table-row-border");
         TableRow.tableClsRowActions = this.getThemeClass("table-row-actions");
-        TableRow.tableClsRowActionItem = this.getThemeClass("action-item");
-        TableRow.tableClsRowActionItemText = this.getThemeClass("action-item-text");
     }
 
     protected drawing(): GinkgoElement | undefined | null {
@@ -240,35 +237,10 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                         if (item.color) style['color'] = item.color;
                                         if (item.size) style.fontSize = item.size;
 
-                                        if (item.iconType) {
-                                            icons.push(
-                                                <div className={TableRow.tableClsRowActionItem}
-                                                     style={style}
-                                                     onClick={e => {
-                                                         this.onActionClick(e, item, column, data, value);
-                                                     }}>
-                                                    <Icon icon={item.iconType}/>
-                                                </div>)
-                                        } else if (item.icon) {
-                                            icons.push(
-                                                <div className={TableRow.tableClsRowActionItem}
-                                                     style={style}
-                                                     onClick={e => {
-                                                         this.onActionClick(e, item, column, data, value);
-                                                     }}>
-                                                    <img src={item.icon}/>
-                                                </div>)
-                                        } else if (item.text) {
-                                            icons.push(
-                                                <div
-                                                    className={[TableRow.tableClsRowActionItem, TableRow.tableClsRowActionItemText]}
-                                                    style={style}
-                                                    onClick={e => {
-                                                        this.onActionClick(e, item, column, data, value);
-                                                    }}>
-                                                    <span>{item.text}</span>
-                                                </div>)
-                                        }
+                                        icons.push(<TableActionCell item={item}
+                                                                    column={column}
+                                                                    value={value}
+                                                                    data={data}/>);
                                     }
                                 }
                             }

@@ -73,7 +73,7 @@ export default class MessageBox<P extends MessageBoxProps> extends WindowPanel<P
     }
 
     public static showPrompt(title: string, content: string,
-                             onOkClick: (e) => void,
+                             onOkClick: (e, value) => void,
                              value?: string,
                              onCancelClick?: (e) => void) {
         return MessageBox.show(<MessageBox type={"prompt"}
@@ -81,7 +81,7 @@ export default class MessageBox<P extends MessageBoxProps> extends WindowPanel<P
                                            content={content}
                                            value={value}
                                            onOkClick={(e, value) => {
-                                               onOkClick && onOkClick(e)
+                                               onOkClick && onOkClick(e, value)
                                            }}
                                            onCancelClick={e => onCancelClick && onCancelClick(e)}/>)
     }

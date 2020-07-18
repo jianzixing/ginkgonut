@@ -35,24 +35,8 @@
   .x-table-row-actions {
     display: block;
     overflow: hidden;
-    font-size: 18px;
     padding: 7px 4px 7px 4px;
     text-align: center;
-
-    .x-action-item {
-      display: inline-block;
-      margin-right: 10px;
-      cursor: pointer;
-      vertical-align: middle;
-
-      &.x-action-item-text {
-        font-size: 13px;
-      }
-
-      &:last-child {
-        margin-right: 0px;
-      }
-    }
 
     img {
       width: 18px;
