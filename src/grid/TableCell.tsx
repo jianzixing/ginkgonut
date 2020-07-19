@@ -201,7 +201,11 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
     protected buildCellChildren() {
         let column = this.props.column;
         if (this.onEditing && column.editing && column.editing.field) {
-            let field = {...column.editing.field};
+            let fieldProps: any = column.editing.field;
+            if (typeof fieldProps == "function") {
+                fieldProps = fieldProps(this.props.data);
+            }
+            let field = {...fieldProps};
             field['style'] = {...field['style'] || {}, width: "100%", height: "100%"};
             field['ref'] = this.editingFieldRef;
             field['onChange'] = this.onEditValueChange.bind(this);
@@ -246,7 +250,12 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
                 value = this.props.column.editing.onValue(this.props.column, this.props.data, value);
             }
             this.editingFieldRef.instance.setValue(value);
-            this.editingFieldRef.instance.focus();
+
+            let column = this.props.column;
+            let editing = column && column.editing ? column.editing : {};
+            if (editing.showEvent != "show") {
+                this.editingFieldRef.instance.focus();
+            }
         }
     }
 

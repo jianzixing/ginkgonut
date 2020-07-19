@@ -25,7 +25,7 @@ export interface ActionColumnItem {
 
 export interface CellEditing {
     showEvent?: "click" | "dbclick" | "show",
-    field?: GinkgoElement;
+    field?: (data: any) => GinkgoNode | GinkgoElement;
     fieldType?: "check";
     onValue?: (column: TableColumnModel, data: any, value: any) => any;
     onChange?: (model: TableItemModel) => void;
