@@ -216,7 +216,7 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
         }
         if (this.fieldBodyRefObject.instance) {
             this.errorTooltipsManager = Tooltip.show(
-                <Tooltip position={"mouse"} x={x} y={y}>
+                <Tooltip position={"mouse"} x={x} y={y} alignAdjust={10}>
                     <div className={FormField.formFieldErrorCls}>
                         <div className={FormField.formFieldErrorBodyCls}>
                             <Icon icon={IconTypes.exclamationCircle}/>
@@ -413,7 +413,7 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
     public validate(): boolean {
         let value = this.getValue();
         if (this.props.allowBlank == false) {
-            if (value == null || value == "") {
+            if (value == null || value === "") {
                 this.showError = true;
                 this.errorText = this.props.blankText || "This field is required";
                 if (this.fieldErrorTextRefObject && this.fieldErrorTextRefObject.instance) {
