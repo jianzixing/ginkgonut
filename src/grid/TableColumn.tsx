@@ -7,6 +7,7 @@ import {IconTypes} from "../icon/IconTypes";
 import Menu, {MenuModel, MenuProps, MenuShowing} from "../menu/Menu";
 import {ActionColumnItem, CellEditing} from "./TableRow";
 import "./TableColumn.scss";
+import {TableItemModel} from "./Table";
 
 export interface TableColumnModel {
     type?: tableCellTypes;
@@ -31,7 +32,7 @@ export interface TableColumnModel {
     className?: string;
     children?: Array<TableColumnModel>;
     editing?: CellEditing;
-    render?: (value: any, data?: any, column?: TableColumnModel) => GinkgoNode;
+    render?: (value: any, data?: any, column?: TableColumnModel, tableItem?: TableItemModel) => GinkgoNode;
 }
 
 export interface GridColumnProps extends ComponentProps {

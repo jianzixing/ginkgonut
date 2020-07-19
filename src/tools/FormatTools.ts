@@ -4,6 +4,8 @@ export default class FormatTools {
             let str = value + "";
             if (str.indexOf(".") > 0) {
                 let s1 = str.split(".");
+                if (s1[1].length == 2) return value;
+
                 if (s1.length > 1) {
                     let dig = "";
                     if (s1[1].length > 2) {

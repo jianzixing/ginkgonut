@@ -225,7 +225,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                             let icons = [];
                             if (column.render) {
                                 try {
-                                    let node = column.render(value, tableItem.data, column);
+                                    let node = column.render(value, tableItem.data, column, tableItem);
                                     icons.push(node);
                                 } catch (e) {
                                     console.error("column render error", e);
@@ -277,7 +277,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                             let cellValue = value;
                             if (column.render) {
                                 try {
-                                    let node = column.render(value, tableItem.data, column);
+                                    let node = column.render(value, tableItem.data, column, tableItem);
                                     cellValue = node;
                                 } catch (e) {
                                     console.error("column render error", e);
