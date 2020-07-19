@@ -39,10 +39,14 @@ export default class GridPanel<P extends GridPanelProps> extends Panel<P> {
                         c.setOnAutoHeight((authHeight: number) => {
                             this.setGridPanelSize(null, authHeight);
                             let height = authHeight;
+                            let toolbar = 0;
+                            if (this.toolbarTopEl) toolbar += this.toolbarTopEl.height;
+                            if (this.toolbarBottomEl) toolbar += this.toolbarBottomEl.height;
                             if (this.headerEl) {
                                 let headerEl = this.headerEl.dom as HTMLElement;
                                 height += headerEl.offsetHeight;
                             }
+                            height += toolbar;
                             this.setHeight(height);
                         });
                     }}

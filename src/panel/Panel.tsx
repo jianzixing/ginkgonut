@@ -62,6 +62,8 @@ export default class Panel<P extends PanelProps> extends Container<P> {
     protected static panelClsHeaderIconTool;
     protected static panelClsHeaderImg;
     protected static panelClsWrapper;
+    protected static panelClsToolbarTop;
+    protected static panelClsToolbarBottom;
     protected static panelClsScrollX;
     protected static panelClsScrollY;
     protected static panelClsScrollAutoX;
@@ -75,6 +77,8 @@ export default class Panel<P extends PanelProps> extends Container<P> {
     protected headerEl: HTMLComponent;
     protected headerBodyEl: HTMLComponent;
     protected wrapperEl: HTMLComponent;
+    protected toolbarTopEl: HTMLComponent;
+    protected toolbarBottomEl: HTMLComponent;
 
     protected collapse: boolean = false;
     protected originalWidth: number;
@@ -111,6 +115,8 @@ export default class Panel<P extends PanelProps> extends Container<P> {
         Panel.panelClsHeaderIconTool = this.getThemeClass("panel-header-icon-tool");
         Panel.panelClsHeaderImg = this.getThemeClass("panel-header-img-inner");
         Panel.panelClsWrapper = this.getThemeClass("panel-wrapper-el");
+        Panel.panelClsToolbarTop = this.getThemeClass("panel-toolbar-top");
+        Panel.panelClsToolbarBottom = this.getThemeClass("panel-toolbar-bottom");
         Panel.panelClsScrollX = this.getThemeClass("panel-scroll-x");
         Panel.panelClsScrollY = this.getThemeClass("panel-scroll-y");
         Panel.panelClsScrollAutoX = this.getThemeClass("panel-scroll-ax");
@@ -327,15 +333,29 @@ export default class Panel<P extends PanelProps> extends Container<P> {
                 className={Panel.panelClsWrapper}
                 style={this.wrapperStyle}
             >
-                {topToolbar}
+                {topToolbar ?
+                    <div key={"toolbar_top"}
+                         ref={c => this.toolbarTopEl = c}
+                         className={Panel.panelClsToolbarTop}>
+                        {topToolbar}
+                    </div>
+                    : null}
                 <div
+                    key={"panel_inner"}
                     className={innerElCls.join(" ")}
                     style={this.innerStyle}
                 >
                     {this.drawingPanelChild()}
                 </div>
-                {bottomToolbar}
-                {this.props.mask ? <Loading text={this.props.maskText}/> : undefined}
+                {bottomToolbar ?
+                    <div key={"toolbar_bottom"}
+                         ref={c => this.toolbarBottomEl = c}
+                         className={Panel.panelClsToolbarBottom}>
+                        {bottomToolbar}
+                    </div>
+                    : null}
+
+                {this.props.mask ? <Loading key={"panel_loading"} text={this.props.maskText}/> : undefined}
             </div>
         );
 

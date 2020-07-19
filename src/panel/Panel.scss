@@ -143,6 +143,16 @@
           overflow-y: auto;
         }
       }
+
+      .x-panel-toolbar-top {
+        width: 100%;
+        overflow: hidden;
+      }
+
+      .x-panel-toolbar-bottom {
+        width: 100%;
+        overflow: hidden;
+      }
     }
   }
 
