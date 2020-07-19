@@ -45,6 +45,7 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
     protected static comboboxFieldPickerSelected;
     protected static comboboxFieldEmpty;
 
+    protected selectData = this.props.selectData;
     protected comboboxValue: ComboboxModel;
     protected cacheSetValue: any;
     protected data = this.props.data;
@@ -236,7 +237,7 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
             let item = {
                 value: dt[this.props.valueField || 'id'],
                 text: typeof dt == "object" ? dt[this.props.displayField || 'text'] : dt,
-                selected: this.props.selectData ? this.props.selectData == dt : false,
+                selected: this.selectData ? this.selectData == dt : false,
                 data: dt
             };
             if (item.value == null) {
@@ -245,6 +246,15 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
             models.push(item);
         }
         return models;
+    }
+
+    protected compareUpdate(key: string, newValue: any, oldValue: any): boolean {
+        if (key == "selectData" && this.selectData != newValue) {
+            this.selectData = newValue;
+            this.setValue(this.selectData);
+            return true;
+        }
+        return false;
     }
 
     protected redrawingPickerBody() {
