@@ -71,8 +71,15 @@ export class TableRecord {
 
     commit() {
         if (this._data && this.record) {
+            for (let key in this.record) {
+                if (this._data[key] != this.record[key]) {
+                    this._data[key] = this.record[key];
+                }
+            }
             for (let key in this._data) {
-                this._data[key] = this.record[key];
+                if (this.record[key] != this._data[key]) {
+                    this.record[key] = this._data[key];
+                }
             }
             if (this.callback) {
                 this.callback();
