@@ -1,5 +1,5 @@
 import Ginkgo, {CSSProperties, GinkgoNode} from "ginkgoes";
-import Tree, {TreeListModel, TreeProps} from "./Tree";
+import Tree, {TreeProps} from "./Tree";
 import Grid, {GridProps} from "../grid/Grid";
 
 export interface TreeGridProps extends TreeProps, GridProps {
@@ -7,9 +7,6 @@ export interface TreeGridProps extends TreeProps, GridProps {
 }
 
 export default class TreeGrid<P extends TreeGridProps> extends Tree<P> {
-    constructor(props: P) {
-        super(props);
-    }
 
     drawing() {
         return (

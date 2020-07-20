@@ -10,6 +10,26 @@
     display: flex;
     flex-direction: column;
     background-color: #ffffff;
+
+    .x-grid-inner {
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      border: 0;
+
+      .x-grid-table {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        box-sizing: border-box;
+        border-top: 1px solid #d0d0d0;
+      }
+
+    }
   }
 
   .x-column-resize-line {
@@ -30,13 +50,5 @@
     .x-column-header-trigger {
       cursor: col-resize;
     }
-  }
-
-  .x-grid-table {
-    position: relative;
-    flex: 1;
-    overflow: auto;
-    box-sizing: border-box;
-    border-top: 1px solid #d0d0d0;
   }
 }

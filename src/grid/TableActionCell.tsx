@@ -4,7 +4,7 @@ import "./TableActionCell.scss";
 import {ActionColumnItem} from "./TableRow";
 import {TableColumnModel} from "./TableColumn";
 import Icon from "../icon/Icon";
-import {Tooltip} from "../ginkgonut";
+import Tooltip from "../tooltips/Tooltip";
 
 export interface TableActionCellProps extends ComponentProps {
     item: ActionColumnItem;

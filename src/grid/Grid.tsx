@@ -48,6 +48,7 @@ export interface GridProps extends TableProps {
 export default class Grid<P extends GridProps> extends Component<P> implements StoreProcessor {
     protected static gridClsRoot;
     protected static gridClsBody;
+    protected static gridClsInner;
     protected static gridClsTable;
     protected static gridClsResize;
     protected static clsColumnResizeLine;
@@ -77,6 +78,7 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
 
         Grid.gridClsRoot = this.getThemeClass("grid");
         Grid.gridClsBody = this.getThemeClass("grid-body");
+        Grid.gridClsInner = this.getThemeClass("grid-inner");
         Grid.gridClsTable = this.getThemeClass("grid-table");
         Grid.gridClsResize = this.getThemeClass("grid-resize");
         Grid.clsColumnResizeLine = this.getThemeClass("column-resize-line");
@@ -120,6 +122,7 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
         return (
             <div ref={this.gridBodyRef} className={Grid.gridClsBody}>
                 <TableColumnGroup
+                    key={"grid_column"}
                     ref={(component: any) => this.columnsRef = component}
                     columnPositionRef={this.gridBodyRef}
                     columnResizeLineRef={this.columnLineRef}
@@ -145,66 +148,68 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
                         this.onColumnChange(type, data);
                     })}
                 />
-                <div
-                    ref={this.tableRef}
-                    className={gridTableClsNames}
-                    onScroll={(e) => {
-                        this.onTableScroll(e);
-                    }}
-                >
-                    <Table
-                        {...this.props}
-                        disableClickSelected={this.props.disableClickSelected}
-                        enableToggleSelected={this.props.enableToggleSelected}
-                        width={this.tableWidth}
-                        height={undefined}
-                        ref={c => this.tableComponentRef = (c as Table<any>)}
-                        tableItemModels={this.tableItemModels}
-                        referRefObjectWidth={this.tableRef}
-                        columns={columns}
-                        onSelected={(e: Event, data: TableItemModel, sel?: Array<TableItemModel>) => {
-                            if (this.tableItemModels) {
-                                let allSel = true;
-                                this.tableItemModels.map(tableItemModel => {
-                                    if (tableItemModel.selected != true) {
-                                        allSel = false;
+                <div key={"grid_body"}
+                     className={Grid.gridClsInner}>
+                    <div ref={this.tableRef}
+                         className={gridTableClsNames}
+                         onScroll={(e) => {
+                             this.onTableScroll(e);
+                         }}
+                    >
+                        <Table
+                            {...this.props}
+                            disableClickSelected={this.props.disableClickSelected}
+                            enableToggleSelected={this.props.enableToggleSelected}
+                            width={this.tableWidth}
+                            height={undefined}
+                            ref={c => this.tableComponentRef = (c as Table<any>)}
+                            tableItemModels={this.tableItemModels}
+                            columns={columns}
+                            onSelected={(e: Event, data: TableItemModel, sel?: Array<TableItemModel>) => {
+                                if (this.tableItemModels) {
+                                    let allSel = true;
+                                    this.tableItemModels.map(tableItemModel => {
+                                        if (tableItemModel.selected != true) {
+                                            allSel = false;
+                                        }
+                                    });
+                                    if (allSel && this.props.columns) {
+                                        let arr = columns.filter(column => column.type == "checkbox");
+                                        arr.map(column => column.checked = true);
+                                        this.redrawing();
+                                    } else if (!allSel) {
+                                        let arr = columns.filter(column => column.type == "checkbox");
+                                        arr.map(column => column.checked = false);
+                                        this.redrawing();
                                     }
-                                });
-                                if (allSel && this.props.columns) {
-                                    let arr = columns.filter(column => column.type == "checkbox");
-                                    arr.map(column => column.checked = true);
-                                    this.redrawing();
-                                } else if (!allSel) {
+                                }
+                                if (this.props.onSelected) {
+                                    this.props.onSelected(e, data.data, sel);
+                                }
+                                if (this.props.onSelectChange) {
+                                    this.props.onSelectChange(sel, {data: data, type: 1});
+                                }
+                            }}
+                            onDeselected={(e: Event, data: TableItemModel, sel?: Array<TableItemModel>) => {
+                                if (this.props.columns) {
                                     let arr = columns.filter(column => column.type == "checkbox");
                                     arr.map(column => column.checked = false);
-                                    this.redrawing();
                                 }
-                            }
-                            if (this.props.onSelected) {
-                                this.props.onSelected(e, data.data, sel);
-                            }
-                            if (this.props.onSelectChange) {
-                                this.props.onSelectChange(sel, {data: data, type: 1});
-                            }
-                        }}
-                        onDeselected={(e: Event, data: TableItemModel, sel?: Array<TableItemModel>) => {
-                            if (this.props.columns) {
-                                let arr = columns.filter(column => column.type == "checkbox");
-                                arr.map(column => column.checked = false);
-                            }
-                            this.redrawing();
+                                this.redrawing();
 
-                            if (this.props.onDeselected) {
-                                this.props.onDeselected(e, data.data, sel);
-                            }
-                            if (this.props.onSelectChange) {
-                                this.props.onSelectChange(sel, {data: data, type: 2});
-                            }
-                        }}
-                    />
+                                if (this.props.onDeselected) {
+                                    this.props.onDeselected(e, data.data, sel);
+                                }
+                                if (this.props.onSelectChange) {
+                                    this.props.onSelectChange(sel, {data: data, type: 2});
+                                }
+                            }}
+                        />
+                    </div>
                     {this.isLoading ? <Loading/> : undefined}
                 </div>
-                <div ref={this.columnLineRef} className={Grid.clsColumnResizeLine}></div>
+                <div key={"grid_line"} ref={this.columnLineRef} className={Grid.clsColumnResizeLine}></div>
+
             </div>
         )
     }
@@ -318,6 +323,16 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
         }
     }
 
+    protected resetTableScroll() {
+        let columnsEl: TableColumnGroup<TableColumnGroupProps> | null = this.columnsRef,
+            tableEl = this.tableRef.instance ? this.tableRef.instance.dom : undefined;
+        if (columnsEl && tableEl) {
+            columnsEl.setScrollLeft(0);
+            (tableEl as HTMLElement).scrollLeft = 0;
+            (tableEl as HTMLElement).scrollTop = 0;
+        }
+    }
+
     protected getRootClassName(): string[] {
         let arr = super.getRootClassName();
         arr.push(Grid.gridClsRoot);
@@ -342,5 +357,6 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
             this.tableItemModels = [];
         }
         this.redrawing();
+        this.resetTableScroll();
     }
 }
