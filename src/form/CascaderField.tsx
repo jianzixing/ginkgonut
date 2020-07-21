@@ -247,15 +247,15 @@ export default class CascaderField<P extends CascaderFieldProps> extends Combobo
             let dom = this.cascaderFieldPickerRef.instance.dom as HTMLElement;
 
             let list = dom.children;
-            let height = 0;
-            if (list && list.length > 0) {
-                for (let i = 0; i < list.length; i++) {
-                    let el = list.item(i) as HTMLElement;
-                    if (height < el.offsetHeight) {
-                        height = el.offsetHeight;
-                    }
-                }
-            }
+            let height = this.pickerRefObject.instance.height;
+            // if (list && list.length > 0) {
+            //     for (let i = 0; i < list.length; i++) {
+            //         let el = list.item(i) as HTMLElement;
+            //         if (height < el.offsetHeight) {
+            //             height = el.offsetHeight;
+            //         }
+            //     }
+            // }
             if (list && list.length > 0) {
                 for (let i = 0; i < list.length; i++) {
                     let el = list.item(i) as HTMLElement;

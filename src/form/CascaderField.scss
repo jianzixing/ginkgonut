@@ -9,6 +9,8 @@
     float: left;
     margin: 0;
     padding: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
 
     &.x-cascader-field-list-border {
       border-right: 1px solid #D0D0D0;
