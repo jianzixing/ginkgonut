@@ -23,6 +23,7 @@ export interface FormFieldProps extends AbstractFormFieldProps {
     fixMinWidth?: boolean;
     showRequireText?: boolean;
     requireText?: string;
+    enableShowError?: boolean;
 }
 
 /**
@@ -33,6 +34,7 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
     protected static formFieldDisabledCls;
     protected static formFieldContentCls;
     protected static formFieldBorderCls;
+    protected static formFieldBorderInvisibleCls;
     protected static formFieldFocusBorderCls;
     protected static formFieldLabelCls;
     protected static formFieldBodyCls;
@@ -55,6 +57,7 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
     };
 
     protected showError: boolean = false;
+    protected enableShowError: boolean = this.props.enableShowError == false ? false : true;
     protected fieldBorder: boolean = false;
     protected fieldFocusBorder: boolean = false;
     protected fieldLabelWidth: number | string = this.props.labelWidth;
@@ -100,6 +103,7 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
         FormField.formFieldDisabledCls = this.getThemeClass("formfield-disabled");
         FormField.formFieldContentCls = this.getThemeClass("field-content");
         FormField.formFieldBorderCls = this.getThemeClass("field-border");
+        FormField.formFieldBorderInvisibleCls = this.getThemeClass("field-border-invisible");
         FormField.formFieldFocusBorderCls = this.getThemeClass("field-focus-border");
         FormField.formFieldLabelCls = this.getThemeClass("field-label");
         FormField.formFieldBodyCls = this.getThemeClass("field-body");
@@ -120,7 +124,10 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
 
     protected drawing(): GinkgoElement<any> | string | undefined | null | GinkgoElement[] {
         let labelCss = [FormField.formFieldLabelCls],
-            bodyInnerCss = [FormField.formFieldBodyInnerCls, Component.componentClsEnabledSelect];
+            bodyInnerCss = [
+                FormField.formFieldBodyInnerCls,
+                Component.componentClsEnabledSelect,
+                FormField.formFieldBorderCls];
 
         let labelAlign = this.props.labelAlign;
         let labelVAlign = this.props.labelVAlign;
@@ -129,8 +136,8 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
             label += ":";
         }
 
-        if (this.fieldBorder) {
-            bodyInnerCss.push(FormField.formFieldBorderCls);
+        if (this.fieldBorder == false) {
+            bodyInnerCss.push(FormField.formFieldBorderInvisibleCls);
         }
         if (this.fieldFocusBorder) {
             bodyInnerCss.push(FormField.formFieldFocusBorderCls);
@@ -190,7 +197,7 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
                     <div ref={this.fieldBodyRefObject}
                          className={bodyInnerCss}
                          onMouseEnter={e => {
-                             if (this.showError) {
+                             if (this.showError && this.enableShowError) {
                                  let x = e.clientX, y = e.clientY;
                                  this.showErrorTooltips(x, y);
                              }
@@ -201,6 +208,7 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
                                  this.errorTooltipsManager = null;
                              }
                          }}
+                         style={this.props.enableShowError == false ? {borderColor: "transparent"} : null}
                     >
                         <bind ref={this.fieldBodyBindRefObject} render={this.drawingFieldBody.bind(this)}/>
                     </div>
@@ -371,19 +379,23 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
     }
 
     protected showErrorMessage() {
-        this.showError = true;
-        this.rootEl.reloadClassName();
+        if (this.enableShowError) {
+            this.showError = true;
+            this.rootEl.reloadClassName();
+        }
     }
 
     protected hideErrorMessage() {
-        this.showError = false;
-        this.rootEl.reloadClassName();
+        if (this.enableShowError) {
+            this.showError = false;
+            this.rootEl.reloadClassName();
+        }
     }
 
     protected getRootClassName(): string[] {
         let arr = super.getRootClassName();
         arr.push(FormField.formFieldCls);
-        if (this.showError) {
+        if (this.showError && this.enableShowError) {
             arr.push(FormField.formFieldErrorShowCls);
         }
         if (this.props.disable) {
@@ -411,39 +423,41 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
     }
 
     public validate(): boolean {
-        let value = this.getValue();
-        if (this.props.allowBlank == false) {
-            if (value == null || value === "") {
-                this.showError = true;
-                this.errorText = this.props.blankText || "This field is required";
-                if (this.fieldErrorTextRefObject && this.fieldErrorTextRefObject.instance) {
-                    this.fieldErrorTextRefObject.instance.overlap(this.errorText);
-                }
-                this.rootEl.reloadClassName();
-                return false;
-            } else {
-                if (this.showError == true) {
-                    this.showError = false;
+        if (this.enableShowError) {
+            let value = this.getValue();
+            if (this.props.allowBlank == false) {
+                if (value == null || value === "") {
+                    this.showError = true;
+                    this.errorText = this.props.blankText || "This field is required";
+                    if (this.fieldErrorTextRefObject && this.fieldErrorTextRefObject.instance) {
+                        this.fieldErrorTextRefObject.instance.overlap(this.errorText);
+                    }
                     this.rootEl.reloadClassName();
+                    return false;
+                } else {
+                    if (this.showError == true) {
+                        this.showError = false;
+                        this.rootEl.reloadClassName();
+                    }
                 }
             }
-        }
 
-        if (this.props.regex) {
-            let regex = this.props.regex;
-            if (regex.test(value)) {
-                if (this.showError == true) {
-                    this.showError = false;
+            if (this.props.regex) {
+                let regex = this.props.regex;
+                if (regex.test(value)) {
+                    if (this.showError == true) {
+                        this.showError = false;
+                        this.rootEl.reloadClassName();
+                    }
+                } else {
+                    this.showError = true;
+                    this.errorText = this.props.regexText || "This field is not match";
+                    if (this.fieldErrorTextRefObject && this.fieldErrorTextRefObject.instance) {
+                        this.fieldErrorTextRefObject.instance.overlap(this.errorText);
+                    }
                     this.rootEl.reloadClassName();
+                    return false;
                 }
-            } else {
-                this.showError = true;
-                this.errorText = this.props.regexText || "This field is not match";
-                if (this.fieldErrorTextRefObject && this.fieldErrorTextRefObject.instance) {
-                    this.fieldErrorTextRefObject.instance.overlap(this.errorText);
-                }
-                this.rootEl.reloadClassName();
-                return false;
             }
         }
 

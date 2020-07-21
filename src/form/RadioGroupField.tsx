@@ -2,6 +2,7 @@ import Ginkgo, {GinkgoNode, InputComponent} from "ginkgoes";
 import FormField, {FormFieldProps} from "./FormField";
 import RadioField from "./RadioField";
 import "./RadioGroupField.scss";
+import CheckboxField from "./CheckboxField";
 
 export interface RadioGroupModel {
     value?: number | string;
@@ -57,6 +58,7 @@ export default class RadioGroupField<P extends RadioGroupFieldProps> extends For
                                         disabledFormChange={true}
                                         fixMinWidth={false}
                                         selectByIcon={this.props.selectByIcon}
+                                        enableShowError={false}
                                         onChange={e => {
                                             let oldValue = this.value ? this.value.value : undefined;
                                             for (let m2 of this.models) {

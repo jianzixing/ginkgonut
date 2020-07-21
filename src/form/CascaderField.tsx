@@ -64,6 +64,7 @@ export default class CascaderField<P extends CascaderFieldProps> extends Combobo
             list = (
                 <Loading/>
             );
+            style.width = this.fieldBodyRefObject.instance.width;
             style.height = 80;
         } else {
             if (modelList && modelList.length > 0) {

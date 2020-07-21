@@ -81,6 +81,7 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
                                            disabledFormChange={true}
                                            fixMinWidth={false}
                                            selectByIcon={this.props.selectByIcon}
+                                           enableShowError={false}
                                            onChange={e => {
                                                let oldValue = [];
                                                this.value.map(i => {
@@ -158,7 +159,8 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
 
     getValue(): any {
         if (this.value) {
-            return this.value.filter(value => value.value);
+            let values = this.value.filter(value => value.value);
+            if (values && values.length > 0) return values;
         }
     }
 
