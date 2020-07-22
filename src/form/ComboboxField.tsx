@@ -30,6 +30,7 @@ export interface ComboboxFieldProps extends TextFieldProps {
     selectData?: any;
     queryField?: string;
     remote?: boolean;
+    selectEmptyModel?: ComboboxModel;
 
     picker?: (data: any, fns: any) => GinkgoNode;
 }
@@ -45,6 +46,7 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
     protected static comboboxFieldPickerSelected;
     protected static comboboxFieldEmpty;
 
+    protected selectEmptyModel = this.props.selectEmptyModel;
     protected selectData = this.props.selectData;
     protected comboboxValue: ComboboxModel;
     protected cacheSetValue: any;
@@ -221,6 +223,12 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
     protected onItemClick(e, sel: ComboboxModel) {
         this.comboboxValue = sel;
         if (this.inputEl) {
+            if (this.models && this.models.length > 0) {
+                for (let m of this.models) {
+                    m.selected = false;
+                }
+            }
+            this.comboboxValue.selected = true;
             this.inputEl.value = this.comboboxValue.text;
             super.value = this.comboboxValue.text;
             this.triggerOnChangeEvents(this, this.getValue());
@@ -232,7 +240,11 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
     }
 
     protected data2Models(data) {
+        let selectEmptyModel = this.selectEmptyModel;
         let models: Array<ComboboxModel> = [];
+        if (selectEmptyModel) {
+            models.push(selectEmptyModel);
+        }
         for (let dt of data) {
             let item = {
                 value: dt[this.props.valueField || 'id'],
@@ -240,6 +252,9 @@ export default class ComboboxField<P extends ComboboxFieldProps> extends TextFie
                 selected: this.selectData ? this.selectData == dt : false,
                 data: dt
             };
+            if (item.selected) {
+                selectEmptyModel.selected = false;
+            }
             if (item.value == null) {
                 item.value = item.text;
             }

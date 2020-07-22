@@ -33,6 +33,7 @@ export interface PanelProps extends ComponentProps {
     collapseType?: "top" | "right" | "bottom" | "left";
     collapseStatus?: "open" | "close";
     toolbars?: Array<ToolbarProps>;
+    innerStyle?: CSSProperties;
 
     mask?: boolean;
     maskText?: string;
@@ -89,7 +90,7 @@ export default class Panel<P extends PanelProps> extends Container<P> {
     protected headerStyle: CSSProperties = {};
     protected headerBodyStyle: CSSProperties = {};
     protected wrapperStyle: CSSProperties = {};
-    protected innerStyle: CSSProperties = {};
+    protected innerStyle: CSSProperties = this.props.innerStyle || {};
 
     protected extTools: Array<PanelToolModel>;
     protected extOnCollapseClick: (e, panel: Panel<any>) => boolean;
