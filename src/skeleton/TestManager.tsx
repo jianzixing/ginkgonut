@@ -64,7 +64,9 @@ export default class TestManager extends AppManager<TestManagerProps> {
                                                this.forward(<TestBuilder/>)
                                            }}/>
                                    <CascaderField fieldLabel={"级联选择"} width={300}
-                                                  store={new DataStore({api: "http://localhost:3300/cascader_data.json"})}
+                                                  store={new DataStore({
+                                                      api: "http://localhost:3300/cascader_data.json"
+                                                  })}
                                                   value={11}/>
                                    <Button text={"打开窗口"}
                                            onClick={e => {

@@ -4,8 +4,8 @@ import Loading from "../loading/Loading";
 import DataEmpty from "../empty/DataEmpty";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
-import "./CascaderField.scss";
 import ObjectTools from "../tools/ObjectTools";
+import "./CascaderField.scss";
 
 export interface CascaderModel extends ComboboxModel {
     parent?: CascaderModel;

@@ -236,7 +236,7 @@ export default class DataStore {
                     let code = data[this.props.code || "code"];
                     let succ = this.props.successCode != null ? this.props.successCode : 100;
                     let msg = data[this.props.failMsg || "msg"];
-                    if ((code + "") != (succ + "")) {
+                    if (code != null && (code + "") != (succ + "")) {
                         import("../window/MessageBox")
                             .then(value => {
                                 value.default.showAlert("请求数据出错", msg);
