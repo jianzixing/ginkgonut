@@ -36,7 +36,7 @@ export class TooltipManager {
 
     updateProps(props: TooltipProps) {
         if (this.info && this.info.component) {
-            this.info.component.update(props);
+            this.info.component.set(props);
         }
     }
 

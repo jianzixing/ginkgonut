@@ -64,6 +64,7 @@ export default class App extends Ginkgo.Component {
                                     this.moduleList = data;
                                     localStorage.setItem("$jianzixing_modules", JSON.stringify(data));
                                     this.isUserLogin = true;
+                                    debugger
                                     this.forceRender();
                                 })
                         }, message => {

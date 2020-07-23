@@ -514,7 +514,7 @@ export class BorderLayoutItem<P extends BorderLayoutItemProps> extends Container
         if (this.children && this.children.length > 0) {
             let child = this.children[0];
             if (child && child instanceof Panel) {
-                if (this.props.type == "north") child.update("", "top");
+                if (this.props.type == "north") child.set("", "top");
                 if (this.props.type == "south") child.setCollapseType("bottom");
                 if (this.props.type == "west") child.setCollapseType("left");
                 if (this.props.type == "east") child.setCollapseType("right");

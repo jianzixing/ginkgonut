@@ -409,7 +409,7 @@ export default class TableColumn<P extends GridColumnProps> extends Component<P>
                                     this.menuItemModels = [...this.menuItemModels];
                                     this.checkMenuItemModels(this.menuItemModels);
                                     if (this.showingModal.component) {
-                                        this.showingModal.component.update("items", this.menuItemModels);
+                                        this.showingModal.component.set("items", this.menuItemModels);
                                     }
                                 }
 

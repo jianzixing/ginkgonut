@@ -47,7 +47,7 @@ export default class Icon extends Ginkgo.Component<IconProps> {
                 arr = ["fa", "fa-" + props.icon];
             }
             if (props.className) arr.push(props.className);
-            this.iconEl && this.iconEl.update({style: props.style, className: arr.join(" ")});
+            this.iconEl && this.iconEl.set({style: props.style, className: arr.join(" ")});
         }
     }
 }

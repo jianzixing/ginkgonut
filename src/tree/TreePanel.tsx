@@ -22,14 +22,6 @@ export default class TreePanel<P extends TreePanelProps> extends Panel<P> {
         return (<Tree {...newProps}/>)
     }
 
-    render(): any {
-        return super.render();
-    }
-
-    protected drawing(): GinkgoElement<any> | undefined | null {
-        return super.drawing();
-    }
-
     protected getRootClassName(): string[] {
         let arr = super.getRootClassName();
         arr.push(TreePanel.treeClsPanel);

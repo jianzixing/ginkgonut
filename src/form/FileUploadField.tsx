@@ -227,7 +227,7 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
     componentDidMount() {
         super.componentDidMount();
         if (this.uploadRef && this.uploadRef.instance) {
-            this.uploadRef.instance.update("models", this.models);
+            this.uploadRef.instance.set("models", this.models);
         }
     }
 
@@ -260,7 +260,7 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
                 }
                 this.models = models;
                 if (this.uploadRef && this.uploadRef.instance) {
-                    this.uploadRef.instance.update("models", models);
+                    this.uploadRef.instance.set("models", models);
                 }
             } else if (typeof value == "string") {
                 let models: Array<UploadModel> = [];
@@ -272,7 +272,7 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
                 })
                 this.models = models;
                 if (this.uploadRef && this.uploadRef.instance) {
-                    this.uploadRef.instance.update("models", models);
+                    this.uploadRef.instance.set("models", models);
                 }
             } else if (value instanceof FileList) {
                 let models: Array<UploadModel> = [];
@@ -294,7 +294,7 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
 
                         self.models = models;
                         if (self.uploadRef && self.uploadRef.instance) {
-                            self.uploadRef.instance.update("models", models);
+                            self.uploadRef.instance.set("models", models);
                         }
                     };
                 }

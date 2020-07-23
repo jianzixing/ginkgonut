@@ -255,7 +255,7 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
                 && component.children.length > 0
                 && component.children[0] instanceof Button) {
                 if (!component.children[0].props['action']) {
-                    component.children[0].update("action", "light");
+                    component.children[0].set("action", "light");
                 }
             }
         }

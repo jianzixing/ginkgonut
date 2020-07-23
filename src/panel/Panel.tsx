@@ -296,6 +296,7 @@ export default class Panel<P extends PanelProps> extends Container<P> {
                     }}
                 >
                     <div
+                        key={"panel_header_inner"}
                         ref={c => this.headerBodyEl = c}
                         className={Panel.panelClsHeaderBody}
                         style={this.headerBodyStyle}
@@ -432,6 +433,8 @@ export default class Panel<P extends PanelProps> extends Container<P> {
                 height = this.getHeight(),
                 headerHeight = headerBodyEl ? headerBodyEl.offsetHeight : 0;
 
+            this.headerBodyStyle = {};
+            this.headerStyle = {};
             if (align == "right") {
                 this.headerBodyStyle.left = headerHeight + "px";
                 this.headerBodyStyle.top = 0 + "px";
