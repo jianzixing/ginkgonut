@@ -328,6 +328,7 @@ export default class Panel<P extends PanelProps> extends Container<P> {
             }
         }
 
+        innerElCls.push(Component.componentClsEnabledSelect)
         contentReactElement = (
             <div
                 key={"panel_wrapper"}
