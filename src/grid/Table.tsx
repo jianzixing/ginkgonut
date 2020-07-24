@@ -49,6 +49,7 @@ export interface TableProps extends ComponentProps {
 
     // 包含各种情况的点击
     onItemClick?: (e: Event, data: { data: TableItemModel, actionItem?: ActionColumnItem }) => void;
+    onItemDoubleClick?: (e: Event, data: { data: TableItemModel, actionItem?: ActionColumnItem }) => void;
 
     feature?: FeatureTypes;
     plugin?: {
@@ -179,6 +180,11 @@ export default class Table<P extends TableProps> extends Component<P> {
                                         onClick={(e, data: TableItemModel) => {
                                             if (this.props.onItemClick) {
                                                 this.props.onItemClick(e, {data: data});
+                                            }
+                                        }}
+                                        onDoubleClick={(e, data: TableItemModel) => {
+                                            if (this.props.onItemDoubleClick) {
+                                                this.props.onItemDoubleClick(e, {data: data});
                                             }
                                         }}
                                         onActionClick={(e, data: TableItemModel, actionItem) => {

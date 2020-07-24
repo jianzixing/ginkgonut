@@ -60,8 +60,6 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
     protected onEditing: boolean = false;
     protected editingFieldRef: RefObject<Component<any>> = Ginkgo.createRef();
     protected value: any = this.props.value;
-    protected doubleClickCount = 0;
-    protected doubleTimeoutHandler;
 
     defaultProps = {
         hasPadding: true,
@@ -179,22 +177,18 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
             this.redrawing();
             this.mountDocumentMouseDown();
         }
+    }
+
+    protected onDoubleClick(e) {
+        super.onDoubleClick(e);
+        let column = this.props.column;
 
         if (column && column.editing && column.editing.showEvent == "dbclick") {
-            this.doubleClickCount++;
-            if (this.doubleClickCount == 1) {
-                this.doubleTimeoutHandler = setTimeout(() => {
-                    this.doubleClickCount = 0;
-                    clearTimeout(this.doubleTimeoutHandler);
-                }, 300);
-            }
-            if (this.doubleClickCount > 1) {
-                e.stopPropagation();
-                e.preventDefault();
-                this.onEditing = true;
-                this.redrawing();
-                this.mountDocumentMouseDown();
-            }
+            e.stopPropagation();
+            e.preventDefault();
+            this.onEditing = true;
+            this.redrawing();
+            this.mountDocumentMouseDown();
         }
     }
 

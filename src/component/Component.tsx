@@ -15,6 +15,7 @@ export interface ComponentProps extends GinkgoElement {
     permitCode?: string;
     hidden?: boolean;
     onClick?: (e: Event) => void;
+    onDoubleClick?: (e: Event) => void;
     onMouseEnter?: (e: Event) => void;
     onMouseLeave?: (e: Event) => void;
     onMouseDown?: (e: Event) => void;
@@ -77,6 +78,8 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
 
     protected disableCompareProps: Array<string> = ["store"];
     protected boundsParentScrollEventEls: Array<Element>;
+    private doubleClickHandler;
+    private doubleClickCount;
 
     constructor(props?: any) {
         super(props);
@@ -336,6 +339,25 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
     }
 
     protected onClick(e: Event) {
+        if (this.doubleClickHandler) {
+            clearTimeout(this.doubleClickHandler);
+            this.doubleClickHandler = null;
+        }
+        this.doubleClickCount++;
+        if (this.doubleClickCount >= 2) {
+            this.doubleClickHandler = null;
+            this.doubleClickCount = 0;
+            if (this.onDoubleClick) {
+                this.onDoubleClick(e);
+            }
+        } else {
+            this.doubleClickHandler = setTimeout(() => {
+                clearTimeout(this.doubleClickHandler);
+                this.doubleClickCount = 0;
+                this.doubleClickHandler = null;
+            }, 300);
+        }
+
         if (this.isEnableSelected) {
             if (!this.isOnSelected)
                 this.setSelected(true);
@@ -346,6 +368,12 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
             this.props.onClick && this.props.onClick(e);
         } catch (e) {
             console.error(e);
+        }
+    }
+
+    protected onDoubleClick(e) {
+        if (this.props.onDoubleClick) {
+            this.props.onDoubleClick(e);
         }
     }
 
