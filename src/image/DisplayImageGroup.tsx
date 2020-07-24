@@ -9,6 +9,7 @@ export interface DisplayImageGroupModel {
     style?: CSSProperties;
     type?: "center" | "fit" | "stretch";
     alt?: string;
+    data?: any;
 }
 
 export interface DisplayImageGroupProps extends ComponentProps {
@@ -16,6 +17,7 @@ export interface DisplayImageGroupProps extends ComponentProps {
     itemWidth?: number;
     itemHeight?: number;
     type?: "center" | "fit" | "stretch";
+    onItemClick?: (e: Event, model: DisplayImageGroupModel) => void;
 }
 
 export default class DisplayImageGroup<P extends DisplayImageGroupProps> extends Component<P> {
@@ -40,7 +42,12 @@ export default class DisplayImageGroup<P extends DisplayImageGroupProps> extends
                                   src={m.url}
                                   link={m.link}
                                   type={m.type || this.props.type}
-                                  alt={m.alt}/>
+                                  alt={m.alt}
+                                  onClick={e => {
+                                      if (this.props.onItemClick) {
+                                          this.props.onItemClick(e, m);
+                                      }
+                                  }}/>
                 </div>);
             }
             return arr;
