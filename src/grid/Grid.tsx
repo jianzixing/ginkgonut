@@ -87,9 +87,15 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
     protected compareUpdate(key: string, newValue: any, oldValue: any): boolean {
         if (key == "data" && newValue != oldValue) {
             this.tableItemModels = this.data2TableItemModels(newValue);
+            return true;
         }
         if (key == "columns" && newValue != oldValue) {
             this.columns = newValue;
+            return true;
+        }
+        if (key == "models" && newValue != oldValue) {
+            this.tableItemModels = newValue;
+            return true;
         }
         return false;
     }

@@ -99,9 +99,11 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
                             if (e.treeListItem.expanded) {
                                 this.showTreeListItems(e.treeListItem, false);
                                 this.expandTreeListItems(e.treeListItem);
+                                this.tableItemModels = this.buildTableStructs(this.treeListItems);
                             } else {
                                 this.showTreeListItems(e.treeListItem, true);
                                 this.expandTreeListItems(e.treeListItem);
+                                this.tableItemModels = this.buildTableStructs(this.treeListItems);
                             }
                             this.redrawing();
                         }
