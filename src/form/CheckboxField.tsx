@@ -7,6 +7,7 @@ import "./CheckboxField.scss";
 export interface CheckboxFieldProps extends FormFieldProps {
     text?: GinkgoNode;
     checked?: boolean;
+    value?: boolean;
     checkAlign?: "left" | "center" | "right";
     itemStyle?: CSSProperties;
     selectByIcon?: boolean;

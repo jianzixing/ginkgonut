@@ -7,6 +7,7 @@ import "./RadioField.scss";
 export interface RadioFieldProps extends FormFieldProps {
     text?: GinkgoNode;
     selected?: boolean;
+    value?: boolean;
     selectByIcon?: boolean;
 }
 
