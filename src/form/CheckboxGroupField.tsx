@@ -48,12 +48,17 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
         let is = false;
         if (this.value) {
             for (let v1 of this.value) {
-                if (v1 != null && v1 == v) return true;
-                if (v1.value != null && v1.value == v.value) return true;
-                if (v1.data != null && v1.data == v.data) return true;
+                if (this.isInValueImpl(v, v1) == true) return true;
             }
         }
         return is;
+    }
+
+    private isInValueImpl(v, v1): boolean {
+        if (v1 != null && v1 == v) return true;
+        if (v1.value != null && v1.value == v.value) return true;
+        if (v1.data != null && v1.data == v.data) return true;
+        return null;
     }
 
     protected drawingFieldBody() {
@@ -91,7 +96,7 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
                                                    if (!this.isInValue(m)) this.value.push(m);
                                                } else {
                                                    this.value = this.value.filter(value => {
-                                                       return !this.isInValue(value);
+                                                       return this.isInValueImpl(value, m) != true;
                                                    });
                                                }
                                                let newValues = [];
