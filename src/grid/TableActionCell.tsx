@@ -102,6 +102,12 @@ export default class TableActionCell<P extends TableActionCellProps> extends Com
                 style[k] = item.style[k];
             }
         }
+        if (item.color) {
+            style.color = item.color;
+        }
+        if (item.size) {
+            style.fontSize = item.size;
+        }
         return style;
     }
 }
