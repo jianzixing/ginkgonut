@@ -72,7 +72,7 @@ export default class CheckboxField<P extends CheckboxFieldProps> extends FormFie
 
 
     compareUpdate(key: string, newValue: any, oldValue: any): boolean {
-        if (key == 'checked' && this.value != newValue) {
+        if ((key == 'value' || key == 'checked') && this.value != newValue) {
             this.value = newValue;
             this.redrawingFieldBody();
             return false;

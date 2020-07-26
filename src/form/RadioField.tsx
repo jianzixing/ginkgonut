@@ -54,7 +54,7 @@ export default class RadioField<P extends RadioFieldProps> extends FormField<P> 
     }
 
     compareUpdate(key: string, newValue: any, oldValue: any): boolean {
-        if (key == 'selected' && this.value != newValue) {
+        if ((key == 'value' || key == 'selected') && this.value != newValue) {
             this.value = newValue;
             this.redrawingFieldBody();
             return false;
