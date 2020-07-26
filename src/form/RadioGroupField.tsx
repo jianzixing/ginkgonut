@@ -2,7 +2,6 @@ import Ginkgo, {GinkgoNode, InputComponent} from "ginkgoes";
 import FormField, {FormFieldProps} from "./FormField";
 import RadioField from "./RadioField";
 import "./RadioGroupField.scss";
-import CheckboxField from "./CheckboxField";
 
 export interface RadioGroupModel {
     value?: number | string;
