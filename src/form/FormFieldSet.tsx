@@ -35,6 +35,13 @@ export default class FormFieldSet<P extends FormFieldSetProps> extends Component
         );
     }
 
+    componentReceiveProps(props: P, context?) {
+        super.componentReceiveProps(props, context);
+        if (context.childChange) {
+            this.forceRender();
+        }
+    }
+
     redrawing() {
         this.forceRender();
     }

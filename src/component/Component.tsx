@@ -116,7 +116,7 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
         this.onParentScrolling = this.onParentScrolling.bind(this);
     }
 
-    componentReceiveProps(props: P, context?: { oldProps: P, type: "new" | "mounted" }) {
+    componentReceiveProps(props: P, context?) {
         if (this.compareComponentUpdate(props, context)
             || context.type == "new") {
             if (context.type != "new") {
