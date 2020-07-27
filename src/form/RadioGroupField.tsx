@@ -38,16 +38,21 @@ export default class RadioGroupField<P extends RadioGroupFieldProps> extends For
         if (key == 'models' && this.models != newValue) {
             this.models = newValue;
             if (this.models && this.value) {
-                let has = false;
+                let has = false, sels = [];
                 for (let m of this.models) {
                     if (m.value == this.value.value || m.text == this.value.text) {
                         m.selected = true;
                         has = true;
-                        break;
+                    } else {
+                        if (m.selected == true) sels.push(m);
                     }
                 }
                 if (has == false) {
                     this.value = null;
+                } else {
+                    for (let sel of sels) {
+                        sel.selected = false;
+                    }
                 }
             }
             return true;

@@ -147,7 +147,7 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
             this.redrawingFieldBody();
             let newValue = this.getValue();
             if (!ObjectTools.objectEqualArray(oldValue, newValue, false)) {
-                this.triggerOnChangeEvents(this, newValue);
+                this.triggerOnChangeEvents(this, newValue, oldValue);
             }
         }
     }
@@ -187,7 +187,10 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
 
     getValue(): any {
         if (this.value) {
-            let values = this.value.filter(value => value.value);
+            let values = [];
+            this.value.map(value => {
+                values.push(value.value);
+            });
             if (values && values.length > 0) return values;
         }
     }
