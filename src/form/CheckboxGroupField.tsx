@@ -39,6 +39,29 @@ export default class CheckboxGroupField<P extends CheckboxGroupFieldProps> exten
     protected compareUpdate(key: string, newValue: any, oldValue: any): boolean {
         if (key == 'models' && this.models != newValue) {
             this.models = newValue;
+            if (this.models) {
+                for (let m of this.models) {
+                    if (this.isInValue(m)) {
+                        m.checked = true;
+                    } else {
+                        m.checked = false;
+                    }
+                }
+                if (this.value) {
+                    for (let v of this.value) {
+                        let has = false;
+                        for (let m of this.models) {
+                            if (this.isInValueImpl(v, m) == true) {
+                                has = true;
+                                break;
+                            }
+                        }
+                        if (!has) {
+                            this.value.splice(this.value.indexOf(v), 1);
+                        }
+                    }
+                }
+            }
             return true;
         }
         return false;

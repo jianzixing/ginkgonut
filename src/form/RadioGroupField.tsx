@@ -34,6 +34,27 @@ export default class RadioGroupField<P extends RadioGroupFieldProps> extends For
         RadioGroupField.radioGroupFieldItemBodyCls = this.getThemeClass("radiogroup-item-body");
     }
 
+    protected compareUpdate(key: string, newValue: any, oldValue: any): boolean {
+        if (key == 'models' && this.models != newValue) {
+            this.models = newValue;
+            if (this.models && this.value) {
+                let has = false;
+                for (let m of this.models) {
+                    if (m.value == this.value.value || m.text == this.value.text) {
+                        m.selected = true;
+                        has = true;
+                        break;
+                    }
+                }
+                if (has == false) {
+                    this.value = null;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     protected drawingFieldBody() {
         let items = [];
         if (this.models) {
