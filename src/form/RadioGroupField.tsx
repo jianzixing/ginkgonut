@@ -95,9 +95,11 @@ export default class RadioGroupField<P extends RadioGroupFieldProps> extends For
                                             } else {
                                                 this.value = this.value = null;
                                             }
-
-                                            this.triggerOnChangeEvents(this, this.value.value, oldValue);
                                             this.redrawingFieldBody();
+
+
+                                            this.triggerOnChangeEvents(this,
+                                                this.value ? this.value.value : undefined, oldValue);
                                         }}/>
                         </div>
                     </div>)

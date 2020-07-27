@@ -15,6 +15,7 @@ export interface FormPanelProps extends PanelProps {
 export default class FormPanel<P extends FormPanelProps> extends Panel<P> {
     protected formLayoutRef: RefObject<FormLayout> = Ginkgo.createRef();
     protected formValues = this.props.formValues || {};
+    protected values = this.props.values;
 
     constructor(props: P) {
         super(props);
@@ -61,10 +62,17 @@ export default class FormPanel<P extends FormPanelProps> extends Panel<P> {
                 }
             }
         }, this.wrapperEl);
+    }
 
-        if (this.props.values) {
-            this.setValues(this.props.values);
+    protected compareUpdate(key: string, newValue: any, oldValue: any): boolean {
+        if (key == "values" && newValue != oldValue) {
+            this.values = newValue;
+            if (this.values) {
+                this.setValues(this.values);
+            }
+            return true;
         }
+        return false;
     }
 
     protected lockScroll(): boolean {
