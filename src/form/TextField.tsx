@@ -28,10 +28,6 @@ export default class TextField<P extends TextFieldProps> extends FormField<P> {
         TextField.textFieldInputCls = this.getThemeClass("textfield-input");
     }
 
-    componentReceiveProps(props: P, context?: { oldProps: P; type: "new" | "mounted" }) {
-        super.componentReceiveProps(props, context);
-    }
-
     protected drawingFieldBody() {
         let spinner = this.drawingFieldSpinner();
         let inputEl = this.drawingFieldBodyInner();

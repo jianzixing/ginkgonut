@@ -118,7 +118,8 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
 
     componentReceiveProps(props: P, context?) {
         if (this.compareComponentUpdate(props, context)
-            || context.type == "new") {
+            || context.type == "new"
+            || context.childChange) {
             if (context.type != "new") {
                 this.rootEl.reloadStyleSheets();
             }
