@@ -9,6 +9,10 @@ export interface AbstractFormFieldProps extends ComponentProps {
      * 则可以使用这个字段作为替换，仅在FormPanel中有效
      */
     initField?: string;
+    /**
+     * form setValues 时是否跳过不使用form的setValue
+     */
+    formValueSkip?: boolean;
 }
 
 export class AbstractFormField<P extends AbstractFormFieldProps> extends Component<P> {

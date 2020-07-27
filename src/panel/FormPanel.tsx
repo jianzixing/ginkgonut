@@ -127,7 +127,7 @@ export default class FormPanel<P extends FormPanelProps> extends Panel<P> {
         Ginkgo.forEachContent(component => {
             if (component instanceof AbstractFormField) {
                 let name = component.getFieldName();
-                if (name) {
+                if (name && (component.props as AbstractFormFieldProps).formValueSkip != true) {
                     let value = values[name];
                     if (component.props["initField"]) {
                         value = values[component.props["initField"]];
