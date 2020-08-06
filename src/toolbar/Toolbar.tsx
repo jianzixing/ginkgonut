@@ -43,7 +43,7 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
     protected toolbarScrollerEl: HTMLComponent;
     protected toolbarScrollerBodyEl: HTMLComponent;
     protected bodyStyle?: CSSProperties;
-    protected scrollerShow?: boolean;
+    protected scrollerShow: boolean = false;
     protected scrollerLeftDisabled?: boolean = true;
     protected scrollerRightDisabled?: boolean;
     protected positionChildren = {left: [], center: [], right: []};
@@ -271,20 +271,25 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
             innerWidth = 0,
             innerHeight = 0,
             oldScrollerShow = this.scrollerShow,
-            direction = this.props.direction == "vertical" ? true : false;
+            direction = this.props.direction == "vertical" ? true : false,
+            splitWidth = this.defaultSplitWidth;
+
+        let rootEl = this.rootEl.dom as HTMLElement;
         if (this.toolbarInnerEl) {
-            let dom = this.toolbarInnerEl.dom as HTMLElement;
+            let dom = this.rootEl.dom.parentElement;
             innerWidth = dom.offsetWidth;
             innerHeight = dom.offsetHeight;
         }
 
         if (direction) {
+            rootEl.style.height = "100%";
             if (wh.th <= innerHeight) {
                 this.scrollerShow = false;
             } else {
                 this.scrollerShow = true;
             }
         } else {
+            rootEl.style.width = "100%";
             if (wh.tw <= innerWidth) {
                 this.scrollerShow = false;
             } else {
@@ -313,14 +318,14 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
 
                 if (direction) {
                     dom.style.top = lastLeft + "px";
-                    lastLeft += height + (l.item.hidden == true ? 0 : this.defaultSplitWidth);
+                    lastLeft += height + (l.item.hidden == true ? 0 : splitWidth);
 
                     let dl = (wh.w - width) / 2;
                     dl = dl >= 0 ? dl : 0;
                     dom.style.left = dl + "px";
                 } else {
                     dom.style.left = lastLeft + "px";
-                    lastLeft += width + (l.item.hidden == true ? 0 : this.defaultSplitWidth);
+                    lastLeft += width + (l.item.hidden == true ? 0 : splitWidth);
 
                     let dl = (wh.h - height) / 2;
                     dl = dl >= 0 ? dl : 0;
@@ -332,7 +337,7 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
         let totalCenterSize = 0;
         this.positionChildren.center.map((value, index) => {
             if (value.item.hidden != true && index != 0) {
-                totalCenterSize += this.defaultSplitWidth;
+                totalCenterSize += splitWidth;
             }
         })
         for (let c of this.positionChildren.center) {
@@ -366,14 +371,14 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
 
                 if (direction) {
                     dom.style.top = centerLeft + "px";
-                    centerLeft += height + (c.item.hidden == true ? 0 : this.defaultSplitWidth);
+                    centerLeft += height + (c.item.hidden == true ? 0 : splitWidth);
 
                     let dl = (wh.w - width) / 2;
                     dl = dl >= 0 ? dl : 0;
                     dom.style.left = dl + "px";
                 } else {
                     dom.style.left = centerLeft + "px";
-                    centerLeft += width + (c.item.hidden == true ? 0 : this.defaultSplitWidth);
+                    centerLeft += width + (c.item.hidden == true ? 0 : splitWidth);
 
                     let dl = (wh.h - height) / 2;
                     dl = dl >= 0 ? dl : 0;
@@ -394,14 +399,14 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
 
                 if (direction) {
                     dom.style.bottom = lastRight + "px";
-                    lastRight += height + (r.item.hidden == true ? 0 : this.defaultSplitWidth);
+                    lastRight += height + (r.item.hidden == true ? 0 : splitWidth);
 
                     let dl = (wh.w - width) / 2;
                     dl = dl >= 0 ? dl : 0;
                     dom.style.left = dl + "px";
                 } else {
                     dom.style.right = lastRight + "px";
-                    lastRight += width + (r.item.hidden == true ? 0 : this.defaultSplitWidth);
+                    lastRight += width + (r.item.hidden == true ? 0 : splitWidth);
 
                     let dl = (wh.h - height) / 2;
                     dl = dl >= 0 ? dl : 0;
@@ -411,7 +416,7 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
         }
 
         if (this.scrollerShow != oldScrollerShow) {
-            this.setState();
+            this.setState({}, false);
         }
     }
 

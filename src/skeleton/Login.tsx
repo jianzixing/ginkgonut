@@ -53,7 +53,7 @@ export default class Login<P extends LoginProps> extends Ginkgo.Component<P> {
                         {hasCode ?
                             <div className={"app-user-code"}>
                                 <div className={"app-login-input app-login-code"}>
-                                    <input ref={this.codeRef} placeholder={"验证码"}/>
+                                    <input className={"login-input"} ref={this.codeRef} placeholder={"验证码"}/>
                                     <img src={this.currCodeUrl}
                                          onClick={e => {
                                              if (this.codeUrl.indexOf("?") >= 0) {
