@@ -275,8 +275,13 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
             splitWidth = this.defaultSplitWidth;
 
         let rootEl = this.rootEl.dom as HTMLElement;
+        if (direction) {
+            rootEl.style.height = "100%";
+        } else {
+            rootEl.style.width = "100%";
+        }
         if (this.toolbarInnerEl) {
-            let dom = this.rootEl.dom.parentElement;
+            let dom = this.toolbarInnerEl.dom as HTMLElement;
             innerWidth = dom.offsetWidth;
             innerHeight = dom.offsetHeight;
         }
