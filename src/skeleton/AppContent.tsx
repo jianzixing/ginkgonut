@@ -49,7 +49,7 @@ export default class AppContent<P extends AppContentProps> extends Component<P> 
                             i++;
                         }
                     }
-                    this.redrawing()
+                    this.setState()
                 }}
             />
         );
@@ -57,7 +57,7 @@ export default class AppContent<P extends AppContentProps> extends Component<P> 
 
     setItemsAndRedrawing(items: Array<TabContentModel>) {
         this.items = items;
-        this.redrawing();
+        this.setState();
     }
 
     onSizeChange(width: number, height: number): void {

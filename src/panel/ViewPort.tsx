@@ -34,10 +34,6 @@ export default class ViewPort extends Container<ViewPortProps> {
         super.componentWillMount();
     }
 
-    drawing() {
-        return this.props.children;
-    }
-
     componentDidMount(): void {
         super.componentDidMount();
         this.setWindowSize();

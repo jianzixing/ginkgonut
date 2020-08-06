@@ -168,7 +168,7 @@ export default class Upload<P extends UploadProps> extends Component<P> {
                                                   promise.then(value => {
                                                       this.props.onDelClick && this.props.onDelClick(item);
                                                       this.items.splice(this.items.indexOf(item), 1);
-                                                      this.redrawing();
+                                                      this.setState();
                                                   }).catch(reason => {
 
                                                   });
@@ -197,7 +197,7 @@ export default class Upload<P extends UploadProps> extends Component<P> {
                                                       this.props.onChange && this.props.onChange(this.items);
                                                       this.props.onDelClick && this.props.onDelClick(item);
                                                       this.items.splice(this.items.indexOf(item), 1);
-                                                      this.redrawing();
+                                                      this.setState();
                                                   }}/>
                                         </div>
                                     </div>
@@ -237,11 +237,11 @@ export default class Upload<P extends UploadProps> extends Component<P> {
                              onMouseEnter={e => {
                                  for (let item of this.items) item.showMask = false;
                                  item.showMask = true;
-                                 this.redrawing();
+                                 this.setState();
                              }}
                              onMouseLeave={e => {
                                  for (let item of this.items) item.showMask = false;
-                                 this.redrawing();
+                                 this.setState();
                              }}
                              style={style}>
                             <div className={Upload.uploadItemImgCls}>
@@ -349,7 +349,7 @@ export default class Upload<P extends UploadProps> extends Component<P> {
                         let src = this.result;
                         item.src = src;
                         item.status = "finish";
-                        self.redrawing();
+                        self.setState();
                     };
                 }).catch(reason => {
                     let reads = new FileReader();
@@ -357,7 +357,7 @@ export default class Upload<P extends UploadProps> extends Component<P> {
                     reads.onload = function (e) {
                         let src = this.result;
                         item.src = src;
-                        self.redrawing();
+                        self.setState();
                     };
                 })
 

@@ -411,7 +411,7 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
         }
 
         if (this.scrollerShow != oldScrollerShow) {
-            this.redrawing();
+            this.setState();
         }
     }
 
@@ -464,7 +464,7 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
                 }
                 this.scrollerRightDisabled = false;
 
-                this.redrawing();
+                this.setState();
                 scrollerEl.scrollTop = scrollTop;
             } else {
                 let width = scrollerEl.offsetWidth,
@@ -476,7 +476,7 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
                 }
                 this.scrollerRightDisabled = false;
 
-                this.redrawing();
+                this.setState();
                 scrollerEl.scrollLeft = scrollLeft;
             }
         }
@@ -496,7 +496,7 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
                 }
                 this.scrollerLeftDisabled = false;
 
-                this.redrawing();
+                this.setState();
                 scrollerEl.scrollTop = scrollTop;
             } else {
                 let width = scrollerEl.offsetWidth,
@@ -509,7 +509,7 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
                 }
                 this.scrollerLeftDisabled = false;
 
-                this.redrawing();
+                this.setState();
                 scrollerEl.scrollLeft = scrollLeft;
             }
         }

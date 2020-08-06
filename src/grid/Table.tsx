@@ -148,7 +148,7 @@ export default class Table<P extends TableProps> extends Component<P> {
                                                     });
                                                 }
                                                 data.selected = true;
-                                                this.redrawing();
+                                                this.setState();
 
                                                 if (this.props.onSelected) {
                                                     let sels = [];
@@ -164,7 +164,7 @@ export default class Table<P extends TableProps> extends Component<P> {
                                         onDeselected={(e, data: TableItemModel, multiSelect) => {
                                             if (this.props.enableToggleSelected == true || multiSelect == true) {
                                                 data.selected = false;
-                                                this.redrawing();
+                                                this.setState();
                                             }
 
                                             if (this.props.onDeselected) {

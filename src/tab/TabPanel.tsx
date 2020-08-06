@@ -149,7 +149,7 @@ export default class TabPanel<P extends TabPanelProps> extends Container<P> {
                                 this.tabs.map(value => value.model.action = false);
                                 tab.model.action = true;
                                 this.onTabClickSetting(tab);
-                                this.redrawing();
+                                this.setState();
                                 this.layout();
                             }
                         }}
@@ -241,7 +241,7 @@ export default class TabPanel<P extends TabPanelProps> extends Container<P> {
     }
 
     componentChildChange(children: Array<GinkgoElement>, old: Array<GinkgoElement>): void {
-        this.redrawing();
+        this.setState();
     }
 
     protected onTabClickSetting(tab: TabModelWrapper) {

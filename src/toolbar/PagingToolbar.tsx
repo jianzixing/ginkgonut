@@ -79,7 +79,7 @@ export default class PagingToolbar<P extends PagingToolbarProps> extends Toolbar
 
     protected onPageFirstClick(e) {
         this.page = 1;
-        this.redrawing();
+        this.setState();
 
         this.loading();
     }
@@ -87,7 +87,7 @@ export default class PagingToolbar<P extends PagingToolbarProps> extends Toolbar
     protected onPagePrevClick(e) {
         if (this.page > 1) {
             this.page = this.page - 1;
-            this.redrawing();
+            this.setState();
 
             this.loading();
         }
@@ -101,20 +101,20 @@ export default class PagingToolbar<P extends PagingToolbarProps> extends Toolbar
                 reload = true;
             }
             this.page = v;
-            this.redrawing();
+            this.setState();
 
             if (reload) {
                 this.loading();
             }
         } else {
-            this.redrawing();
+            this.setState();
         }
     }
 
     protected onPageNextClick(e) {
         if (this.page < this.totalPage) {
             this.page = this.page + 1;
-            this.redrawing();
+            this.setState();
 
             this.loading();
         }
@@ -122,7 +122,7 @@ export default class PagingToolbar<P extends PagingToolbarProps> extends Toolbar
 
     protected onPageLastClick(e) {
         this.page = this.totalPage;
-        this.redrawing();
+        this.setState();
 
         this.loading();
     }
@@ -145,13 +145,13 @@ export default class PagingToolbar<P extends PagingToolbarProps> extends Toolbar
 
     storeBeforeLoad?(): void {
         this.isLoading = true;
-        // this.redrawing();
+        // this.setState();
     }
 
     storeLoaded(data: Object | Object[], total?: number, originData?: any): void {
         this.isLoading = false;
         this.totalRecord = total;
-        this.redrawing();
+        this.setState();
     }
 
     storeAutoLoad(): void {

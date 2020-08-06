@@ -153,7 +153,7 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
                     }
                 }
             }
-            this.redrawing();
+            this.setState();
             this.unmountDocumentMouseDown();
         }
     }
@@ -174,7 +174,7 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
             e.stopPropagation();
             e.preventDefault();
             this.onEditing = true;
-            this.redrawing();
+            this.setState();
             this.mountDocumentMouseDown();
         }
     }
@@ -187,7 +187,7 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
             e.stopPropagation();
             e.preventDefault();
             this.onEditing = true;
-            this.redrawing();
+            this.setState();
             this.mountDocumentMouseDown();
         }
     }

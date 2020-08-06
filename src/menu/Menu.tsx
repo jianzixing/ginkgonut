@@ -15,9 +15,9 @@ export class MenuShowing {
         Menu.close(this.link.props as MenuProps);
     }
 
-    redrawing() {
+    render() {
         if (this.component instanceof Component) {
-            this.component.redrawing();
+            this.component.setState();
         }
     }
 
@@ -199,10 +199,10 @@ export default class Menu<P extends MenuProps> extends Component<P> {
         );
     }
 
-    redrawing() {
-        super.redrawing();
+    setState(props?) {
+        super.setState(props);
         if (this.childrenMenus && this.childrenMenus.showing) {
-            this.childrenMenus.showing.redrawing();
+            this.childrenMenus.showing.render();
         }
     }
 
@@ -220,7 +220,7 @@ export default class Menu<P extends MenuProps> extends Component<P> {
             this.showMenuChildren(value, index);
 
             value.selected = true;
-            this.redrawing();
+            this.setState();
         }
     }
 

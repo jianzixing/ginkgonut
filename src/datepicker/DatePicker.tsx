@@ -242,7 +242,7 @@ export default class DatePicker<P extends DatePickerProps> extends Component<P> 
         }
 
         this.date = new Date(preYear, preMonth, day);
-        this.redrawing();
+        this.setState();
     }
 
     protected onRightClick() {
@@ -258,7 +258,7 @@ export default class DatePicker<P extends DatePickerProps> extends Component<P> 
         }
 
         this.date = new Date(preYear, preMonth, day);
-        this.redrawing();
+        this.setState();
     }
 
     protected onDayClick(currElDate: { year: number, month: number, day: number },
@@ -277,10 +277,10 @@ export default class DatePicker<P extends DatePickerProps> extends Component<P> 
             // let seconds = this.secondsField.instance ? this.secondsField.instance.getValue() : 0;
             // this.date.setHours(hours, minutes, seconds);
             if (this.props.onSelectedDate(this.date)) {
-                this.redrawing();
+                this.setState();
             }
         } else {
-            this.redrawing();
+            this.setState();
         }
     }
 
@@ -288,10 +288,10 @@ export default class DatePicker<P extends DatePickerProps> extends Component<P> 
         this.date = new Date();
         if (this.props.onSelectedDate) {
             if (this.props.onSelectedDate(this.date)) {
-                this.redrawing();
+                this.setState();
             }
         } else {
-            this.redrawing();
+            this.setState();
         }
     }
 
@@ -351,7 +351,7 @@ export default class DatePicker<P extends DatePickerProps> extends Component<P> 
         let second = this.date.getSeconds();
 
         this.date = new Date(time.year || year, time.month >= 0 ? time.month : month, day, hour, minute, second);
-        this.redrawing();
+        this.setState();
     }
 
     protected getPickerInfoByTime(date: Date): {

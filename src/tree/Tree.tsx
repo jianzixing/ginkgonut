@@ -105,14 +105,14 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
                                 this.expandTreeListItems(e.treeListItem);
                                 this.tableItemModels = this.buildTableStructs(this.treeListItems);
                             }
-                            this.redrawing();
+                            this.setState();
                         }
                     }}
                     onCheck={(item, sel) => {
                         if (item) {
                             this.setItemChecked(item, sel);
                             this.setItemCheckedParent(item);
-                            this.redrawing();
+                            this.setState();
 
                             if (this.props.onCheckboxChange) {
                                 this.props.onCheckboxChange(item, sel, this.getCheckItems(this.treeListItems));
@@ -426,7 +426,7 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
                 for (let item of this.treeListItems) {
                     this.expandTreeListItems(item);
                 }
-                this.redrawing();
+                this.setState();
             }
         }
     }
@@ -454,12 +454,12 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
 
     storeBeforeLoad?(): void {
         this.isLoading = true;
-        this.redrawing();
+        this.setState();
     }
 
     storeLoaded(data: Object | Object[], total?: number, originData?: any): void {
         this.isLoading = false;
         this.processNewTreeData(data);
-        this.redrawing();
+        this.setState();
     }
 }

@@ -1,6 +1,10 @@
 import Ginkgo, {CSSProperties, GinkgoNode} from "ginkgoes";
 import Button from "../button/Button";
 import ButtonGroup from "../button/ButtonGroup";
+import Panel from "../panel/Panel";
+import FormPanel from "../panel/FormPanel";
+import TextField from "../form/TextField";
+import NumberTextField from "../form/NumberTextField";
 
 export default class App2 extends Ginkgo.Component {
     render(): GinkgoNode {
@@ -21,6 +25,21 @@ export default class App2 extends Ginkgo.Component {
                 ]}/>
             </div>
             <div style={style}>
+                <Panel title={"Panel"} width={500} height={200} border={true}>
+                    <span>refactor code</span>
+                </Panel>
+            </div>
+            <div style={style}>
+                <FormPanel title={"Form Panel"} width={500} height={100} layout={{column: 2}}>
+                    <span>a</span>
+                    <span>b</span>
+                </FormPanel>
+            </div>
+            <div style={style}>
+                <FormPanel title={"Form Panel"} width={500} height={380} layout={{column: 2}}>
+                    <TextField fieldLabel={"文本"} value={"abc"}/>
+                    <NumberTextField fieldLabel={"数字文本"}/>
+                </FormPanel>
             </div>
         </div>
     }

@@ -467,7 +467,7 @@ export default class WindowPanel<P extends WindowProps> extends Component<P> {
                 let nheight = height + y;
                 this.top = ntop;
                 this.height = nheight;
-                this.redrawing();
+                this.setState();
                 // this.panelRef && this.panelRef.setHeaderDefaultAlign();
             }
 
@@ -478,7 +478,7 @@ export default class WindowPanel<P extends WindowProps> extends Component<P> {
                 let nwidth = width + x;
                 this.left = nleft;
                 this.width = nwidth;
-                this.redrawing();
+                this.setState();
                 //this.panelRef &&  this.panelRef.setHeaderDefaultAlign();
             }
 
@@ -487,7 +487,7 @@ export default class WindowPanel<P extends WindowProps> extends Component<P> {
                 || this.currentResizeType == "se") {
                 let nheight = height - y;
                 this.height = nheight;
-                this.redrawing();
+                this.setState();
                 // this.panelRef  && this.panelRef.setHeaderDefaultAlign();
             }
 
@@ -496,7 +496,7 @@ export default class WindowPanel<P extends WindowProps> extends Component<P> {
                 || this.currentResizeType == "se") {
                 let nwidth = width - x;
                 this.width = nwidth;
-                this.redrawing();
+                this.setState();
                 // this.panelRef && this.panelRef.setHeaderDefaultAlign();
             }
 
@@ -527,7 +527,7 @@ export default class WindowPanel<P extends WindowProps> extends Component<P> {
             this.ghost = false;
             this.left = left;
             this.top = top;
-            this.redrawing();
+            this.setState();
         }
 
         this.startX = 0;
@@ -584,7 +584,7 @@ export default class WindowPanel<P extends WindowProps> extends Component<P> {
         this.setWindowPosition(left, top);
         if (this.ghost != true) {
             this.ghost = true;
-            this.redrawing();
+            this.setState();
         }
     }
 

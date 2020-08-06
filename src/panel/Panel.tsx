@@ -456,7 +456,7 @@ export default class Panel<P extends PanelProps> extends Container<P> {
                 this.headerBodyStyle.width = width + "px";
                 this.headerStyle.width = undefined;
             }
-            this.redrawing(false);
+            this.setState({}, false);
         }
     }
 
@@ -465,7 +465,7 @@ export default class Panel<P extends PanelProps> extends Container<P> {
             if (component instanceof Toolbar) {
                 if (this.getWidth() > 0) {
                     component.setWidth(this.getWidth());
-                    component.redrawing();
+                    component.setState();
                 }
             }
         }, this);
@@ -498,7 +498,7 @@ export default class Panel<P extends PanelProps> extends Container<P> {
                     }
                 }
 
-                this.redrawing();
+                this.setState();
             }
         }
     }
@@ -527,19 +527,19 @@ export default class Panel<P extends PanelProps> extends Container<P> {
                 this.headerStyle.width = null;
                 this.headerBodyStyle.width = null;
 
-                this.redrawing();
+                this.setState();
             }
         }
     }
 
     setCollapseType(type: "left" | "right" | "bottom" | "top") {
         this.collapseType = type;
-        this.redrawing();
+        this.setState();
     }
 
     setCollapse(collapse: boolean) {
         this.collapse = collapse;
-        this.redrawing();
+        this.setState();
     }
 
     isCollapse(): boolean {

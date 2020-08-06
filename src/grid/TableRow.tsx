@@ -342,7 +342,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
     }
 
     protected onTableCellValueChange(column: TableColumnModel, model: TableItemModel) {
-        this.redrawing();
+        this.setState();
         if (this.props.autoCommit != false) {
             model && model.record && model.record.commit();
         }
@@ -352,7 +352,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
     }
 
     protected onCommitRecord() {
-        this.redrawing();
+        this.setState();
     }
 
     protected getRootClassName(): string[] {

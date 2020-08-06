@@ -35,10 +35,6 @@ export default class FormFieldSet<P extends FormFieldSetProps> extends Component
         );
     }
 
-    redrawing() {
-        this.forceRender();
-    }
-
     protected getRootClassName(): string[] {
         let arr = super.getRootClassName();
         arr.push(FormFieldSet.fieldSetCls);

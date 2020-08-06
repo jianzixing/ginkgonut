@@ -49,7 +49,7 @@ export default class TableFeatureGroup {
                         } else {
                             value.show = true;
                         }
-                        table.redrawing();
+                        table.setState();
                     }}
                 >
                     <Icon className={TableFeatureGroup.tableClsFeatureGroupIcon}
@@ -79,7 +79,7 @@ export default class TableFeatureGroup {
                                     v.selected = false;
                                 });
                                 data.selected = true;
-                                table.redrawing();
+                                table.setState();
                             }
                         }}
                         onDeselected={(e, data: TableItemModel) => {

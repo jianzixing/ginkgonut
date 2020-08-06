@@ -22,7 +22,7 @@ export default class TreeGridPanel<P extends TreeGridPanelProps> extends Panel<P
 
     updateTree(): void {
         if (this.treeGridRef.instance) {
-            this.treeGridRef.instance.redrawing();
+            this.treeGridRef.instance.setState();
         }
     }
 

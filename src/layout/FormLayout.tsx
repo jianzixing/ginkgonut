@@ -1,4 +1,4 @@
-import Ginkgo, {CSSProperties, GinkgoElement, GinkgoNode} from "ginkgoes";
+import Ginkgo, {CSSProperties, GinkgoElement, GinkgoNode, HTMLComponent} from "ginkgoes";
 import Component, {ComponentProps} from "../component/Component";
 import FormField from "../form/FormField";
 import Container from "../component/Container";
@@ -57,7 +57,6 @@ export default class FormLayout extends Container<FormLayoutProps> {
             spacingH = this.props.spacingH == null ? 10 : this.props.spacingH,
             rowEls = [],
             cellEls = [],
-            width = this.rootEl.width,
 
             childSplits: Array<Array<any>> = [];
 
@@ -115,8 +114,7 @@ export default class FormLayout extends Container<FormLayoutProps> {
                     }
                 }
 
-                let c = 0, num = -1, spacingItem = spacingH / 2,
-                    cellWidth = (width - (columnCount - 1) * spacingH) / columnCount;
+                let c = 0, num = -1, spacingItem = spacingH / 2;
                 if (columnCount > 1) {
                     for (let cell of cellEls) {
                         let style: CSSProperties = {};
@@ -130,7 +128,6 @@ export default class FormLayout extends Container<FormLayoutProps> {
                                 style.paddingLeft = spacingItem;
                             }
                         }
-                        style.width = cellWidth;
                         let cellStruts = (
                             <div className={FormLayout.formItemCellCls} style={style}>
                                 {cell}
@@ -194,6 +191,19 @@ export default class FormLayout extends Container<FormLayoutProps> {
                 )
             }
             return bodys;
+        }
+    }
+
+    componentRenderUpdate(props?: FormLayoutProps, state?: {}) {
+        let spacingH = this.props.spacingH == null ? 10 : this.props.spacingH;
+        let width = this.rootEl.width;
+        let columnCount = this.props.column || 1
+        let cellWidth = (width - (columnCount - 1) * spacingH) / columnCount;
+        let items: Array<HTMLComponent> = this.queryAll("div." + FormLayout.formItemCellCls);
+        if (items) {
+            for (let item of items) {
+                item.style.width = cellWidth + "px";
+            }
         }
     }
 
@@ -267,7 +277,7 @@ export default class FormLayout extends Container<FormLayoutProps> {
     }
 
     doLayout(): void {
-        this.redrawing();
+        this.setState();
     }
 }
 

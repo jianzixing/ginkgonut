@@ -109,7 +109,7 @@ export default class AppNavigation extends Component<AppNavigationProps> {
             m.selected = false;
         }
         module.selected = true;
-        this.redrawing();
+        this.setState();
 
         this.onModuleButtonClick(module);
     }

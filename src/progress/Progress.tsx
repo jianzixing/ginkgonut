@@ -78,6 +78,6 @@ export default class Progress<P extends ProgressProps> extends Component<P> {
 
     setPercent(percent?: number) {
         this.percent = percent;
-        this.redrawing();
+        this.setState();
     }
 }

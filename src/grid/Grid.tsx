@@ -146,8 +146,8 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
                         if (type == "finish") {
                             this.hasGridResizeCls = false;
                             // this.rootEl.reloadClassName();
-                            // this.tableComponentRef && this.tableComponentRef.redrawing();
-                            this.redrawing();
+                            // this.tableComponentRef && this.tableComponentRef.setState();
+                            this.setState();
                         }
                     }}
                     onColumnMenuChange={((type, data) => {
@@ -182,7 +182,7 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
                                     if (allSel && this.props.columns) {
                                         let arr = columns.filter(column => column.type == "checkbox");
                                         arr.map(column => column.checked = true);
-                                        this.columnsRef.redrawing();
+                                        this.columnsRef.setState();
                                     } else if (!allSel) {
                                         let arr = columns.filter(column => column.type == "checkbox");
                                         let isRe = false;
@@ -193,7 +193,7 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
                                             }
                                         });
                                         if (isRe) {
-                                            this.redrawing();
+                                            this.setState();
                                         }
                                     }
                                 }
@@ -209,7 +209,7 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
                                     let arr = columns.filter(column => column.type == "checkbox");
                                     arr.map(column => column.checked = false);
                                 }
-                                this.redrawing();
+                                this.setState();
 
                                 if (this.props.onDeselected) {
                                     this.props.onDeselected(e, data.data, sel);
@@ -259,7 +259,7 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
         this.tableComponentRef.setWidth(totalWidth);
         let tableRef = this.tableRef.instance.dom as HTMLElement;
         this.tableClientWidth = totalWidth + (tableRef.offsetWidth - tableRef.clientWidth);
-        this.redrawing(false);
+        this.setState({}, false);
     }
 
     protected calGridHeight() {
@@ -301,7 +301,7 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
                 }
             }
         }
-        this.redrawing();
+        this.setState();
 
         if (type == 'checked') {
             let arr = [];
@@ -358,7 +358,7 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
 
     storeBeforeLoad?(): void {
         this.isLoading = true;
-        this.redrawing();
+        this.setState();
     }
 
     storeLoaded(data: Object | Object[], total?: number, originData?: any): void {
@@ -369,7 +369,7 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
         } else {
             this.tableItemModels = [];
         }
-        this.redrawing();
+        this.setState();
         this.resetTableScroll();
     }
 }

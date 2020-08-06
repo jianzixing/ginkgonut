@@ -46,14 +46,14 @@ export default class AppPanel<P extends AppPanelProps> extends Container<P> {
         ref.instance = this;
         element['navPanel'] = ref;
         this.history.push(element);
-        this.redrawing();
+        this.setState();
     }
 
     back() {
         if (this.history.length > 1) {
             this.history.splice(this.history.length - 1, 1);
         }
-        this.redrawing();
+        this.setState();
         this.layout();
     }
 

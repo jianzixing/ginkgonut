@@ -27,7 +27,7 @@ export default class DisplayImage<P extends DisplayImageProps> extends Component
 
     set src(src: string) {
         this.value = src;
-        this.redrawing();
+        this.setState();
     }
 
     protected buildClassNames(themePrefix: string) {
@@ -108,7 +108,7 @@ export default class DisplayImage<P extends DisplayImageProps> extends Component
     protected compareUpdate(key: string, newValue: any, oldValue: any): boolean {
         if (key == "src" && this.value != newValue) {
             this.value = newValue;
-            this.redrawing();
+            this.setState();
         }
         return false;
     }

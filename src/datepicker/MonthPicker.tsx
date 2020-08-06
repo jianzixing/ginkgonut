@@ -122,22 +122,22 @@ export default class MonthPicker<P extends MonthPickerProps> extends Component<P
     protected onMonthClick(month: string, monthIndex: number) {
         this.currentMonthStr = month;
         this.currentMonth = monthIndex;
-        this.redrawing();
+        this.setState();
     }
 
     protected onYearClick(year: number) {
         this.currentYear = year;
-        this.redrawing();
+        this.setState();
     }
 
     protected onPreYearClick() {
         this.startYear = this.startYear - 10;
-        this.redrawing();
+        this.setState();
     }
 
     protected onNextYearClick() {
         this.startYear = this.startYear + 10;
-        this.redrawing();
+        this.setState();
     }
 
     protected getMonthPickerInfo(): { months: Array<string>, years: Array<number> } {
