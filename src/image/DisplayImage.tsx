@@ -113,7 +113,7 @@ export default class DisplayImage<P extends DisplayImageProps> extends Component
         return false;
     }
 
-    protected onAfterDrawing() {
+    componentDidUpdate() {
         if (this.imgRef.instance) {
             let el = this.imgRef.instance.dom as HTMLImageElement;
             let root = this.rootEl.dom as HTMLElement;

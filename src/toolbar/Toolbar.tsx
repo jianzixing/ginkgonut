@@ -241,8 +241,7 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
         return children;
     }
 
-    protected onAfterDrawing() {
-        super.onAfterDrawing();
+    componentDidUpdate() {
         this.setChildButton();
         this.resetPositionChildren();
     }

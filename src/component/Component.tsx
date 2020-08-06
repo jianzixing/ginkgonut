@@ -70,8 +70,8 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
     protected isDisabledSelectText: boolean = (this.props.disabledSelectText == null ? true : this.props.disabledSelectText);
 
     protected themePrefix = "x-";
-    protected width: number = this.props.width || 250;
-    protected height: number = this.props.height || 130;
+    protected width: number = this.props.width;
+    protected height: number = this.props.height;
     protected rootX: number;
     protected rootY: number;
     protected maskEl;
@@ -117,15 +117,6 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
     }
 
     componentReceiveProps(props: P, context?) {
-        if (this.compareComponentUpdate(props, context)
-            || context.type == "new"
-            || context.childChange) {
-            if (context.type != "new") {
-                this.rootEl.reloadStyleSheets();
-            }
-            this.redrawing();
-        }
-
         if (props) {
             for (let p in props) {
                 let item = props[p];
@@ -141,16 +132,6 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
 
     }
 
-    addDisableProps(key: string) {
-        if (this.disableCompareProps.indexOf(key) == -1) {
-            this.disableCompareProps.push(key);
-        }
-    }
-
-    removeDisableProps(key: string) {
-        this.disableCompareProps = this.disableCompareProps.filter(value => value != key);
-    }
-
     /**
      * 验证旧的属性和新的属性是否一致，如果一致则不需要重新绘制dom，
      * 相反则需要绘制dom，判断新旧属性是否一致使用的是==号，所以如果
@@ -159,7 +140,7 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
      * @param props
      * @param context
      */
-    private compareComponentUpdate(props: P, context?: { oldProps: P, type: "new" | "mounted" }): boolean {
+    componentUpdateProps(props: P, context?): void {
         if (props && context && context.oldProps) {
             let isNeedRedraw: boolean = false;
             for (let p in props) {
@@ -189,12 +170,9 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
             }
 
             if (this.compareAfterUpdate && this.compareAfterUpdate(props, context.oldProps)) {
-                return false;
+                this.setState();
             }
-
-            return isNeedRedraw;
         }
-        return false;
     }
 
     protected compareUpdate(key: string, newValue: any, oldValue: any): boolean {
@@ -202,25 +180,6 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
     }
 
     protected compareAfterUpdate?(props: P, oldProps: P): boolean;
-
-    /**
-     * 如果只是修改了数组的内部数据如果调用update则判断对象一致则不会重绘，
-     * 调用staticUpdate方法可以重新处理数据并重绘
-     *
-     * @param key
-     */
-    staticUpdate(key: string) {
-        this.compareUpdate(key, this.props[key], null);
-        this.redrawing();
-    }
-
-    redrawing(callAfter: boolean = true) {
-        this.rootEl && this.rootEl.reloadStyleSheets();
-        this.rootEl && this.rootEl.overlap(this.drawing());
-        if (callAfter) {
-            this.onAfterDrawing();
-        }
-    }
 
     setTheme(themePrefix?: string) {
         if (!themePrefix) {
@@ -259,20 +218,16 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
             onMouseDown: this.onMouseDown.bind(this),
             onMouseUp: this.onMouseUp.bind(this)
         }
-
+        
         return (
-            <div
-                className={this.getRootClassName}
-                style={this.getRootStyle}
-                ref={c => this.rootEl = c}
-                {...events}
+            <div className={this.getRootClassName}
+                 style={this.getRootStyle}
+                 ref={c => this.rootEl = c}
+                 {...events}
             >
-
+                {this.drawing()}
             </div>
         )
-    }
-
-    protected onAfterDrawing() {
     }
 
     /**
@@ -303,7 +258,6 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
 
     protected getRootStyle(): CSSProperties {
         let style: CSSProperties | any = {};
-
         if (this.props.style) {
             for (let key in this.props.style) {
                 style[key] = this.props.style[key];

@@ -272,7 +272,7 @@ export default class BorderLayout<P extends BorderLayoutProps> extends Container
         return 0;
     }
 
-    protected onAfterDrawing() {
+    componentDidUpdate() {
         this.doLayout();
     }
 

@@ -96,7 +96,7 @@ export default class ButtonGroup<P extends ButtonGroupProps> extends Component<P
             } else {
                 model.pressing = true;
             }
-            this.redrawing();
+            this.setState();
         }
 
 

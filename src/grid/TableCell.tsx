@@ -235,8 +235,7 @@ export default class TableCell<P extends TableCellProps> extends Component<P> {
         }
     }
 
-    protected onAfterDrawing() {
-        super.onAfterDrawing();
+    componentDidUpdate() {
         if (this.editingFieldRef && this.editingFieldRef.instance
             && this.editingFieldRef.instance instanceof AbstractFormField) {
             let value = this.value;

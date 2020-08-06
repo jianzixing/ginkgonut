@@ -58,9 +58,7 @@ export default class Progress<P extends ProgressProps> extends Component<P> {
         ];
     }
 
-    protected onAfterDrawing() {
-        super.onAfterDrawing();
-
+    componentDidUpdate() {
         if (this.progressBarTextRef && this.progressBarTextRef.instance) {
             let dom = this.progressBarTextRef.instance.dom as HTMLElement;
             dom.style.width = this.getWidth() + "px";

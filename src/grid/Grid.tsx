@@ -228,8 +228,7 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
         )
     }
 
-    protected onAfterDrawing() {
-        super.onAfterDrawing();
+    componentDidUpdate() {
         this.calTableWidth();
         this.calGridHeight();
     }

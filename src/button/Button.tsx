@@ -358,11 +358,11 @@ export default class Button<P extends ButtonProps> extends Component<P> {
     protected compareUpdate(key: string, newValue: any, oldValue: any): boolean {
         if (key == "pressing" && this.isOnPressing != newValue) {
             this.isOnPressing = newValue;
-            this.rootEl.reloadClassName();
+            return true;
         }
         if (key == "selected" && this.isOnSelected != newValue) {
             this.isOnSelected = newValue;
-            this.rootEl.reloadClassName();
+            return true
         }
         return false;
     }

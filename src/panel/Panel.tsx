@@ -415,8 +415,7 @@ export default class Panel<P extends PanelProps> extends Container<P> {
         this.resizeToolbars();
     }
 
-    protected onAfterDrawing() {
-        super.onAfterDrawing();
+    componentDidUpdate() {
         this.layout();
     }
 

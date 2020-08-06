@@ -61,8 +61,7 @@ export default class GridPanel<P extends GridPanelProps> extends Panel<P> {
         }
     }
 
-    protected onAfterDrawing() {
-        super.onAfterDrawing();
+    componentDidUpdate() {
         this.setGridPanelSize();
     }
 
