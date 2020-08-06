@@ -4,11 +4,6 @@ import Component, {ComponentProps} from "./Component";
 export default class Container<P extends ComponentProps> extends Component<P> {
     protected isEnableParentSize = true;
 
-    componentUpdateProps(props: P, context?) {
-        super.componentUpdateProps(props, context);
-        this.setState({});
-    }
-
     /**
      * 重新设置组件配置，比如窗口改变则会从上依次调用
      * 1 如果是布局组件则组件样式布局及大小完成后调用该方法

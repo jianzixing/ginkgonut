@@ -175,9 +175,11 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
                 this.isDisabledSelectText = props.disabledSelectText;
             }
 
-            if (isNeedRedraw || (this.compareAfterUpdate && this.compareAfterUpdate(props, context.oldProps))) {
-                this.setState();
-            }
+            // if (isNeedRedraw || (this.compareAfterUpdate && this.compareAfterUpdate(props, context.oldProps))) {
+            //     this.setState();
+            // }
+            this.compareAfterUpdate && this.compareAfterUpdate(props, context.oldProps)
+            this.setState({});
         }
     }
 
