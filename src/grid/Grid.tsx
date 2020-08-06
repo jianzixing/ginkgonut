@@ -228,7 +228,7 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
         )
     }
 
-    componentDidUpdate() {
+    componentRenderUpdate() {
         this.calTableWidth();
         this.calGridHeight();
     }

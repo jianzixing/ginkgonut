@@ -415,7 +415,7 @@ export default class Panel<P extends PanelProps> extends Container<P> {
         this.resizeToolbars();
     }
 
-    componentDidUpdate() {
+    componentRenderUpdate() {
         this.layout();
     }
 

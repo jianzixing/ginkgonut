@@ -83,7 +83,7 @@ export default class SelectField<P extends SelectFieldProps> extends TextField<P
         return this.value;
     }
 
-    componentDidUpdate() {
+    componentRenderUpdate() {
         if (this.rightElRef && this.rightElRef.instance
             && this.rightButtonRef && this.rightButtonRef.instance) {
             let width = this.rightButtonRef.instance.getWidth();

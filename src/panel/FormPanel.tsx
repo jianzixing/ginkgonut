@@ -40,7 +40,7 @@ export default class FormPanel<P extends FormPanelProps> extends Panel<P> {
         }
     }
 
-    componentDidUpdate() {
+    componentRenderUpdate() {
         Ginkgo.forEachContent(component => {
             if (component instanceof AbstractFormField) {
                 component.addOnChange(this.onFormFieldsChange);

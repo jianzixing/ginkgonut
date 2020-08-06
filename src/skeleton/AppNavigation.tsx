@@ -92,7 +92,7 @@ export default class AppNavigation extends Component<AppNavigationProps> {
         );
     }
 
-    componentDidUpdate() {
+    componentRenderUpdate() {
         if (this.modules && this.modules.length > 0) {
             let hasSelected = false;
             for (let m of this.modules) {

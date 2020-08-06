@@ -64,7 +64,7 @@ export default class App extends Ginkgo.Component {
                                     this.moduleList = data;
                                     localStorage.setItem("$jianzixing_modules", JSON.stringify(data));
                                     this.isUserLogin = true;
-                                    this.forceRender();
+                                    this.setState();
                                 })
                         }, message => {
                             login.setStatus("登录", 0);
@@ -81,7 +81,7 @@ export default class App extends Ginkgo.Component {
                                     APIAdmin.loginOut()
                                         .load(data => {
                                             this.isUserLogin = false;
-                                            this.forceRender();
+                                            this.setState();
                                         });
                                 }}/>
                         </BorderLayoutItem>

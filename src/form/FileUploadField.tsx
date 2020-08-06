@@ -332,7 +332,7 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
         return this.getValue();
     }
 
-    componentDidUpdate() {
+    componentRenderUpdate() {
         if (this.rightElRef && this.rightElRef.instance
             && this.uploadRef && this.uploadRef.instance
             && (this.props.uploadType == "default"

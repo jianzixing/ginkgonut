@@ -231,7 +231,7 @@ export default class TabPanel<P extends TabPanelProps> extends Container<P> {
         )
     }
 
-    componentDidUpdate() {
+    componentRenderUpdate() {
         this.resetHeaderAlign();
         this.recalTabPosition();
         if (this.tabChange == true) {

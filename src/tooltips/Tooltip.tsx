@@ -143,7 +143,7 @@ export default class Tooltip<P extends TooltipProps> extends Component<P> {
         return list;
     }
 
-    componentDidUpdate() {
+    componentRenderUpdate() {
         this.updatePosition();
     }
 

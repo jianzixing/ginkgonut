@@ -253,7 +253,7 @@ export default class WindowPanel<P extends WindowProps> extends Component<P> {
         );
     }
 
-    componentDidUpdate() {
+    componentRenderUpdate() {
         if (this.panelRef) {
             Ginkgo.forEachContent(component => {
                 if (component instanceof Button && component.props.type == "close") {

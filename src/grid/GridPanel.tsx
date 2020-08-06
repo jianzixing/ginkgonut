@@ -55,13 +55,7 @@ export default class GridPanel<P extends GridPanelProps> extends Panel<P> {
         ];
     }
 
-    staticUpdate(key: string) {
-        if (this.gridRef && this.gridRef.instance) {
-            this.gridRef.instance.staticUpdate(key);
-        }
-    }
-
-    componentDidUpdate() {
+    componentRenderUpdate() {
         this.setGridPanelSize();
     }
 

@@ -90,6 +90,12 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
 
     componentWillMount(): void {
         this.setTheme();
+        let props = this.props;
+        if (props) {
+            for (let key in props) {
+                this.compareUpdate && this.compareUpdate(key, props[key], undefined);
+            }
+        }
     }
 
     componentWillUnmount?(): void {
@@ -169,7 +175,7 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
                 this.isDisabledSelectText = props.disabledSelectText;
             }
 
-            if (this.compareAfterUpdate && this.compareAfterUpdate(props, context.oldProps)) {
+            if (isNeedRedraw || (this.compareAfterUpdate && this.compareAfterUpdate(props, context.oldProps))) {
                 this.setState();
             }
         }
@@ -218,7 +224,7 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
             onMouseDown: this.onMouseDown.bind(this),
             onMouseUp: this.onMouseUp.bind(this)
         }
-        
+
         return (
             <div className={this.getRootClassName}
                  style={this.getRootStyle}

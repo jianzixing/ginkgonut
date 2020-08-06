@@ -55,7 +55,7 @@ export default class HtmlEditor<P extends HtmlEditorProps> extends Component<P> 
         )
     }
 
-    componentDidUpdate() {
+    componentRenderUpdate() {
         if (this.bodyRef.instance) {
             let dom = this.bodyRef.instance.dom as HTMLElement;
             if (dom) {

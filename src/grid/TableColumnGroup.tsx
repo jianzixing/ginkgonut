@@ -85,7 +85,7 @@ export default class TableColumnGroup<P extends TableColumnGroupProps> extends C
         )
     }
 
-    componentDidUpdate() {
+    componentRenderUpdate() {
         Ginkgo.forEachChildren(component => {
             if (component instanceof TableColumn) {
                 component.isResizing = false;
