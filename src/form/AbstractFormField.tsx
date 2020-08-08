@@ -17,15 +17,16 @@ export interface AbstractFormFieldProps extends ComponentProps {
 
 export class AbstractFormField<P extends AbstractFormFieldProps> extends Component<P> {
     protected onChangeEvents: Array<(field: AbstractFormField<AbstractFormFieldProps>, value: any, oldValue?: any) => void> = [];
-
-    protected compareAfterUpdate(props: P, oldProps: P): boolean {
+    
+    componentReceiveProps(props: P, context?) {
+        super.componentReceiveProps(props, context);
+        let oldProps = context.oldProps;
         if (props['value'] != oldProps['value']) {
             let promise = Promise.resolve();
             promise.then(() => {
                 this.setValue(props['value']);
             })
         }
-        return false;
     }
 
     public setValue(value: any): void {

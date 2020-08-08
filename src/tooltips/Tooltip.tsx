@@ -147,22 +147,6 @@ export default class Tooltip<P extends TooltipProps> extends Component<P> {
         this.updatePosition();
     }
 
-    protected compareAfterUpdate(props: P, oldProps: P): boolean {
-        if (props && oldProps) {
-            let hasOtherProps = false;
-            for (let p in props) {
-                if (props[p] != oldProps[p] && p != 'x' && p != 'y') {
-                    hasOtherProps = true;
-                }
-            }
-            if (!hasOtherProps) {
-                this.updatePosition();
-                return true;
-            }
-        }
-        return false;
-    }
-
     updatePosition() {
         if (this.rootEl && this.authorRef && this.authorRef.instance) {
             let authorDom = this.authorRef.instance.dom as HTMLElement;

@@ -146,19 +146,13 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
      * @param props
      * @param context
      */
-    componentUpdateProps(props: P, context?): void {
+    componentWillCompareProps(props: P, context?): void {
         if (props && context && context.oldProps) {
-            let isNeedRedraw: boolean = false;
             for (let p in props) {
                 if ((!this.disableCompareProps || this.disableCompareProps.indexOf(p) == -1)
                     && p != "children") {
                     let v = context.oldProps[p];
-                    if (this.compareUpdate && this.compareUpdate(p, props[p], v)) {
-                        isNeedRedraw = true;
-                    }
-                    if (props[p] != v) {
-                        isNeedRedraw = true;
-                    }
+                    this.compareUpdate && this.compareUpdate(p, props[p], v);
                 }
             }
 
@@ -174,20 +168,12 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
             if (props.disabledSelectText != null && this.isDisabledSelectText != props.disabledSelectText) {
                 this.isDisabledSelectText = props.disabledSelectText;
             }
-
-            // if (isNeedRedraw || (this.compareAfterUpdate && this.compareAfterUpdate(props, context.oldProps))) {
-            //     this.setState();
-            // }
-            this.compareAfterUpdate && this.compareAfterUpdate(props, context.oldProps)
-            this.setState({});
         }
     }
 
     protected compareUpdate(key: string, newValue: any, oldValue: any): boolean {
         return false;
     }
-
-    protected compareAfterUpdate?(props: P, oldProps: P): boolean;
 
     setTheme(themePrefix?: string) {
         if (!themePrefix) {
