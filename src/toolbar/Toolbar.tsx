@@ -111,6 +111,9 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
                             this.positionChildren.right.push({item: split});
                         }
                     } else {
+                        if (Ginkgo.instanceofComponent(c, Button)) {
+                            c['action'] = 'light';
+                        }
                         if (childType == 0) {
                             this.positionChildren.left.push({item: c});
                         } else if (childType == 1) {
@@ -224,7 +227,6 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
 
     componentReceiveProps(props: P, context?: { oldProps: P; type: "new" | "mounted" }) {
         super.componentReceiveProps(props, context);
-        this.setChildButton();
     }
 
     private getAllChildren() {
@@ -242,22 +244,7 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
     }
 
     componentRenderUpdate() {
-        this.setChildButton();
         this.resetPositionChildren();
-    }
-
-    protected setChildButton() {
-        let children = this.getAllChildren();
-        for (let l of children) {
-            let component = l.ref.instance as HTMLComponent;
-            if (component.children
-                && component.children.length > 0
-                && component.children[0] instanceof Button) {
-                if (!component.children[0].props['action']) {
-                    component.children[0].set("action", "light");
-                }
-            }
-        }
     }
 
     onSizeChange(width: number, height: number): void {

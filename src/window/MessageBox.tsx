@@ -260,25 +260,28 @@ export default class MessageBox<P extends MessageBoxProps> extends WindowPanel<P
         }
     }
 
+    componentWillReceiveProps(props: P, context?) {
+        this.width = 250;
+        if (this.props.multiLineInput && this.props.type == "prompt") {
+            this.width = 350;
+        }
+        if (this.props.type == "custom") {
+            this.width = null;
+        }
+        if (this.props.width > 0) {
+            this.width = this.props.width;
+        }
+    }
+
     protected getRootStyle(): CSSProperties {
         let style = super.getRootStyle(true);
-        style.width = 250;
         style.minHeight = 130;
         if (this.props.type == "wait") {
             style.minHeight = 40;
         }
-        if (this.props.multiLineInput && this.props.type == "prompt") {
-            style.width = 350;
-        }
         if (this.props.type == "custom") {
-            style.width = null;
             style.minWidth = 300;
         }
-        if (this.props.width > 0) {
-            style.width = this.props.width;
-        }
-
-
         return style;
     }
 

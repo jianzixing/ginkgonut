@@ -223,7 +223,6 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
                     {this.isLoading ? <Loading/> : undefined}
                 </div>
                 <div key={"grid_line"} ref={this.columnLineRef} className={Grid.clsColumnResizeLine}></div>
-
             </div>
         )
     }

@@ -33,11 +33,11 @@ export default class BorderLayout<P extends BorderLayoutProps> extends Container
     protected defaultSplitWidth = 10;
     protected defaultMinSize = 40;
     protected childrenRefs: {
-        north?: { ref: BorderLayoutItem<any>, split?: RefObject<Moving<any>>, disableSplit: boolean },
-        south?: { ref: BorderLayoutItem<any>, split?: RefObject<Moving<any>>, disableSplit: boolean }
-        east?: { ref: BorderLayoutItem<any>, split?: RefObject<Moving<any>>, disableSplit: boolean }
-        west?: { ref: BorderLayoutItem<any>, split?: RefObject<Moving<any>>, disableSplit: boolean }
-        center?: { ref: BorderLayoutItem<any>, split?: RefObject<Moving<any>>, disableSplit: boolean }
+        north?: { ref: RefObject<BorderLayoutItem<any>>, split?: RefObject<Moving<any>>, disableSplit: boolean },
+        south?: { ref: RefObject<BorderLayoutItem<any>>, split?: RefObject<Moving<any>>, disableSplit: boolean }
+        east?: { ref: RefObject<BorderLayoutItem<any>>, split?: RefObject<Moving<any>>, disableSplit: boolean }
+        west?: { ref: RefObject<BorderLayoutItem<any>>, split?: RefObject<Moving<any>>, disableSplit: boolean }
+        center?: { ref: RefObject<BorderLayoutItem<any>>, split?: RefObject<Moving<any>>, disableSplit: boolean }
     } = {};
 
     protected buildClassNames(themePrefix: string): void {
@@ -56,155 +56,163 @@ export default class BorderLayout<P extends BorderLayoutProps> extends Container
     }
 
     protected drawing(): GinkgoElement | undefined | null | GinkgoElement[] {
-        let children: Array<GinkgoComponent> = this.children,
-            childEls: Array<GinkgoNode> = [];
+        let childEls: Array<GinkgoNode> = [];
 
         this.childrenRefs = {};
         let hasCenter = false;
-        if (children) {
-            for (let c of children) {
-                if (c instanceof BorderLayoutItem) {
-                    let props = c.props,
-                        refSplit: RefObject<Moving<MovingProps>>;
+        for (let c of this.props.children) {
+            if (Ginkgo.instanceofComponent(c, BorderLayoutItem)) {
+                let props = c as BorderLayoutItemProps,
+                    refItem: RefObject<BorderLayoutItem<any>> = Ginkgo.createRef(),
+                    refSplit: RefObject<Moving<MovingProps>>;
 
-                    childEls.push(c.props);
+                props.ref = refItem;
+                childEls.push(props);
 
-                    if (props.split == true) {
-                        let style: CSSProperties = {},
-                            splitCls = [BorderLayout.borderLayoutClsSplit],
-                            collapseCls = [BorderLayout.collapseCls],
-                            iconType = "", fixX = false, fixY = false;
+                if (props.split == true) {
+                    let style: CSSProperties = {},
+                        splitCls = [BorderLayout.borderLayoutClsSplit],
+                        collapseCls = [BorderLayout.collapseCls],
+                        iconType = "", fixX = false, fixY = false;
 
-                        refSplit = Ginkgo.createRef();
-                        if (props.type == "north") {
-                            style.height = this.defaultSplitWidth + "px";
-                            splitCls.push(BorderLayout.borderLayoutClsSplitV);
-                            collapseCls.push(BorderLayout.collapseBottomCls);
-                            iconType = IconTypes.caretUp;
-                            fixX = true;
-                        }
-                        if (props.type == "south") {
-                            style.height = this.defaultSplitWidth + "px";
-                            splitCls.push(BorderLayout.borderLayoutClsSplitV);
-                            collapseCls.push(BorderLayout.collapseBottomCls);
-                            iconType = IconTypes.caretDown;
-                            fixX = true;
-                        }
-                        if (props.type == "east") {
-                            style.width = this.defaultSplitWidth + "px";
-                            splitCls.push(BorderLayout.borderLayoutClsSplitH);
-                            collapseCls.push(BorderLayout.collapseLeftCls);
-                            iconType = IconTypes.caretRight;
-                            fixY = true;
-                        }
-                        if (props.type == "west") {
-                            style.width = this.defaultSplitWidth + "px";
-                            splitCls.push(BorderLayout.borderLayoutClsSplitH);
-                            collapseCls.push(BorderLayout.collapseLeftCls);
-                            iconType = IconTypes.caretLeft;
-                            fixY = true;
-                        }
+                    refSplit = Ginkgo.createRef();
+                    if (props.type == "north") {
+                        style.height = this.defaultSplitWidth + "px";
+                        splitCls.push(BorderLayout.borderLayoutClsSplitV);
+                        collapseCls.push(BorderLayout.collapseBottomCls);
+                        iconType = IconTypes.caretUp;
+                        fixX = true;
+                    }
+                    if (props.type == "south") {
+                        style.height = this.defaultSplitWidth + "px";
+                        splitCls.push(BorderLayout.borderLayoutClsSplitV);
+                        collapseCls.push(BorderLayout.collapseBottomCls);
+                        iconType = IconTypes.caretDown;
+                        fixX = true;
+                    }
+                    if (props.type == "east") {
+                        style.width = this.defaultSplitWidth + "px";
+                        splitCls.push(BorderLayout.borderLayoutClsSplitH);
+                        collapseCls.push(BorderLayout.collapseLeftCls);
+                        iconType = IconTypes.caretRight;
+                        fixY = true;
+                    }
+                    if (props.type == "west") {
+                        style.width = this.defaultSplitWidth + "px";
+                        splitCls.push(BorderLayout.borderLayoutClsSplitH);
+                        collapseCls.push(BorderLayout.collapseLeftCls);
+                        iconType = IconTypes.caretLeft;
+                        fixY = true;
+                    }
 
-                        let collapseSplitEl;
-                        if (c.props && c.props.children
-                            && c.props.children[0]
-                            && c.props.children[0]['collapse']) {
-                            collapseSplitEl = (
-                                <div className={collapseCls.join(" ")}
-                                     onClick={e => {
-                                         if (c.props && c.props.children && c.props.children.length > 0) {
-                                             let layoutItem = Ginkgo.getComponentByProps(c.props);
-                                             let cmp = Ginkgo.getComponentByProps(c.props.children[0]);
-                                             if (layoutItem && layoutItem instanceof BorderLayoutItem
-                                                 && cmp && cmp instanceof Panel) {
-                                                 layoutItem.onPanelCollapseClick(e, cmp);
-                                             }
+                    let collapseSplitEl;
+                    if (props && props.children
+                        && props.children[0]
+                        && props.children[0]['collapse']) {
+                        collapseSplitEl = (
+                            <div className={collapseCls.join(" ")}
+                                 onClick={e => {
+                                     if (props && props.children && props.children.length > 0) {
+                                         let layoutItem = Ginkgo.getComponentByProps(props);
+                                         let cmp = Ginkgo.getComponentByProps(props.children[0]);
+                                         if (layoutItem && layoutItem instanceof BorderLayoutItem
+                                             && cmp && cmp instanceof Panel) {
+                                             layoutItem.onPanelCollapseClick(e, cmp);
                                          }
-                                     }}>
-                                    <div className={BorderLayout.collapseIconCls}>
-                                        <Icon icon={iconType}/>
-                                    </div>
+                                     }
+                                 }}>
+                                <div className={BorderLayout.collapseIconCls}>
+                                    <Icon icon={iconType}/>
                                 </div>
-                            );
-                        }
-
-                        childEls.push(
-                            <Moving
-                                ref={refSplit}
-                                className={splitCls.join(" ")}
-                                style={style}
-                                movingClassName={BorderLayout.splitActiveCls}
-                                movingSelf={true}
-                                fixX={fixX}
-                                fixY={fixY}
-                                data={c}
-                                onFinishMoving={(point, data) => {
-                                    if (fixY && point && point.x) {
-                                        if (data) {
-                                            let width = data.getSize().width;
-                                            if (data.props.type == "east") {
-                                                data.setWidth(width + point.x);
-                                            } else {
-                                                data.setWidth(width - point.x);
-                                            }
-                                            this.layout();
-                                        }
-                                    }
-
-                                    if (fixX && point && point.y) {
-                                        if (data) {
-                                            let height = data.getSize().height;
-                                            if (data.props.type == "south") {
-                                                data.setHeight(height + point.y);
-                                            } else {
-                                                data.setHeight(height - point.y);
-                                            }
-                                            this.layout();
-                                        }
-                                    }
-                                }}
-                                onMoving={(point, data) => {
-                                    let max = this.getLayoutMaxSize(data);
-                                    if (max > 0) {
-                                        if (data.props.type == "north" && point.y) {
-                                            let height = data.getSize().height;
-                                            let h = height - point.y;
-                                            if (h >= max || h <= this.defaultMinSize) return false;
-                                        }
-                                        if (data.props.type == "south" && point.y) {
-                                            let height = data.getSize().height;
-                                            let h = height + point.y;
-                                            if (h >= max || h <= this.defaultMinSize) return false;
-                                        }
-                                        if (data.props.type == "east" && point.x) {
-                                            let width = data.getSize().width;
-                                            let w = width + point.x;
-                                            if (w >= max || w <= this.defaultMinSize) return false;
-                                        }
-                                        if (data.props.type == "west" && point.x) {
-                                            let width = data.getSize().width;
-                                            let w = width - point.x;
-                                            if (w >= max || w <= this.defaultMinSize) return false;
-                                        }
-                                    }
-                                    return true;
-                                }}
-                            >
-                                {collapseSplitEl}
-                            </Moving>);
+                            </div>
+                        );
                     }
 
-                    if (props.type == "north") this.childrenRefs.north = {ref: c, split: refSplit, disableSplit: false};
-                    if (props.type == "south") this.childrenRefs.south = {ref: c, split: refSplit, disableSplit: false};
-                    if (props.type == "east") this.childrenRefs.east = {ref: c, split: refSplit, disableSplit: false};
-                    if (props.type == "west") this.childrenRefs.west = {ref: c, split: refSplit, disableSplit: false};
-                    if (props.type == "center") {
-                        this.childrenRefs.center = {ref: c, disableSplit: false};
-                        hasCenter = true;
-                    }
-                } else {
-                    throw Error("BorderLayout children must is BorderLayoutItem");
+                    childEls.push(
+                        <Moving
+                            ref={refSplit}
+                            className={splitCls.join(" ")}
+                            style={style}
+                            movingClassName={BorderLayout.splitActiveCls}
+                            movingSelf={true}
+                            fixX={fixX}
+                            fixY={fixY}
+                            data={refItem}
+                            onFinishMoving={(point, data: RefObject<BorderLayoutItem<any>>) => {
+                                if (fixY && point && point.x) {
+                                    if (data) {
+                                        let width = data.instance.getSize().width;
+                                        if (data.instance.props.type == "east") {
+                                            data.instance.setWidth(width + point.x);
+                                        } else {
+                                            data.instance.setWidth(width - point.x);
+                                        }
+                                        this.layout();
+                                    }
+                                }
+
+                                if (fixX && point && point.y) {
+                                    if (data) {
+                                        let height = data.instance.getSize().height;
+                                        if (data.instance.props.type == "south") {
+                                            data.instance.setHeight(height + point.y);
+                                        } else {
+                                            data.instance.setHeight(height - point.y);
+                                        }
+                                        this.layout();
+                                    }
+                                }
+                            }}
+                            onMoving={(point, layoutItem: RefObject<BorderLayoutItem<any>>) => {
+                                let max = this.getLayoutMaxSize(layoutItem);
+                                if (max > 0) {
+                                    let data = layoutItem.instance;
+                                    if (data.props.type == "north" && point.y) {
+                                        let height = data.getSize().height;
+                                        let h = height - point.y;
+                                        if (h >= max || h <= this.defaultMinSize) return false;
+                                    }
+                                    if (data.props.type == "south" && point.y) {
+                                        let height = data.getSize().height;
+                                        let h = height + point.y;
+                                        if (h >= max || h <= this.defaultMinSize) return false;
+                                    }
+                                    if (data.props.type == "east" && point.x) {
+                                        let width = data.getSize().width;
+                                        let w = width + point.x;
+                                        if (w >= max || w <= this.defaultMinSize) return false;
+                                    }
+                                    if (data.props.type == "west" && point.x) {
+                                        let width = data.getSize().width;
+                                        let w = width - point.x;
+                                        if (w >= max || w <= this.defaultMinSize) return false;
+                                    }
+                                }
+                                return true;
+                            }}
+                        >
+                            {collapseSplitEl}
+                        </Moving>);
                 }
+
+                if (props.type == "north") this.childrenRefs.north = {
+                    ref: refItem,
+                    split: refSplit,
+                    disableSplit: false
+                };
+                if (props.type == "south") this.childrenRefs.south = {
+                    ref: refItem,
+                    split: refSplit,
+                    disableSplit: false
+                };
+                if (props.type == "east") this.childrenRefs.east = {ref: refItem, split: refSplit, disableSplit: false};
+                if (props.type == "west") this.childrenRefs.west = {ref: refItem, split: refSplit, disableSplit: false};
+                if (props.type == "center") {
+                    this.childrenRefs.center = {ref: refItem, disableSplit: false};
+                    hasCenter = true;
+                }
+            } else {
+                throw Error("BorderLayout children must is BorderLayoutItem");
             }
         }
 
@@ -212,6 +220,9 @@ export default class BorderLayout<P extends BorderLayoutProps> extends Container
             throw Error("borderlayout have multiple children and have no center type item.");
         }
 
+        if (childEls == null || childEls.length == 0) {
+            childEls = this.props.children;
+        }
         return (
             <div className={BorderLayout.borderLayoutClsBody}>
                 {childEls}
@@ -219,7 +230,7 @@ export default class BorderLayout<P extends BorderLayoutProps> extends Container
         )
     }
 
-    getLayoutMaxSize(item: BorderLayoutItem<BorderLayoutItemProps>): number {
+    getLayoutMaxSize(item: RefObject<BorderLayoutItem<BorderLayoutItemProps>>): number {
         let north = this.childrenRefs.north,
             south = this.childrenRefs.south,
             east = this.childrenRefs.east,
@@ -229,40 +240,40 @@ export default class BorderLayout<P extends BorderLayoutProps> extends Container
             height = this.getHeight(),
             width = this.getWidth();
 
-        if (item.props.type == "north") {
+        if (item.instance.props.type == "north") {
             let maxHeight = this.defaultMinSize;
             if (south) {
-                maxHeight += south.ref ? south.ref.getSize().height : 0;
+                maxHeight += south.ref ? south.ref.instance.getSize().height : 0;
                 if (south.split && south.split.instance) {
                     maxHeight += south.split.instance.getHeight();
                 }
             }
             return height - maxHeight;
         }
-        if (item.props.type == "south") {
+        if (item.instance.props.type == "south") {
             let maxHeight = this.defaultMinSize;
             if (north) {
-                maxHeight += north.ref ? north.ref.getSize().height : 0;
+                maxHeight += north.ref ? north.ref.instance.getSize().height : 0;
                 if (north.split && north.split.instance) {
                     maxHeight += north.split.instance.getHeight();
                 }
             }
             return height - maxHeight;
         }
-        if (item.props.type == "west") {
+        if (item.instance.props.type == "west") {
             let maxWidth = this.defaultMinSize;
             if (east) {
-                maxWidth += east.ref ? east.ref.getSize().width : 0;
+                maxWidth += east.ref ? east.ref.instance.getSize().width : 0;
                 if (east.split && east.split.instance) {
                     maxWidth += east.split.instance.getWidth();
                 }
             }
             return width - maxWidth;
         }
-        if (item.props.type == "east") {
+        if (item.instance.props.type == "east") {
             let maxWidth = this.defaultMinSize;
             if (west) {
-                maxWidth += west.ref ? west.ref.getSize().width : 0;
+                maxWidth += west.ref ? west.ref.instance.getSize().width : 0;
                 if (west.split && west.split.instance) {
                     maxWidth += west.split.instance.getWidth();
                 }
@@ -273,7 +284,9 @@ export default class BorderLayout<P extends BorderLayoutProps> extends Container
     }
 
     componentRenderUpdate() {
-        this.doLayout();
+        this.setState({}, () => {
+            this.doLayout();
+        }, false)
     }
 
     onSizeChange(width: number, height: number): void {
@@ -300,7 +313,7 @@ export default class BorderLayout<P extends BorderLayoutProps> extends Container
             westSplitWidth = 0;
 
         if (north) {
-            northHeight = north.ref ? north.ref.getSize().height : 0;
+            northHeight = north.ref ? north.ref.instance.getSize().height : 0;
             northY += northHeight;
             if (north.split && north.split.instance) {
                 north.split.instance.setWidth(width);
@@ -310,7 +323,7 @@ export default class BorderLayout<P extends BorderLayoutProps> extends Container
             southY += northY;
         }
         if (south) {
-            southY += south.ref ? south.ref.getSize().height : 0;
+            southY += south.ref ? south.ref.instance.getSize().height : 0;
             if (south.split && south.split.instance) {
                 south.split.instance.setWidth(width);
                 southY += south.split.instance.getHeight();
@@ -321,8 +334,8 @@ export default class BorderLayout<P extends BorderLayoutProps> extends Container
 
 
         if (west) {
-            westX += west.ref ? west.ref.getSize().width : 0;
-            westWith += west.ref ? west.ref.getSize().width : 0;
+            westX += west.ref ? west.ref.instance.getSize().width : 0;
+            westWith += west.ref ? west.ref.instance.getSize().width : 0;
             if (west.split && west.split.instance) {
                 west.split.instance.setHeight(centerHeight);
                 westX += west.split.instance.getWidth();
@@ -331,21 +344,21 @@ export default class BorderLayout<P extends BorderLayoutProps> extends Container
             }
 
             if (west.ref) {
-                west.ref.setSize(undefined, centerHeight);
+                west.ref.instance.setSize(undefined, centerHeight);
             }
             eastX += westX;
             weWidth += westX;
         }
 
         if (east) {
-            weWidth += east.ref ? east.ref.getSize().width : 0;
+            weWidth += east.ref ? east.ref.instance.getSize().width : 0;
             if (east.split && east.split.instance) {
                 east.split.instance.setHeight(centerHeight);
                 weWidth += east.split.instance.getWidth();
                 eastX += east.split.instance.getWidth();
             }
             if (east.ref) {
-                east.ref.setSize(undefined, centerHeight);
+                east.ref.instance.setSize(undefined, centerHeight);
             }
         }
 
@@ -353,24 +366,24 @@ export default class BorderLayout<P extends BorderLayoutProps> extends Container
         if (center) {
             eastX += centerWidth;
             if (center.ref) {
-                center.ref.setSize(centerWidth, centerHeight);
+                center.ref.instance.setSize(centerWidth, centerHeight);
             }
         }
 
         if (north && north.ref) {
-            north.ref.setXY(0, 0);
+            north.ref.instance.setXY(0, 0);
             if (north.split && north.split.instance) {
                 north.split.instance.setXY(undefined, northHeight);
             }
         }
         if (south && south.ref) {
-            south.ref.setXY(0, southY + northSplitHeight);
+            south.ref.instance.setXY(0, southY + northSplitHeight);
             if (south.split && south.split.instance) {
                 south.split.instance.setXY(undefined, southY);
             }
         }
         if (west && west.ref) {
-            west.ref.setXY(0, northY);
+            west.ref.instance.setXY(0, northY);
             if (west.split && west.split.instance) {
                 west.split.instance.setXY(undefined, northY);
                 west.split.instance.setXY(westWith - westSplitWidth, undefined);
@@ -378,21 +391,21 @@ export default class BorderLayout<P extends BorderLayoutProps> extends Container
             }
         }
         if (east && east.ref) {
-            east.ref.setXY(eastX, northY);
+            east.ref.instance.setXY(eastX, northY);
             if (east.split && east.split.instance) {
                 east.split.instance.setXY(undefined, northY);
                 east.split.instance.setXY(eastX - westSplitWidth, undefined);
             }
         }
         if (center && center.ref) {
-            center.ref.setXY(westWith, northY);
+            center.ref.instance.setXY(westWith, northY);
         }
 
-        north && north.ref && north.ref.layout();
-        south && south.ref && south.ref.layout();
-        east && east.ref && east.ref.layout();
-        west && west.ref && west.ref.layout();
-        center && center.ref && center.ref.layout();
+        north && north.ref && north.ref.instance.layout();
+        south && south.ref && south.ref.instance.layout();
+        east && east.ref && east.ref.instance.layout();
+        west && west.ref && west.ref.instance.layout();
+        center && center.ref && center.ref.instance.layout();
     }
 
     setDisableSplitByItem(bli: BorderLayoutItem<any>, disable: boolean) {
