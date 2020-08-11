@@ -516,13 +516,6 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
         this.rootEl.remove(this.maskEl);
     }
 
-    isMount() {
-        if (Ginkgo.getComponentStatus(this) === "mount") {
-            return true;
-        }
-        return false;
-    }
-
     getBounds(el?: HTMLComponent | HTMLElement | null, createScrollEvent?: boolean):
         { x: number, y: number, w: number, h: number, cw: number, ch: number } {
         if (!el) el = this.rootEl;

@@ -1,4 +1,4 @@
-import Ginkgo, {GinkgoNode, RefObject} from "ginkgoes";
+import Ginkgo, {GinkgoContainer, GinkgoNode, RefObject} from "ginkgoes";
 import {AppManagerProps, AppManager} from "./AppPanel";
 import Toolbar from "../toolbar/Toolbar";
 import Button from "../button/Button";
@@ -112,7 +112,6 @@ export default class TestManager extends AppManager<TestManagerProps> {
 
     componentDidMount() {
         // APIAdmin.getAdmins("abc").load();
-
         this.panelRef.instance.mask();
         setTimeout(() => {
             this.panelRef.instance.unmask();

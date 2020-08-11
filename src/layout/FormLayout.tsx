@@ -60,10 +60,10 @@ export default class FormLayout extends Container<FormLayoutProps> {
 
             childSplits: Array<Array<any>> = [];
 
-        if (this.children) {
+        if (this.props.children) {
             let newChild = [], hiddenChild = [];
-            for (let c of this.children) {
-                if (c instanceof FormLayoutTitle) {
+            for (let c of this.props.children) {
+                if (Ginkgo.instanceofComponent(c, FormLayoutTitle)) {
                     if (newChild.length > 0) {
                         childSplits.push(newChild);
                     }
@@ -71,13 +71,13 @@ export default class FormLayout extends Container<FormLayoutProps> {
                     newChild.push(c);
                 } else {
                     let isHidden = false;
-                    if (c instanceof Component) {
-                        if (c.getHidden()) {
+                    if (Ginkgo.instanceofComponent(c, Component)) {
+                        if (c['hidden']) {
                             hiddenChild.push(c);
                             isHidden = true;
                         }
                     }
-                    if (c instanceof FormLayoutItem) {
+                    if (Ginkgo.instanceofComponent(c, FormLayoutItem)) {
 
                     }
                     if (!isHidden) {
@@ -98,18 +98,18 @@ export default class FormLayout extends Container<FormLayoutProps> {
             let i = 0;
             for (let children of childSplits) {
                 for (let c of children) {
-                    if (c instanceof FormLayoutTitle) {
-                        bodys.push(c.props);
+                    if (Ginkgo.instanceofComponent(c, FormLayoutTitle)) {
+                        bodys.push(c);
                     } else {
-                        if (c instanceof FormField) {
+                        if (Ginkgo.instanceofComponent(c, FormField)) {
                             c.addRootClassName(FormLayout.formItemFieldCls);
                         }
                         if (columnCount == 1) {
                             childrenEls.push(
-                                <div className={FormLayout.formItemCls} style={styleItem}>{c.props}</div>
+                                <div className={FormLayout.formItemCls} style={styleItem}>{c}</div>
                             );
                         } else {
-                            cellEls.push(c.props);
+                            cellEls.push(c);
                         }
                     }
                 }
@@ -367,13 +367,7 @@ export class FormLayoutItem<P extends FormLayoutItemProps> extends Component<P> 
         let children = this.props.children;
         let spacingH = this.props.spacingH || 10;
         let setting = this.props.setting;
-        if (this.children) {
-            for (let c of this.children) {
-                if (c instanceof FormField) {
-                    c.addRootClassName(FormLayoutItem.formItemFieldCls);
-                }
-            }
-        }
+
         let chs = [];
         if (children) {
             let i = 0;
@@ -412,6 +406,16 @@ export class FormLayoutItem<P extends FormLayoutItemProps> extends Component<P> 
             }
         }
         return chs;
+    }
+
+    componentRenderUpdate(props?: P, state?: {}) {
+        if (this.children) {
+            for (let c of this.children) {
+                if (c instanceof FormField) {
+                    c.addRootClassName(FormLayoutItem.formItemFieldCls);
+                }
+            }
+        }
     }
 
     protected getRootClassName(): string[] {
