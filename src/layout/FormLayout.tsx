@@ -101,9 +101,6 @@ export default class FormLayout extends Container<FormLayoutProps> {
                     if (Ginkgo.instanceofComponent(c, FormLayoutTitle)) {
                         bodys.push(c);
                     } else {
-                        if (Ginkgo.instanceofComponent(c, FormField)) {
-                            c.addRootClassName(FormLayout.formItemFieldCls);
-                        }
                         if (columnCount == 1) {
                             childrenEls.push(
                                 <div className={FormLayout.formItemCls} style={styleItem}>{c}</div>
@@ -195,6 +192,13 @@ export default class FormLayout extends Container<FormLayoutProps> {
     }
 
     componentRenderUpdate(props?: FormLayoutProps, state?: {}) {
+        if (this.children) {
+            for (let c of this.children) {
+                if (c instanceof FormField) {
+                    c.addRootClassName(FormLayout.formItemFieldCls);
+                }
+            }
+        }
         let spacingH = this.props.spacingH == null ? 10 : this.props.spacingH;
         let width = this.rootEl.width;
         let columnCount = this.props.column || 1
