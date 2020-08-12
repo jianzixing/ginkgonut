@@ -80,6 +80,7 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
     protected boundsParentScrollEventEls: Array<Element>;
     private doubleClickHandler;
     private doubleClickCount;
+    private cacheClassNames: Array<string>;
 
     constructor(props?: any) {
         super(props);
@@ -231,6 +232,12 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
         return this.props.children;
     }
 
+    addClassName(cls: Array<string>) {
+        this.cacheClassNames = cls;
+        this.rootEl.reloadClassName();
+        this.cacheClassNames = undefined;
+    }
+
     protected getRootClassName(): string[] {
         let arr = [Component.componentClsRoot];
         if (this.isOnHovered) arr.push(Component.componentClsHovered);
@@ -245,6 +252,9 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
             if (clss && clss.length > 0) {
                 clss.map(value => arr.push(value));
             }
+        }
+        if (this.cacheClassNames && this.cacheClassNames.length > 0) {
+            this.cacheClassNames.map(value => arr.push(value));
         }
 
         return arr;

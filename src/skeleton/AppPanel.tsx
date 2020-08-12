@@ -2,6 +2,7 @@ import Ginkgo, {GinkgoElement, GinkgoNode, HTMLComponent, RefObject} from "ginkg
 import {NavModuleModel} from "./AppNavigation";
 import "./AppPanel.scss";
 import Component from "../component/Component";
+import Panel from "../panel/Panel";
 
 export interface AppPanelProps {
 
@@ -39,6 +40,21 @@ export default class AppPanel<P extends AppPanelProps> extends Component<P> {
         }
 
         return childEls;
+    }
+
+    componentRenderUpdate(props?: P, state?: {}) {
+        if (this.content) {
+            let childrens = this.content.children;
+            if (childrens && childrens.length > 0) {
+                for (let children of childrens) {
+                    let nextChild = children.children[0];
+                    let content = nextChild.content as Component<any>;
+                    if (content instanceof Panel) {
+                        content.addClassName(["x-app-panel-body"]);
+                    }
+                }
+            }
+        }
     }
 
     forward(element: GinkgoElement) {
