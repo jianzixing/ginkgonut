@@ -1,7 +1,6 @@
 import Ginkgo, {CSSProperties, GinkgoElement, GinkgoNode, HTMLComponent} from "ginkgoes";
 import Component, {ComponentProps} from "../component/Component";
 import FormField from "../form/FormField";
-import Container from "../component/Container";
 import Icon from "../icon/Icon";
 import "./FormLayout.scss";
 
@@ -18,7 +17,7 @@ export interface FormLayoutProps extends ComponentProps {
     bodyStyle?: CSSProperties;
 }
 
-export default class FormLayout extends Container<FormLayoutProps> {
+export default class FormLayout extends Component<FormLayoutProps> {
     protected static formLayoutCls;
     protected static formLayoutBody;
     protected static formLayoutHiddenBody;

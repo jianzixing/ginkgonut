@@ -23,10 +23,6 @@ export default class FormPanel<P extends FormPanelProps> extends Panel<P> {
         this.onFormSubmitClick = this.onFormSubmitClick.bind(this);
     }
 
-    protected drawing(): GinkgoElement | undefined | null {
-        return super.drawing();
-    }
-
     protected drawingPanelChild(): GinkgoNode | GinkgoElement[] {
         if (this.props.layout == false) {
             return this.props.children;
@@ -41,6 +37,7 @@ export default class FormPanel<P extends FormPanelProps> extends Panel<P> {
     }
 
     componentRenderUpdate() {
+        super.componentRenderUpdate();
         Ginkgo.forEachContent(component => {
             if (component instanceof AbstractFormField) {
                 component.addOnChange(this.onFormFieldsChange);

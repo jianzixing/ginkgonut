@@ -1,13 +1,12 @@
 import Ginkgo, {GinkgoTools, HTMLComponent} from "ginkgoes";
 import Component from "../component/Component";
-import Container from "../component/Container";
 import "./ViewPort.scss";
 
 export interface ViewPortProps {
 
 }
 
-export default class ViewPort extends Container<ViewPortProps> {
+export default class ViewPort extends Component<ViewPortProps> {
     protected static viewPortCls;
     protected isEnableWindowResize = true;
     protected layoutTimeoutHandler;
@@ -71,7 +70,7 @@ export default class ViewPort extends Container<ViewPortProps> {
                 this.layoutTimeoutHandler = undefined;
             }
             this.layoutTimeoutHandler = setTimeout(() => {
-                this.layout();
+                this.setState();
                 this.layoutTimeoutHandler = undefined;
             }, 100);
         }

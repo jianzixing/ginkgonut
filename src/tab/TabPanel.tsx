@@ -8,7 +8,6 @@ import Ginkgo, {
 import Component, {ComponentProps} from "../component/Component";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
-import Container from "../component/Container";
 import "./TabPanel.scss";
 
 export interface TabModel {
@@ -39,7 +38,7 @@ export interface TabPanelProps extends ComponentProps {
 
 const tabItemSplitWidth = 4;
 
-export default class TabPanel<P extends TabPanelProps> extends Container<P> {
+export default class TabPanel<P extends TabPanelProps> extends Component<P> {
 
     protected static tabPanelCls;
     protected static tabPanelBorderCls;
@@ -150,7 +149,6 @@ export default class TabPanel<P extends TabPanelProps> extends Container<P> {
                                 tab.model.action = true;
                                 this.onTabClickSetting(tab);
                                 this.setState();
-                                this.layout();
                             }
                         }}
                     >
@@ -235,7 +233,6 @@ export default class TabPanel<P extends TabPanelProps> extends Container<P> {
         this.resetHeaderAlign();
         this.recalTabPosition();
         if (this.tabChange == true) {
-            this.layout();
             this.tabChange = false;
         }
     }

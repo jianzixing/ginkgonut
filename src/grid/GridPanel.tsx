@@ -99,12 +99,7 @@ export default class GridPanel<P extends GridPanelProps> extends Panel<P> {
             grid.setSize(width ? width : this.gridWidth, height ? height : this.gridHeight);
         }
     }
-
-    doLayout() {
-        super.doLayout();
-        this.setGridPanelSize();
-    }
-
+    
     getSelects(): Array<TableItemModel> {
         if (this.gridRef && this.gridRef.instance) {
             return this.gridRef.instance.getSelects();

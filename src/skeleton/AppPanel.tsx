@@ -1,7 +1,7 @@
 import Ginkgo, {GinkgoElement, GinkgoNode, HTMLComponent, RefObject} from "ginkgoes";
 import {NavModuleModel} from "./AppNavigation";
-import Container from "../component/Container";
 import "./AppPanel.scss";
+import Component from "../component/Component";
 
 export interface AppPanelProps {
 
@@ -12,7 +12,7 @@ export interface AppManagerProps {
     navPanel?: AppPanel<AppPanelProps>;
 }
 
-export default class AppPanel<P extends AppPanelProps> extends Container<P> {
+export default class AppPanel<P extends AppPanelProps> extends Component<P> {
     private history: Array<GinkgoElement> = [];
 
     drawing() {
@@ -53,9 +53,7 @@ export default class AppPanel<P extends AppPanelProps> extends Container<P> {
         if (this.history.length > 1) {
             this.history.splice(this.history.length - 1, 1);
         }
-        this.setState({}, () => {
-            this.layout();
-        });
+        this.setState();
     }
 
     protected getRootClassName(): string[] {

@@ -1,5 +1,4 @@
 import Component, {ComponentProps} from "./component/Component";
-import Container from "./component/Container";
 
 import CookieTools from "./tools/CookieTools";
 import ObjectTools from "./tools/ObjectTools";
@@ -103,7 +102,6 @@ export {
 
     Component,
     ComponentProps,
-    Container,
 
     Button,
     ButtonProps,

@@ -11,14 +11,13 @@ import Panel from "../panel/Panel";
 import Moving, {MovingProps} from "../dragdrop/Moving";
 import {IconTypes} from "../icon/IconTypes";
 import Icon from "../icon/Icon";
-import Container from "../component/Container";
 import "./BorderLayout.scss";
 
 export interface BorderLayoutProps extends ComponentProps {
 
 }
 
-export default class BorderLayout<P extends BorderLayoutProps> extends Container<P> {
+export default class BorderLayout<P extends BorderLayoutProps> extends Component<P> {
     protected static borderLayoutCls;
     protected static borderLayoutClsBody;
     protected static borderLayoutClsSplit;
@@ -285,15 +284,15 @@ export default class BorderLayout<P extends BorderLayoutProps> extends Container
 
     componentRenderUpdate() {
         this.setState({}, () => {
-            this.doLayout();
+            this.layout();
         }, false)
     }
 
     onSizeChange(width: number, height: number): void {
-        this.doLayout();
+        this.layout();
     }
 
-    doLayout() {
+    layout() {
         let north = this.childrenRefs.north,
             south = this.childrenRefs.south,
             east = this.childrenRefs.east,
@@ -490,7 +489,7 @@ export interface BorderLayoutItemProps extends ComponentProps {
     split?: boolean;
 }
 
-export class BorderLayoutItem<P extends BorderLayoutItemProps> extends Container<P> {
+export class BorderLayoutItem<P extends BorderLayoutItemProps> extends Component<P> {
     protected static northCls;
     protected static southCls;
     protected static eastCls;
@@ -579,7 +578,6 @@ export class BorderLayoutItem<P extends BorderLayoutItemProps> extends Container
 
             this.setWidth(width);
             panel.setWidth(width);
-            panel.layout();
 
             rootDom.style.zIndex = "20";
             rootEl.animation({
@@ -639,18 +637,17 @@ export class BorderLayoutItem<P extends BorderLayoutItemProps> extends Container
         return wh;
     }
 
-    doLayout() {
+    layout() {
         let children = this.children,
             width = this.getWidth(),
             height = this.getHeight();
         if (children && children.length > 0) {
             let c = children[0];
-            if (c instanceof Container) {
+            if (c instanceof Panel) {
                 let oldWidth = c.getWidth(),
                     oldHeight = c.getHeight();
                 if (oldWidth != width || oldHeight != height) {
                     c.setSize(width, height);
-                    c.layout();
                 }
             } else if (c instanceof Component) {
                 let oldWidth = c.getWidth(),

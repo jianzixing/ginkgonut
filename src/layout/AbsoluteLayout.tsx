@@ -1,13 +1,12 @@
 import Ginkgo, {CSSProperties, GinkgoElement, GinkgoNode, HTMLComponent} from "ginkgoes";
 import Component, {ComponentProps} from "../component/Component";
-import Container from "../component/Container";
 import "./AbsoluteLayout.scss";
 
 export interface AbsoluteLayoutProps extends ComponentProps {
 
 }
 
-export default class AbsoluteLayout extends Container<AbsoluteLayoutProps> {
+export default class AbsoluteLayout extends Component<AbsoluteLayoutProps> {
     protected static absoluteLayoutCls;
     protected static absoluteLayoutClsBody;
     protected absBodyRef: HTMLComponent;

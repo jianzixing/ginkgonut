@@ -4,7 +4,6 @@ import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
 import Loading from "../loading/Loading";
 import Toolbar, {ToolbarProps} from "../toolbar/Toolbar";
-import Container from "../component/Container";
 import "./Panel.scss";
 
 export interface PanelToolModel {
@@ -43,7 +42,7 @@ export interface PanelProps extends ComponentProps {
     onHeaderMouseMove?: (e: Event) => void;
 }
 
-export default class Panel<P extends PanelProps> extends Container<P> {
+export default class Panel<P extends PanelProps> extends Component<P> {
 
     protected static panelClsRoot;
     protected static panelFillCls;
@@ -410,13 +409,9 @@ export default class Panel<P extends PanelProps> extends Container<P> {
         }
     }
 
-    doLayout() {
+    componentRenderUpdate() {
         this.resizePanelBounds();
         this.resizeToolbars();
-    }
-
-    componentRenderUpdate() {
-        this.layout();
     }
 
     setHeaderAlign(headerAlign: "top" | "right" | "bottom" | "left" | undefined) {
