@@ -85,7 +85,7 @@ export default class FormLayout extends Component<FormLayoutProps> {
                 }
             }
             childSplits.push(newChild);
-
+            debugger
             let styleItem: CSSProperties = {};
             if (this.props.spacingV != null) {
                 styleItem.marginBottom = this.props.spacingV;
@@ -96,6 +96,7 @@ export default class FormLayout extends Component<FormLayoutProps> {
             let bodys = [];
             let i = 0;
             for (let children of childSplits) {
+                childrenEls = [];
                 for (let c of children) {
                     if (Ginkgo.instanceofComponent(c, FormLayoutTitle)) {
                         bodys.push(c);

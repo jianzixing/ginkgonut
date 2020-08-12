@@ -254,6 +254,7 @@ export default class WindowPanel<P extends WindowProps> extends Component<P> {
     }
 
     componentRenderUpdate() {
+        this.rootEl.reloadStyle();
         if (this.panelRef) {
             Ginkgo.forEachContent(component => {
                 if (component instanceof Button && component.props.type == "close") {
@@ -678,11 +679,13 @@ export default class WindowPanel<P extends WindowProps> extends Component<P> {
 
         let dom = this.rootEl.dom as HTMLElement;
         let parent = dom.parentElement;
-        if (this.left == undefined) {
-            style.left = (parent.offsetWidth - dom.offsetWidth) / 2 + "px";
-        }
-        if (this.top == undefined) {
-            style.top = (parent.offsetHeight - dom.offsetHeight) / 2 + "px";
+        if (parent) {
+            if (this.left == undefined) {
+                style.left = (parent.offsetWidth - dom.offsetWidth) / 2 + "px";
+            }
+            if (this.top == undefined) {
+                style.top = (parent.offsetHeight - dom.offsetHeight) / 2 + "px";
+            }
         }
 
         return style;
