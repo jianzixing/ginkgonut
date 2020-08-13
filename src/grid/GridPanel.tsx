@@ -90,8 +90,11 @@ export default class GridPanel<P extends GridPanelProps> extends Panel<P> {
     }
 
     private setGridPanelSize(width?: number, height?: number) {
-        if (this.gridPanelBodyRef && this.gridPanelBodyRef.instance
-            && this.gridRef && this.gridRef.instance) {
+        if (this.gridPanelBodyRef
+            && this.gridPanelBodyRef.instance
+            && this.gridRef
+            && this.gridRef.instance
+            && this.props.autoHeight) {
             let dom = this.gridPanelBodyRef.instance.dom as HTMLElement;
             let grid = this.gridRef.instance;
             this.gridWidth = dom.offsetWidth;
@@ -99,7 +102,7 @@ export default class GridPanel<P extends GridPanelProps> extends Panel<P> {
             grid.setSize(width ? width : this.gridWidth, height ? height : this.gridHeight);
         }
     }
-    
+
     getSelects(): Array<TableItemModel> {
         if (this.gridRef && this.gridRef.instance) {
             return this.gridRef.instance.getSelects();
