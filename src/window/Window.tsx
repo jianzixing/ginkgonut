@@ -256,7 +256,7 @@ export default class WindowPanel<P extends WindowProps> extends Component<P> {
     componentRenderUpdate() {
         this.rootEl.reloadStyle();
         if (this.panelRef) {
-            Ginkgo.forEachContent(component => {
+            Ginkgo.forEachChildren(component => {
                 if (component instanceof Button && component.props.type == "close") {
                     component.setTypeEvent((e) => {
                         this.closeWindow(e);

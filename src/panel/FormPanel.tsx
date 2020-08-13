@@ -38,13 +38,13 @@ export default class FormPanel<P extends FormPanelProps> extends Panel<P> {
 
     componentRenderUpdate() {
         super.componentRenderUpdate();
-        Ginkgo.forEachContent(component => {
+        Ginkgo.forEachChildren(component => {
             if (component instanceof AbstractFormField) {
                 component.addOnChange(this.onFormFieldsChange);
             }
         }, this);
 
-        Ginkgo.forEachContent(component => {
+        Ginkgo.forEachChildren(component => {
             if (component instanceof Button) {
                 let props = component.props as ButtonProps;
                 if (props.type == "submit") {
@@ -105,7 +105,7 @@ export default class FormPanel<P extends FormPanelProps> extends Panel<P> {
 
     validate(): boolean {
         let isValid = true;
-        Ginkgo.forEachContent(component => {
+        Ginkgo.forEachChildren(component => {
             if (component instanceof AbstractFormField) {
                 let validate = component.validate();
                 if (!validate) {
@@ -119,7 +119,7 @@ export default class FormPanel<P extends FormPanelProps> extends Panel<P> {
     }
 
     resetFormValue() {
-        Ginkgo.forEachContent(component => {
+        Ginkgo.forEachChildren(component => {
             if (component instanceof AbstractFormField) {
                 component.setValue(null);
             }
@@ -127,24 +127,26 @@ export default class FormPanel<P extends FormPanelProps> extends Panel<P> {
     }
 
     setValues(values: any): void {
-        Ginkgo.forEachContent(component => {
-            if (component instanceof AbstractFormField) {
-                let name = component.getFieldName();
-                if (name && (component.props as AbstractFormFieldProps).formValueSkip != true) {
-                    let value = values[name];
-                    if (component.props["initField"]) {
-                        value = values[component.props["initField"]];
-                    }
-                    component.setValue(value);
+        setTimeout(() => {
+            Ginkgo.forEachChildren(component => {
+                if (component instanceof AbstractFormField) {
+                    let name = component.getFieldName();
+                    if (name && (component.props as AbstractFormFieldProps).formValueSkip != true) {
+                        let value = values[name];
+                        if (component.props["initField"]) {
+                            value = values[component.props["initField"]];
+                        }
+                        component.setValue(value);
 
-                    let cv = component.getValue();
-                    let cn = component.getFieldName();
-                    if (cn) {
-                        (this.formValues as any)[cn] = cv;
+                        let cv = component.getValue();
+                        let cn = component.getFieldName();
+                        if (cn) {
+                            (this.formValues as any)[cn] = cv;
+                        }
                     }
                 }
-            }
-        }, this);
+            }, this);
+        });
     }
 }
 

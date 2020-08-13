@@ -189,7 +189,7 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
         }
         this.buildClassNames(themePrefix);
 
-        Ginkgo.forEachContent(component => {
+        Ginkgo.forEachChildren(component => {
             if (component instanceof HTMLComponent) {
                 component.reloadClassName();
             }

@@ -177,7 +177,7 @@ export default class FormLayout extends Component<FormLayoutProps> {
             if (hiddenChild && hiddenChild.length > 0) {
                 let childProps = [];
                 hiddenChild.map(value => {
-                    childProps.push(value.props)
+                    childProps.push(value)
                 });
                 bodys.push(
                     <div key={"form_layout_hidden_body"}
