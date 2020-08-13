@@ -85,7 +85,6 @@ export default class FormLayout extends Component<FormLayoutProps> {
                 }
             }
             childSplits.push(newChild);
-            debugger
             let styleItem: CSSProperties = {};
             if (this.props.spacingV != null) {
                 styleItem.marginBottom = this.props.spacingV;

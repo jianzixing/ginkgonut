@@ -111,7 +111,7 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
                             this.positionChildren.right.push({item: split});
                         }
                     } else {
-                        if (Ginkgo.instanceofComponent(c, Button)) {
+                        if (c['action'] == null && Ginkgo.instanceofComponent(c, Button)) {
                             c['action'] = 'light';
                         }
                         if (childType == 0) {
@@ -227,20 +227,6 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
 
     componentReceiveProps(props: P, context?: { oldProps: P; type: "new" | "mounted" }) {
         super.componentReceiveProps(props, context);
-    }
-
-    private getAllChildren() {
-        let children = [];
-        for (let l of this.positionChildren.left) {
-            children.push(l);
-        }
-        for (let l of this.positionChildren.center) {
-            children.push(l);
-        }
-        for (let l of this.positionChildren.right) {
-            children.push(l);
-        }
-        return children;
     }
 
     componentRenderUpdate() {

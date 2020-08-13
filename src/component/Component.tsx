@@ -87,6 +87,11 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
 
         this.getRootClassName = this.getRootClassName.bind(this);
         this.getRootStyle = this.getRootStyle.bind(this);
+        this.onMouseEnter = this.onMouseEnter.bind(this);
+        this.onMouseLeave = this.onMouseLeave.bind(this);
+        this.onClick = this.onClick.bind(this);
+        this.onMouseDown = this.onMouseDown.bind(this);
+        this.onMouseUp = this.onMouseUp.bind(this);
     }
 
     componentWillMount(): void {
@@ -207,11 +212,11 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
 
     render() {
         let events: any = {
-            onMouseEnter: this.onMouseEnter.bind(this),
-            onMouseLeave: this.onMouseLeave.bind(this),
-            onClick: this.onClick.bind(this),
-            onMouseDown: this.onMouseDown.bind(this),
-            onMouseUp: this.onMouseUp.bind(this)
+            onMouseEnter: this.onMouseEnter,
+            onMouseLeave: this.onMouseLeave,
+            onClick: this.onClick,
+            onMouseDown: this.onMouseDown,
+            onMouseUp: this.onMouseUp
         }
 
         return (
