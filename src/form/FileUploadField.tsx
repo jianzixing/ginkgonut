@@ -38,7 +38,7 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
 
     protected readonly = true;
     protected fieldBorder = true;
-    protected value: FileList;
+    protected value: FileList | string;
 
     protected models: Array<UploadModel>;
 
@@ -88,6 +88,8 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
     }
 
     protected onUploadAsyncFile(item: UploadModel, type: "del" | "add"): Promise<{}> {
+        this.value = undefined;
+
         if (this.props.uploadType == null || this.props.uploadType == "default") {
             let file = item.file;
             let name = file.name;
@@ -132,7 +134,7 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
                                 for (let item of items) {
                                     arr.push(item.data);
                                 }
-                                if (this.props.uploadType == "avatar") {
+                                if (this.props.uploadType == "avatar" || this.props.uploadType == "default" || this.props.uploadType == null) {
                                     this.triggerOnChangeEvents(this, item.data);
                                 } else {
                                     this.triggerOnChangeEvents(this, arr);
@@ -178,7 +180,7 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
                                     for (let item of items) {
                                         arr.push(item.data);
                                     }
-                                    if (this.props.uploadType == "avatar") {
+                                    if (this.props.uploadType == "avatar" || this.props.uploadType == "default" || this.props.uploadType == null) {
                                         this.triggerOnChangeEvents(this, null);
                                     } else {
                                         this.triggerOnChangeEvents(this, arr);
@@ -213,7 +215,7 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
                 for (let item of items) {
                     arr.push(item.file);
                 }
-                if (this.props.uploadType == "avatar") {
+                if (this.props.uploadType == "avatar" || this.props.uploadType == "default" || this.props.uploadType == null) {
                     if (arr && arr.length > 0) this.triggerOnChangeEvents(this, arr[0]);
                 } else {
                     this.triggerOnChangeEvents(this, arr);
@@ -236,6 +238,7 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
         if (uploadType == null || uploadType == "default") {
             if (typeof value === "string") {
                 this.inputEl.value = value;
+                this.value = value;
             }
             if (value instanceof FileList) {
                 if (value && value.length > 0) {
@@ -324,6 +327,9 @@ export default class FileUploadField<P extends FileUploadFieldProps> extends Tex
                     }
                 }
                 return arr;
+            }
+            if (typeof this.value == "string") {
+                return this.value;
             }
         }
     }
