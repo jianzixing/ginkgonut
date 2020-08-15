@@ -408,15 +408,17 @@ export default class FormField<P extends FormFieldProps> extends AbstractFormFie
     }
 
     addRootClassName(cls: string) {
-        if (!this.extRootClassNames) this.extRootClassNames = [];
-        if (this.extRootClassNames.indexOf(cls) < 0) {
-            this.extRootClassNames.push(cls);
+        if (this.rootEl) {
+            if (!this.extRootClassNames) this.extRootClassNames = [];
+            if (this.extRootClassNames.indexOf(cls) < 0) {
+                this.extRootClassNames.push(cls);
+            }
             this.rootEl.reloadClassName();
         }
     }
 
     removeRootClassName(cls: string) {
-        if (this.extRootClassNames) {
+        if (this.extRootClassNames && this.rootEl) {
             this.extRootClassNames = this.extRootClassNames.filter(value => value != cls);
             this.rootEl.reloadClassName();
         }

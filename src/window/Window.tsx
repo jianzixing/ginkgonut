@@ -202,7 +202,6 @@ export default class WindowPanel<P extends WindowProps> extends Component<P> {
         }
 
         let children = this.drawingWindowChildren();
-
         return (
             <Ginkgo.Fragment>
                 {resizableEls}

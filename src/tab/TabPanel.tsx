@@ -71,6 +71,12 @@ export default class TabPanel<P extends TabPanelProps> extends Component<P> {
     protected tabInnerRef: RefObject<HTMLComponent> = Ginkgo.createRef();
     protected clickHistory: Array<TabModel> = []; // TAB点击历史
 
+    constructor(props) {
+        super(props);
+
+        this.buildTabContent = this.buildTabContent.bind(this);
+    }
+
     protected buildClassNames(themePrefix: string): void {
         super.buildClassNames(themePrefix);
 
@@ -145,7 +151,9 @@ export default class TabPanel<P extends TabPanelProps> extends Component<P> {
                         style={style}
                         onClick={(e) => {
                             if (tab.model.disabled != true) {
-                                this.tabs.map(value => value.model.action = false);
+                                this.tabs.map(value => {
+                                    value.model.action = false;
+                                });
                                 tab.model.action = true;
                                 this.onTabClickSetting(tab);
                                 this.setState();
@@ -187,7 +195,9 @@ export default class TabPanel<P extends TabPanelProps> extends Component<P> {
                 tabItemNodes.push(
                     <div ref={refItem}
                          className={contentCls}>
-                        {tabContent}
+                        <bind render={this.buildTabContent}
+                              params={[tab, tabContent]}
+                              shouldUpdate={tab.model.action}/>
                     </div>);
                 tab.ref = refItem;
                 index++;
@@ -239,6 +249,10 @@ export default class TabPanel<P extends TabPanelProps> extends Component<P> {
 
     componentChildChange(children: Array<GinkgoElement>, old: Array<GinkgoElement>): void {
         this.setState();
+    }
+
+    protected buildTabContent(tab: TabModelWrapper, tabContent) {
+        return tabContent;
     }
 
     protected onTabClickSetting(tab: TabModelWrapper) {
