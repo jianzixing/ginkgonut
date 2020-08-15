@@ -157,6 +157,8 @@ export default class Tooltip<P extends TooltipProps> extends Component<P> {
             let y = this.props.y;
             let targetWidth = this.props.targetWidth || 0;
             let targetHeight = this.props.targetHeight || 0;
+            let clientWidth = document.body.clientWidth;
+            let clientHeight = document.body.clientHeight;
 
             if (authorDom && rootDom) {
                 rootDom.style.left = "0px";
@@ -211,7 +213,11 @@ export default class Tooltip<P extends TooltipProps> extends Component<P> {
                         rootDom.style.left = x + (targetWidth / 2 - left) - w1 / 2 + "px";
                         rootDom.style.top = y + targetHeight + w1 / 2 + "px";
                     } else if (position == "mouse") {
-                        rootDom.style.left = x + alignAdjust + "px";
+                        if ((x + alignAdjust + rootDom.offsetWidth) > clientWidth) {
+                            rootDom.style.left = x - alignAdjust - rootDom.offsetWidth + "px";
+                        } else {
+                            rootDom.style.left = x + alignAdjust + "px";
+                        }
                         rootDom.style.top = y + alignAdjust + "px";
                     }
                 }
