@@ -149,7 +149,8 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                     if (column.width) cellBodyWidth = column.width;
                     let cellEl;
                     let pluginCells = plugin ? plugin.cell : undefined;
-                    let value = ObjectTools.valueFromTemplate(data, column.dataIndex);
+                    let originalTValue = ObjectTools.valueFromTemplate(data, column.dataIndex);
+                    let value = originalTValue;
                     if (value == null && column.dataDefault != null) value = column.dataDefault;
 
                     // 通过插件渲染
@@ -285,7 +286,7 @@ export default class TableRow<P extends TableRowProps> extends Component<P> {
                                 }
                             } else {
                                 if (column.type == "datecolumn") {
-                                    let date = DateTools.toDate(cellValue);
+                                    let date = DateTools.toDate(originalTValue);
                                     if (date) {
                                         cellValue = DateTools.format(date, column.format || "yyyy-MM-dd HH:mm:ss")
                                     } else {
