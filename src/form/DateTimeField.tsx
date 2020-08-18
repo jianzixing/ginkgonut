@@ -18,7 +18,7 @@ export default class DateTimeField<P extends DateFieldProps> extends TextField<P
     protected pickerWidth = 310;
     protected datePicker: RefObject<DatePicker<any>> = Ginkgo.createRef();
 
-    protected value: Date;
+    protected dateTimeValue: Date;
 
     protected buildClassNames(themePrefix: string): void {
         super.buildClassNames(themePrefix);
@@ -43,14 +43,14 @@ export default class DateTimeField<P extends DateFieldProps> extends TextField<P
             <DatePicker
                 border={false}
                 ref={this.datePicker}
-                date={this.value}
+                date={this.dateTimeValue}
                 showTime={this.props.showTime}
                 onSelectedDate={date => {
-                    this.value = date;
+                    this.dateTimeValue = date;
                     if (this.props.format) {
-                        this.triggerOnChangeEvents(this, DateTools.format(this.value, this.props.format));
+                        this.triggerOnChangeEvents(this, DateTools.format(this.dateTimeValue, this.props.format));
                     } else {
-                        this.triggerOnChangeEvents(this, this.value);
+                        this.triggerOnChangeEvents(this, this.dateTimeValue);
                     }
                     this.closePicker();
                     this.fillInputValue();
@@ -71,7 +71,7 @@ export default class DateTimeField<P extends DateFieldProps> extends TextField<P
     }
 
     protected fillInputValue() {
-        if (this.value) {
+        if (this.dateTimeValue) {
             let defFormat = "yyyy-MM-dd HH:mm:ss";
             if (this.props.showTime != true) {
                 defFormat = "yyyy-MM-dd";
@@ -80,23 +80,24 @@ export default class DateTimeField<P extends DateFieldProps> extends TextField<P
                 defFormat = this.props.format;
             }
             if (this.inputEl) {
-                this.inputEl.value = DateTools.format(this.value, this.props.format ? this.props.format : defFormat);
+                this.inputEl.value = DateTools.format(this.dateTimeValue, this.props.format ? this.props.format : defFormat);
+                super.value = this.inputEl.value;
             }
         } else {
             if (this.inputEl) {
                 this.inputEl.value = "";
+                super.value = "";
             }
         }
     }
 
     setValue(value: Date | string): void {
         let oldValue = this.getValue();
-        super.setValue(value);
         if (value instanceof Date) {
-            this.value = value;
+            this.dateTimeValue = value;
         } else {
             let date = DateTools.toDate(value);
-            this.value = date;
+            this.dateTimeValue = date;
         }
 
         this.fillInputValue();
@@ -107,15 +108,17 @@ export default class DateTimeField<P extends DateFieldProps> extends TextField<P
     }
 
     getValue(): any {
-        if (this.value) {
+        if (this.dateTimeValue) {
             if (this.props.format) {
-                return DateTools.format(this.value, this.props.format);
+                return DateTools.format(this.dateTimeValue, this.props.format);
             }
+            return this.dateTimeValue;
+        } else {
             return this.value;
         }
     }
 
     getRowValue(): any {
-        return this.value;
+        return this.dateTimeValue;
     }
 }
