@@ -59,6 +59,7 @@ export default class WindowPanel<P extends WindowProps> extends Component<P> {
     protected static windowCls;
     protected static windowClsMask;
     protected static windowClsGhost;
+    protected static windowClsBody;
 
     protected static windowClsResize;
     protected static windowClsResizeProxy;
@@ -123,6 +124,7 @@ export default class WindowPanel<P extends WindowProps> extends Component<P> {
         WindowPanel.windowCls = this.getThemeClass("window");
         WindowPanel.windowClsMask = this.getThemeClass("window-mask");
         WindowPanel.windowClsGhost = this.getThemeClass("window-ghost");
+        WindowPanel.windowClsBody = this.getThemeClass("window-body");
 
         WindowPanel.windowClsResize = this.getThemeClass("resizable-handle");
         WindowPanel.windowClsResizeProxy = this.getThemeClass("resizable-handle-proxy");
@@ -254,6 +256,13 @@ export default class WindowPanel<P extends WindowProps> extends Component<P> {
 
     componentRenderUpdate() {
         this.rootEl.reloadStyle();
+        if (this.children) {
+            for (let ch of this.children) {
+                if (ch instanceof Panel) {
+                    ch.setClassName(WindowPanel.windowClsBody);
+                }
+            }
+        }
         if (this.panelRef) {
             Ginkgo.forEachChildren(component => {
                 if (component instanceof Button && component.props.type == "close") {

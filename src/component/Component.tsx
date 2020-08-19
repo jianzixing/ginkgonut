@@ -237,10 +237,19 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
         return this.props.children;
     }
 
-    addClassName(cls: Array<string>) {
-        this.cacheClassNames = cls;
+    setClassName(cls: Array<string> | string, del: boolean = false) {
+        if (cls instanceof Array) {
+            this.cacheClassNames = cls;
+        } else if (typeof cls == "string") {
+            if (del && this.cacheClassNames) {
+                this.cacheClassNames.splice(this.cacheClassNames.indexOf(cls), 1);
+            }
+            if (del == false) {
+                if (this.cacheClassNames == null) this.cacheClassNames = [];
+                if (this.cacheClassNames.indexOf(cls) == -1) this.cacheClassNames.push(cls);
+            }
+        }
         this.rootEl.reloadClassName();
-        this.cacheClassNames = undefined;
     }
 
     protected getRootClassName(): string[] {

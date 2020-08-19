@@ -50,7 +50,7 @@ export default class AppPanel<P extends AppPanelProps> extends Component<P> {
                     let nextChild = children.children[0];
                     let content = nextChild.content as Component<any>;
                     if (content instanceof Panel) {
-                        content.addClassName(["x-app-panel-body"]);
+                        content.setClassName(["x-app-panel-body"]);
                     }
                 }
             }
