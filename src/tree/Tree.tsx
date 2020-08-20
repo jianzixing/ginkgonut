@@ -49,6 +49,8 @@ export interface TreeProps extends ComponentProps {
     checkboxMode?: "normal" | "anysel";
     onCheckboxChange?: (item: TableItemModel, checked: boolean, checkItems?: Array<TableItemModel>) => void;
     loadingText?: string;
+    // 是否默认选中的值
+    defaultSelected?: Array<any>;
 }
 
 export default class Tree<P extends TreeProps> extends Component<P> implements TableCellPlugin, StoreProcessor {
@@ -302,7 +304,9 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
     }
 
     protected buildTreeListItem(value, isIDKey?: boolean): TreeListModel {
-        let key = value[isIDKey ? 'id' : this.props.keyField];
+        let defaultSelected = this.props.defaultSelected;
+        let primaryKeyValue = value[isIDKey ? 'id' : this.props.keyField];
+        let key = primaryKeyValue;
         if (key == null) {
             key = "tree_cell_" + (this.treeListModelKey++);
         } else {
@@ -321,6 +325,12 @@ export default class Tree<P extends TreeProps> extends Component<P> implements T
         treeListItem.icon = value[this.props.iconKey || 'icon'];
         treeListItem.leaf = !!value[this.props.leafKey || 'leaf'];
         treeListItem.expanded = value[this.props.expandedKey || 'expanded'];
+
+        if (value != null && defaultSelected && defaultSelected instanceof Array) {
+            if (defaultSelected.indexOf(primaryKeyValue) >= 0 || defaultSelected.indexOf(value) >= 0) {
+                treeListItem.checked = true;
+            }
+        }
 
         return treeListItem;
     }
