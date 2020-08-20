@@ -98,28 +98,30 @@ export default class Toolbar<P extends ToolbarProps> extends Component<P> {
         let children = this.drawingToolbarChildren();
         if (children && children.length > 0) {
             for (let c of children) {
-                if (c.module == ToolbarSplit && (c as ToolbarSplitProps).type == "align") {
-                    childType = childType + 1;
-                } else {
-                    if (c.module == ToolbarSplit) {
-                        let split = "split";
-                        if (childType == 0) {
-                            this.positionChildren.left.push({item: split});
-                        } else if (childType == 1) {
-                            this.positionChildren.center.push({item: split});
-                        } else {
-                            this.positionChildren.right.push({item: split});
-                        }
+                if (c) {
+                    if (c.module == ToolbarSplit && (c as ToolbarSplitProps).type == "align") {
+                        childType = childType + 1;
                     } else {
-                        if (c['action'] == null && Ginkgo.instanceofComponent(c, Button)) {
-                            c['action'] = 'light';
-                        }
-                        if (childType == 0) {
-                            this.positionChildren.left.push({item: c});
-                        } else if (childType == 1) {
-                            this.positionChildren.center.push({item: c});
+                        if (c.module == ToolbarSplit) {
+                            let split = "split";
+                            if (childType == 0) {
+                                this.positionChildren.left.push({item: split});
+                            } else if (childType == 1) {
+                                this.positionChildren.center.push({item: split});
+                            } else {
+                                this.positionChildren.right.push({item: split});
+                            }
                         } else {
-                            this.positionChildren.right.push({item: c});
+                            if (c['action'] == null && Ginkgo.instanceofComponent(c, Button)) {
+                                c['action'] = 'light';
+                            }
+                            if (childType == 0) {
+                                this.positionChildren.left.push({item: c});
+                            } else if (childType == 1) {
+                                this.positionChildren.center.push({item: c});
+                            } else {
+                                this.positionChildren.right.push({item: c});
+                            }
                         }
                     }
                 }

@@ -8,6 +8,7 @@ import {TableItemModel} from "./Table";
 
 export interface GridPanelProps extends PanelProps, GridProps {
     paging?: boolean | PagingToolbarProps;
+    pagingHideLabel?: boolean;
 }
 
 export default class GridPanel<P extends GridPanelProps> extends Panel<P> {
@@ -61,7 +62,7 @@ export default class GridPanel<P extends GridPanelProps> extends Panel<P> {
 
     protected getToolbars(): Array<ToolbarProps> {
         let toolbars = super.getToolbars();
-        if (!toolbars) toolbars = [];
+        toolbars = [...toolbars];
         if (this.props.paging) {
             if (typeof this.props.paging == "object") {
                 let props = this.props;
@@ -81,6 +82,7 @@ export default class GridPanel<P extends GridPanelProps> extends Panel<P> {
             } else {
                 toolbars.push(<PagingToolbar
                     store={this.props.store}
+                    hideLabel={this.props.pagingHideLabel === true}
                     align={"bottom"}
                     border={"top"}
                 />);

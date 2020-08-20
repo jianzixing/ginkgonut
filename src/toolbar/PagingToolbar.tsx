@@ -8,6 +8,7 @@ import "./PagingToolbar.scss";
 
 export interface PagingToolbarProps extends ToolbarProps {
     pageCount?: number;
+    hideLabel?: boolean;
 }
 
 export default class PagingToolbar<P extends PagingToolbarProps> extends Toolbar<P> implements StoreProcessor, StoreAutoLoad {
@@ -24,10 +25,12 @@ export default class PagingToolbar<P extends PagingToolbarProps> extends Toolbar
         this.totalPage = Math.ceil(this.totalRecord / (this.props.pageCount || 20));
 
         let label;
-        if (this.totalRecord == 0) {
-            label = <label>Empty Data</label>;
-        } else {
-            label = <label>Displaying {this.page} - {this.totalPage} of {this.totalRecord}</label>;
+        if (this.props.hideLabel !== true) {
+            if (this.totalRecord == 0) {
+                label = <label>Empty Data</label>;
+            } else {
+                label = <label>Displaying {this.page} - {this.totalPage} of {this.totalRecord}</label>;
+            }
         }
 
         return [
