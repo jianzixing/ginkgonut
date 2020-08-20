@@ -62,7 +62,7 @@ export default class GridPanel<P extends GridPanelProps> extends Panel<P> {
 
     protected getToolbars(): Array<ToolbarProps> {
         let toolbars = super.getToolbars();
-        toolbars = [...toolbars];
+        toolbars = toolbars ? [...toolbars] : [];
         if (this.props.paging) {
             if (typeof this.props.paging == "object") {
                 let props = this.props;

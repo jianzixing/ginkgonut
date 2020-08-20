@@ -129,14 +129,8 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
     }
 
     componentReceiveProps(props: P, context?) {
-        if (props) {
-            for (let p in props) {
-                let item = props[p];
-                if (item instanceof DataStore
-                    && (this as any).storeLoaded != null) {
-                    item.addProcessor(this as any);
-                }
-            }
+        if (props && props.store && props.store instanceof DataStore && (this as any).storeLoaded != null) {
+            props.store.addProcessor(this as any);
         }
     }
 

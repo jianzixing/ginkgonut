@@ -11,6 +11,8 @@ export interface StoreProcessor {
 
 export interface StoreAutoLoad {
     storeAutoLoad(): void;
+
+    initStoreLoad?(): void;
 }
 
 export interface DataStoreProps {
@@ -61,7 +63,13 @@ export default class DataStore {
     }
 
     setParam(param: Object): void {
-        this.extParam = param;
+        if (this.extParam) {
+            for (let key in param) {
+                this.extParam[key] = param[key];
+            }
+        } else {
+            this.extParam = param;
+        }
     }
 
     getParam(): Object {
@@ -104,7 +112,9 @@ export default class DataStore {
                     this.processor.splice(this.processor.indexOf(rm), 1);
                 }
             }
-
+            if (processor['initStoreLoad'] && typeof processor['initStoreLoad'] == "function") {
+                processor['initStoreLoad']();
+            }
             this.startAutoLoad();
         }
     }

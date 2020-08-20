@@ -160,4 +160,11 @@ export default class PagingToolbar<P extends PagingToolbarProps> extends Toolbar
     storeAutoLoad(): void {
         this.loading();
     }
+
+    initStoreLoad(): void {
+        let store = this.props.store;
+        if (store) {
+            store.setParam(this.getStoreParam());
+        }
+    }
 }
