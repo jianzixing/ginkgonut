@@ -7,18 +7,28 @@ import {StoreAutoLoad, StoreProcessor} from "../store/DataStore";
 import "./PagingToolbar.scss";
 
 export interface PagingToolbarProps extends ToolbarProps {
+    totalCount?: number;
     pageCount?: number;
     hideLabel?: boolean;
+    onPageChange?: (page: { page: number, start: number, limit: number }) => void;
 }
 
 export default class PagingToolbar<P extends PagingToolbarProps> extends Toolbar<P> implements StoreProcessor, StoreAutoLoad {
     protected page = 1;
     protected totalPage = 0;
-    protected totalRecord = 0;
+    protected totalRecord = this.props.totalCount || 0;
     protected isLoading: boolean = false;
 
     protected buildClassNames(themePrefix: string): void {
         super.buildClassNames(themePrefix);
+    }
+
+    protected compareUpdate(key: string, newValue: any, oldValue: any): boolean {
+        if (key == 'totalCount' && newValue != oldValue) {
+            this.totalRecord = newValue;
+            return true;
+        }
+        return false;
     }
 
     protected drawingToolbarChildren(): Array<GinkgoElement> {
@@ -131,6 +141,9 @@ export default class PagingToolbar<P extends PagingToolbarProps> extends Toolbar
     }
 
     protected loading() {
+        if (this.props.onPageChange) {
+            this.props.onPageChange(this.getStoreParam() as any);
+        }
         let store = this.props.store;
         if (store) {
             store.setParam(this.getStoreParam());

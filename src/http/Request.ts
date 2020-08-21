@@ -145,7 +145,10 @@ export class Submit {
      * @param fail 请求失败的回调
      * @param keepStruct 保持succ函数的参数是返回的值
      */
-    fetch = (module?: string | undefined, succ?: (data: any) => void, fail?: (message: any) => any, keepStruct?: boolean) => {
+    fetch = (module?: string | undefined,
+             succ?: (data: any, orignal?: any) => void,
+             fail?: (message: any) => any,
+             keepStruct?: boolean) => {
         let self = this;
         // "Content-Type", "application/x-www-form-urlencoded;"
         let formData = this.getFormData(module);
@@ -189,7 +192,7 @@ export class Submit {
                             if (keepStruct) {
                                 succ(data);
                             } else {
-                                succ(data['data'])
+                                succ(data['data'], data)
                             }
                         } catch (e) {
                             console.error(e);
@@ -211,7 +214,7 @@ export class Submit {
                         self.waitRef.unmask();
                     }
                 }
-                
+
                 console.error("ajax load error", error);
                 let isShowError: any = true;
                 if (self.callAnyway) {
@@ -319,7 +322,7 @@ export class Submit {
                 const obj = copyParams[i];
                 if (obj instanceof File || obj instanceof FileList || obj instanceof FormData) {
 
-                } else if (obj) {
+                } else if (obj != null) {
                     str.push(i + "=" + encodeURIComponent(this.getParamValue(obj)));
                 }
             }
@@ -342,7 +345,7 @@ export class Submit {
         if (copyParams && typeof copyParams === "object") {
             for (let i in copyParams) {
                 const obj = copyParams[i];
-                if (obj) {
+                if (obj != null) {
                     if (obj instanceof File || obj instanceof FileList || obj instanceof FormData) {
                         if (obj instanceof File) formData.append(i, obj);
                         if (obj instanceof FileList) {

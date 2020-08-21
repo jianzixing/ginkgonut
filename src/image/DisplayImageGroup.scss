@@ -2,11 +2,32 @@
 
   .x-display-image-group-item {
     display: inline-block;
-    overflow: hidden;
     margin-right: 5px;
+    text-align: center;
 
     &:last-child {
       margin-right: 0px;
+    }
+
+    &.x-display-image-group-selempty {
+      border: 1px solid transparent;
+      box-sizing: border-box;
+    }
+
+    &.x-display-image-group-sel {
+      border: 1px solid #99BBE8;
+      background-color: #EFF5FB;
+      box-sizing: border-box;
+    }
+
+    .x-display-image-group-label {
+      display: inline-block;
+      overflow: hidden;
+      font-size: 13px;
+      color: #404040;
+      width: 100%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 }
