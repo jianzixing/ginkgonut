@@ -160,7 +160,7 @@ export class Submit {
             }
         }
         // POST 字符串则可以接收
-        Ginkgo.post(this.getUrl(), formData, {withCredentials: true, onprogress: this.callProgressEvent})
+        Ginkgo.post(this.getUrl(), formData, {withCredentials: true, onProgress: this.callProgressEvent})
             .then(function (response) {
                 if (self.waitRef) {
                     if (self.waitRef['instance'] && self.waitRef['instance'] instanceof Component) {

@@ -2,7 +2,7 @@ import Ginkgo, {GinkgoElement, GinkgoNode, InputComponent, RefObject} from "gink
 import Component, {ComponentProps} from "../component/Component";
 import Icon from "../icon/Icon";
 import {IconTypes} from "../icon/IconTypes";
-import Button from "../button/Button";
+import Button, {ButtonProps} from "../button/Button";
 import "./Upload.scss";
 
 export interface UploadModel {
@@ -32,6 +32,7 @@ export interface UploadProps extends ComponentProps {
     buttonText?: string;
     buttonIcon?: string;
     buttonIconType?: string;
+    buttonProps?: ButtonProps;
     showUploadIcon?: boolean;
     itemWidth?: number;
     itemHeight?: number;
@@ -101,14 +102,19 @@ export default class Upload<P extends UploadProps> extends Component<P> {
         }
 
         if (this.props.type == "button") {
+            let attr: any = {};
+            if (multi) attr.multiple = true;
+
             return (
                 <div className={Upload.uploadButtonCls}>
                     <Button ref={this.buttonRef}
                             text={this.props.buttonText || "Browse..."}
                             icon={this.props.buttonIcon}
-                            iconType={this.props.buttonIconType}/>
+                            iconType={this.props.buttonIconType}
+                            {...this.props.buttonProps || {}}/>
                     <input ref={this.fileInputRef} type={"file"}
                            className={Upload.uploadButtonInputCls}
+                           {...attr}
                            onChange={this.onUploadFileChange.bind(this)}/>
                 </div>
             )
