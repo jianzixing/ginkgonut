@@ -49,6 +49,11 @@ export default class TableActionCell<P extends TableActionCellProps> extends Com
         }
     }
 
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        this.closeTips();
+    }
+
     protected onMouseEnter(e: Event) {
         super.onMouseEnter(e);
         let item = this.props.item;
@@ -70,6 +75,10 @@ export default class TableActionCell<P extends TableActionCellProps> extends Com
 
     protected onMouseLeave(e: Event) {
         super.onMouseLeave(e);
+        this.closeTips();
+    }
+
+    protected closeTips() {
         if (this.toolTip) {
             this.toolTip.close();
         }
