@@ -41,6 +41,7 @@ export interface GridProps extends TableProps {
     fit?: boolean;
     /*自动计算高度*/
     autoHeight?: boolean;
+    // todo:有问题如果表格刷新数据重载则 选择框 和 已经选中的事件不会触发
     onSelectChange?: (sel: Array<TableItemModel>, data?: { data: TableItemModel, type: number }) => void;
     onParseData?: (data: any) => Array<TableItemModel>;
 }
@@ -368,6 +369,29 @@ export default class Grid<P extends GridProps> extends Component<P> implements S
         } else {
             this.tableItemModels = [];
         }
+
+        // 重置onSelectChange
+        let sel, allCheck = true;
+        for (let itemModel of this.tableItemModels) {
+            if (this.props.onSelectChange) {
+                if (itemModel.selected) {
+                    if (sel == null) sel = [];
+                    sel.push(itemModel);
+                }
+            }
+            if (itemModel.selected != true) allCheck = false;
+        }
+        if (this.props.onSelectChange) {
+            this.props.onSelectChange(sel, {data: null, type: 4});
+        }
+        if (allCheck == false) {
+            for (let column of this.columns) {
+                if (column.type == "checkbox") {
+                    column.checked = false;
+                }
+            }
+        }
+
         this.setState();
         this.resetTableScroll();
     }
