@@ -1,6 +1,6 @@
 {
   "name": "ginkgonut",
-  "version": "0.0.3",
+  "version": "0.0.1",
   "description": "",
   "main": "ginkgonut.js",
   "types": "./lib/ginkgonut.d.ts",
@@ -38,7 +38,7 @@
     "webpack-dev-server": "^3.10.1"
   },
   "peerDependencies": {
-    "ginkgoes": ">=0.0.32",
+    "ginkgoes": ">=0.0.1",
     "@ckeditor/ckeditor5-build-classic": ">=19.0.1"
   }
 }
