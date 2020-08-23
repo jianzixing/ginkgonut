@@ -273,4 +273,8 @@ export default class Menu<P extends MenuProps> extends Component<P> {
         style.top = this.props.y || 0;
         return style;
     }
+
+    getRootEl(): HTMLComponent {
+        return this.rootEl;
+    }
 }

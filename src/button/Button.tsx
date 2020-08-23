@@ -28,6 +28,7 @@ export interface ButtonProps extends ComponentProps {
     toggle?: boolean;
     menuType?: "normal" | "bottom" | "splitNormal" | "splitBottom";
     menuModels?: Array<MenuModel>;
+    clickCloseMenu?: boolean;
     onMenuItemClick?: (e: Event, value: MenuModel, menu?: Menu<MenuProps>) => void;
     onMenuClose?: (menu: MenuProps) => void
     contentAlign?: "left" | "center" | "right";
@@ -72,6 +73,7 @@ export default class Button<P extends ButtonProps> extends Component<P> {
     protected isEnableHovered = true;
     protected isEnableSelected = true;
     protected isEnableWindowResize = true;
+    protected isEnableDocumentClick = true;
 
     /**
      * 当props.type不为default时可能需要额外的事件
@@ -246,9 +248,14 @@ export default class Button<P extends ButtonProps> extends Component<P> {
                         x={bounds.x}
                         y={bounds.y + bounds.h}
                         items={this.props.menuModels}
+                        clickCloseMenu={this.props.clickCloseMenu === true}
                         onMenuItemClick={(e: Event, value: MenuModel, menu: Menu<MenuProps>) => {
                             if (this.props.onMenuItemClick) {
                                 this.props.onMenuItemClick(e, value, menu);
+                            }
+                            if (this.props.clickCloseMenu !== true) {
+                                this.setPressing(false);
+                                this.closeButtonMenus();
                             }
                         }}
                         onMenuClose={menu => {
@@ -351,6 +358,25 @@ export default class Button<P extends ButtonProps> extends Component<P> {
         if (!this.props.disabled) {
             if (this.props.toggle != true) {
                 this.setPressing(false);
+            }
+        }
+    }
+
+    protected onDocumentMouseDown(e: MouseEvent) {
+        super.onDocumentMouseDown(e);
+        if (Button.buttonMenus && Button.buttonMenus.length > 0) {
+            let is = false;
+            for (let bm of Button.buttonMenus) {
+                if (bm.button == this) {
+                    let rootEl = (bm.menu.component as Menu<any>).getRootEl();
+                    if (rootEl && this.contains(rootEl, e.target as any)) {
+                        is = true;
+                    }
+                    break;
+                }
+            }
+            if (is == false) {
+                this.closeButtonMenus();
             }
         }
     }
