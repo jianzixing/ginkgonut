@@ -238,39 +238,55 @@ export default class Button<P extends ButtonProps> extends Component<P> {
         );
     }
 
-    private showButtonMenus() {
+    private showButtonMenus(): boolean {
         if (!Button.buttonMenus) Button.buttonMenus = [];
-        let bounds = this.getBounds(null, true);
-        Button.buttonMenus.push(
-            {
-                menu: Menu.show(
-                    <Menu
-                        x={bounds.x}
-                        y={bounds.y + bounds.h}
-                        items={this.props.menuModels}
-                        clickCloseMenu={this.props.clickCloseMenu === true}
-                        onMenuItemClick={(e: Event, value: MenuModel, menu: Menu<MenuProps>) => {
-                            if (this.props.onMenuItemClick) {
-                                this.props.onMenuItemClick(e, value, menu);
-                            }
-                            if (this.props.clickCloseMenu !== true) {
-                                this.setPressing(false);
-                                this.closeButtonMenus();
-                            }
-                        }}
-                        onMenuClose={menu => {
-                            this.setPressing(false);
-                            this.clearBoundsParentScrollEvents();
-                            Button.buttonMenus = Button.buttonMenus.filter(value => value.menu.component != menu);
-                            if (this.props.onMenuClose) {
-                                this.props.onMenuClose(menu);
-                            }
-                        }}
-                    />),
-                button: this
+        let isShowMenu = false;
+        for (let bm of Button.buttonMenus) {
+            if (bm.button == this) {
+                isShowMenu = true;
             }
-        );
-        this.setPressing(true);
+        }
+        if (isShowMenu) {
+            this.setPressing(false);
+            this.closeButtonMenus();
+            return true;
+        } else {
+            if (Button.buttonMenus && Button.buttonMenus.length > 0) {
+                this.closeButtonMenus();
+            }
+            let bounds = this.getBounds(null, true);
+            Button.buttonMenus.push(
+                {
+                    menu: Menu.show(
+                        <Menu
+                            x={bounds.x}
+                            y={bounds.y + bounds.h}
+                            items={this.props.menuModels}
+                            clickCloseMenu={this.props.clickCloseMenu === true}
+                            onMenuItemClick={(e: Event, value: MenuModel, menu: Menu<MenuProps>) => {
+                                if (this.props.onMenuItemClick) {
+                                    this.props.onMenuItemClick(e, value, menu);
+                                }
+                                if (this.props.clickCloseMenu !== true) {
+                                    this.setPressing(false);
+                                    this.closeButtonMenus();
+                                }
+                            }}
+                            onMenuClose={menu => {
+                                this.setPressing(false);
+                                this.clearBoundsParentScrollEvents();
+                                Button.buttonMenus = Button.buttonMenus.filter(value => value.menu.component != menu);
+                                if (this.props.onMenuClose) {
+                                    this.props.onMenuClose(menu);
+                                }
+                            }}
+                        />),
+                    button: this
+                }
+            );
+            this.setPressing(true);
+        }
+        return false;
     }
 
     protected checkPressState() {
@@ -289,7 +305,7 @@ export default class Button<P extends ButtonProps> extends Component<P> {
     }
 
     private closeButtonMenus() {
-        if (Button.buttonMenus) {
+        if (Button.buttonMenus && Button.buttonMenus.length > 0) {
             Button.buttonMenus.map(value => {
                 if (value.button == this) {
                     value.menu.close();
@@ -325,8 +341,6 @@ export default class Button<P extends ButtonProps> extends Component<P> {
                     this.setPressing(true);
                 }
             }
-
-            this.closeButtonMenus();
 
             if (this.props.menuModels && (
                 this.props.menuType == null
@@ -370,6 +384,9 @@ export default class Button<P extends ButtonProps> extends Component<P> {
                 if (bm.button == this) {
                     let rootEl = (bm.menu.component as Menu<any>).getRootEl();
                     if (rootEl && this.contains(rootEl, e.target as any)) {
+                        is = true;
+                    }
+                    if (rootEl && this.contains(this.rootEl, e.target as any)) {
                         is = true;
                     }
                     break;
