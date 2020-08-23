@@ -414,6 +414,12 @@ export default class Panel<P extends PanelProps> extends Component<P> {
         this.resizeToolbars();
     }
 
+    onSizeChange(width: number, height: number) {
+        super.onSizeChange(width, height);
+        this.resizePanelBounds();
+        this.resizeToolbars();
+    }
+
     setHeaderAlign(headerAlign: "top" | "right" | "bottom" | "left" | undefined) {
         this.headerAlign = headerAlign;
         this.resizePanelBounds();

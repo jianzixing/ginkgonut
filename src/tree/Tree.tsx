@@ -27,7 +27,7 @@ export interface TreeProps extends ComponentProps {
     data?: Array<any>;
     keyField?: string;
     displayField?: string;
-    root?: TreeListModel;
+    root?: TreeListModel | any;
     isInheritExpand?: boolean;
     childrenField?: string;
     onTreeItemClick?: (e: Event, data?: TableItemModel) => void;

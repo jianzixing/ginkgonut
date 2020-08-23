@@ -637,6 +637,10 @@ export class BorderLayoutItem<P extends BorderLayoutItemProps> extends Component
         return wh;
     }
 
+    onSizeChange(width: number, height: number): void {
+        this.layout();
+    }
+
     layout() {
         let children = this.children,
             width = this.getWidth(),
