@@ -23,6 +23,8 @@ export interface ComponentProps extends GinkgoElement {
     disabledSelectText?: boolean;
     width?: number;
     height?: number;
+    x?: number;
+    y?: number;
     className?: string;
     style?: CSSProperties;
 
@@ -162,6 +164,12 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
             if (this.height != props.height) {
                 this.height = props.height;
             }
+            if (this.rootX != props.x) {
+                this.rootX = props.x;
+            }
+            if (this.rootY != props.y) {
+                this.rootY = props.y;
+            }
             if (this.isHidden != props.hidden) {
                 this.isHidden = props.hidden;
             }
@@ -243,7 +251,9 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
                 if (this.cacheClassNames.indexOf(cls) == -1) this.cacheClassNames.push(cls);
             }
         }
-        this.rootEl.reloadClassName();
+        if (this.rootEl) {
+            this.rootEl.reloadClassName();
+        }
     }
 
     protected getRootClassName(): string[] {
@@ -416,14 +426,16 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
     }
 
     setSize(width: number, height: number) {
-        let el = this.rootEl.dom as HTMLElement;
-        let oldWidth = el.offsetWidth;
-        let oldHeight = el.offsetHeight;
         if (width >= 0) this.width = width;
         if (height >= 0) this.height = height;
-        this.rootEl && this.rootEl.reloadStyle();
-        if (oldWidth != el.offsetWidth || oldHeight != el.offsetHeight) {
-            this.onSizeChange(width, height);
+        if (this.rootEl && this.rootEl.dom) {
+            let el = this.rootEl.dom as HTMLElement;
+            let oldWidth = el.offsetWidth;
+            let oldHeight = el.offsetHeight;
+            this.rootEl && this.rootEl.reloadStyle();
+            if (oldWidth != el.offsetWidth || oldHeight != el.offsetHeight) {
+                this.onSizeChange(width, height);
+            }
         }
     }
 
@@ -449,12 +461,14 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
     }
 
     setWidth(width: number) {
-        let el = this.rootEl.dom as HTMLElement;
-        let oldWidth = el.offsetWidth;
         this.width = width;
-        this.rootEl && this.rootEl.reloadStyle();
-        if (oldWidth != el.offsetWidth) {
-            this.onSizeChange(width, null);
+        if (this.rootEl && this.rootEl.dom) {
+            let el = this.rootEl.dom as HTMLElement;
+            let oldWidth = el.offsetWidth;
+            this.rootEl && this.rootEl.reloadStyle();
+            if (oldWidth != el.offsetWidth) {
+                this.onSizeChange(width, null);
+            }
         }
     }
 
@@ -466,12 +480,14 @@ export default class Component<P extends ComponentProps> extends Ginkgo.Componen
     }
 
     setHeight(height: number) {
-        let el = this.rootEl.dom as HTMLElement;
-        let oldHeight = el.offsetHeight;
         this.height = height;
-        this.rootEl && this.rootEl.reloadStyle();
-        if (oldHeight != el.offsetHeight) {
-            this.onSizeChange(null, height);
+        if (this.rootEl && this.rootEl.dom) {
+            let el = this.rootEl.dom as HTMLElement;
+            let oldHeight = el.offsetHeight;
+            this.rootEl && this.rootEl.reloadStyle();
+            if (oldHeight != el.offsetHeight) {
+                this.onSizeChange(null, height);
+            }
         }
     }
 
