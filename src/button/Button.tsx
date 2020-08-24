@@ -119,6 +119,11 @@ export default class Button<P extends ButtonProps> extends Component<P> {
         Button.buttonClsOuterRight = this.getThemeClass("btn-outer-right");
     }
 
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        this.closeButtonMenus();
+    }
+
     drawing(): GinkgoElement | any {
         let buttonInnerCls = [Button.buttonClsInner],
             buttonOuterCls = [Button.buttonClsOuter],
