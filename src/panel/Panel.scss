@@ -16,8 +16,11 @@
     border-style: solid;
   }
 
-  &.x-panel-fill {
+  &.x-panel-fill-width {
     width: 100%;
+  }
+
+  &.x-panel-fill-height {
     height: 100%;
   }
 

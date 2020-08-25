@@ -10,6 +10,14 @@
     box-sizing: border-box;
   }
 
+  &.x-tabpanel-fill-width {
+    width: 100%;
+  }
+
+  &.x-tabpanel-fill-height {
+    height: 100%;
+  }
+
   .x-tabpanel-body {
     display: flex;
     flex-direction: column;

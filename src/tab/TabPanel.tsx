@@ -32,6 +32,7 @@ export interface TabPanelProps extends ComponentProps {
     headerAlign?: "top" | "right" | "bottom" | "left";
     headerRotation?: "deg90" | "deg270";
     onCloseClick?: ((e: Event, model?: TabModel) => void);
+    onTabClick?: (tab: TabModel) => void;
     border?: boolean;
     models?: Array<TabModel>;
 }
@@ -41,6 +42,8 @@ const tabItemSplitWidth = 4;
 export default class TabPanel<P extends TabPanelProps> extends Component<P> {
 
     protected static tabPanelCls;
+    protected static tabPanelFillWidthCls;
+    protected static tabPanelFillHeightCls;
     protected static tabPanelBorderCls;
     protected static tabPanelClsRight;
     protected static tabPanelClsLeft;
@@ -81,6 +84,8 @@ export default class TabPanel<P extends TabPanelProps> extends Component<P> {
         super.buildClassNames(themePrefix);
 
         TabPanel.tabPanelCls = this.getThemeClass("tabpanel");
+        TabPanel.tabPanelFillWidthCls = this.getThemeClass("tabpanel-fill-width");
+        TabPanel.tabPanelFillHeightCls = this.getThemeClass("tabpanel-fill-height");
         TabPanel.tabPanelBorderCls = this.getThemeClass("tabpanel-border");
         TabPanel.tabPanelClsRight = this.getThemeClass("tabpanel-right");
         TabPanel.tabPanelClsLeft = this.getThemeClass("tabpanel-left");
@@ -280,6 +285,10 @@ export default class TabPanel<P extends TabPanelProps> extends Component<P> {
                     }
                 }
             }
+
+            if (this.props.onTabClick) {
+                this.props.onTabClick(tab.model);
+            }
         }
     }
 
@@ -475,6 +484,13 @@ export default class TabPanel<P extends TabPanelProps> extends Component<P> {
 
         if (this.props.border) {
             arr.push(TabPanel.tabPanelBorderCls);
+        }
+
+        if (this.width == 0 || this.width == null) {
+            arr.push(TabPanel.tabPanelFillWidthCls);
+        }
+        if (this.height == 0 || this.height == null) {
+            arr.push(TabPanel.tabPanelFillHeightCls);
         }
         return arr;
     }

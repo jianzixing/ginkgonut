@@ -45,7 +45,8 @@ export interface PanelProps extends ComponentProps {
 export default class Panel<P extends PanelProps> extends Component<P> {
 
     protected static panelClsRoot;
-    protected static panelFillCls;
+    protected static panelFillWidthCls;
+    protected static panelFillHeightCls;
     protected static panelClsLightRoot;
     protected static panelClsBorder;
     protected static panelClsFrame;
@@ -98,7 +99,8 @@ export default class Panel<P extends PanelProps> extends Component<P> {
         super.buildClassNames(themePrefix);
 
         Panel.panelClsRoot = this.getThemeClass("panel");
-        Panel.panelFillCls = this.getThemeClass("panel-fill");
+        Panel.panelFillWidthCls = this.getThemeClass("panel-fill-width");
+        Panel.panelFillHeightCls = this.getThemeClass("panel-fill-height");
         Panel.panelClsLightRoot = this.getThemeClass("panel-light");
         Panel.panelClsBorder = this.getThemeClass("panel-border");
         Panel.panelClsFrame = this.getThemeClass("panel-frame");
@@ -597,7 +599,14 @@ export default class Panel<P extends PanelProps> extends Component<P> {
             arr.push(Panel.panelClsAlignLeft);
         }
         if (this.props.fillParent == true) {
-            arr.push(Panel.panelFillCls);
+            arr.push(Panel.panelFillWidthCls);
+            arr.push(Panel.panelFillHeightCls);
+        }
+        if (this.width == 0 || this.width == null) {
+            arr.push(Panel.panelFillWidthCls);
+        }
+        if (this.height == 0 || this.height == null) {
+            arr.push(Panel.panelFillHeightCls);
         }
         return arr;
     }
