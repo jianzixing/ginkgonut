@@ -65,77 +65,71 @@ export default class HtmlEditor<P extends HtmlEditorProps> extends Component<P> 
                         this.customEditor.onChange(this.props.onChange);
                     }
                 } else {
-                    if (this.editor) {
-                        try {
-                            this.editor.destroy();
-                        } catch (e) {
+                    if (this.editor == null) {
+                        function CKEditorHeightPlugin(editor) {
+                            this.editor = editor;
                         }
-                        this.editor = null;
-                    }
 
-                    function CKEditorHeightPlugin(editor) {
-                        this.editor = editor;
-                    }
+                        CKEditorHeightPlugin.prototype.init = function () {
+                            const minHeight = this.editor.config.get('minHeight');
+                            const height = this.editor.config.get('height');
+                            const width = this.editor.config.get('width');
 
-                    CKEditorHeightPlugin.prototype.init = function () {
-                        const minHeight = this.editor.config.get('minHeight');
-                        const height = this.editor.config.get('height');
-                        const width = this.editor.config.get('width');
-
-                        if (minHeight || height || width) {
-                            let style = {};
-                            if (minHeight) {
-                                style['minHeight'] = minHeight;
-                            }
-                            if (height) {
-                                style['height'] = height;
-                            }
-                            if (width) {
-                                style['width'] = width;
-                            }
-                            this.editor.ui.view.editable.extendTemplate({
-                                attributes: {
-                                    style: style
+                            if (minHeight || height || width) {
+                                let style = {};
+                                if (minHeight) {
+                                    style['minHeight'] = minHeight;
                                 }
-                            });
-                        }
-                    };
-                    ClassicEditor.builtinPlugins.push(CKEditorHeightPlugin);
-                    if (this.props.onEditorPlugin) {
-                        this.props.onEditorPlugin(ClassicEditor);
-                    }
-
-                    let options = this.props.options || {};
-                    if (this.props.editorAutoHeight) {
-                        options.minHeight = (this.props.height - (this.props.editToolbarHeight || 42)) + "px";
-                    } else {
-                        if (this.props.fitParent) {
-                            options.height = "calc(100% - 42px)";
-                        } else {
-                            options.height = (this.props.height - (this.props.editToolbarHeight || 42)) + "px";
-                        }
-                    }
-
-                    ClassicEditor.create(dom, options).then(editor => {
-                        this.editor = editor;
-                        editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-                            return new UploadAdapter(loader, this.props);
+                                if (height) {
+                                    style['height'] = height;
+                                }
+                                if (width) {
+                                    style['width'] = width;
+                                }
+                                this.editor.ui.view.editable.extendTemplate({
+                                    attributes: {
+                                        style: style
+                                    }
+                                });
+                            }
                         };
-                        if (this.value) {
-                            this.editor.setData(this.value);
+                        ClassicEditor.builtinPlugins.push(CKEditorHeightPlugin);
+                        if (this.props.onEditorPlugin) {
+                            this.props.onEditorPlugin(ClassicEditor);
                         }
-                        editor.model.document.on('change:data', () => {
-                            this.onEditorValueChange();
-                        })
-                        if (this.props.onEditorReady) {
-                            this.props.onEditorReady(editor);
-                        }
-                        console.log("ckeditor init complete");
 
-                        if (this.props.fitParent) this.setEditorHeight();
-                    }).catch(error => {
-                        console.error(error);
-                    });
+                        let options = this.props.options || {};
+                        if (this.props.editorAutoHeight) {
+                            options.minHeight = (this.props.height - (this.props.editToolbarHeight || 42)) + "px";
+                        } else {
+                            if (this.props.fitParent) {
+                                options.height = "calc(100% - 42px)";
+                            } else {
+                                options.height = (this.props.height - (this.props.editToolbarHeight || 42)) + "px";
+                            }
+                        }
+
+                        ClassicEditor.create(dom, options).then(editor => {
+                            this.editor = editor;
+                            editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                                return new UploadAdapter(loader, this.props);
+                            };
+                            if (this.value) {
+                                this.editor.setData(this.value);
+                            }
+                            editor.model.document.on('change:data', () => {
+                                this.onEditorValueChange();
+                            })
+                            if (this.props.onEditorReady) {
+                                this.props.onEditorReady(editor);
+                            }
+                            console.log("ckeditor init complete");
+
+                            if (this.props.fitParent) this.setEditorHeight();
+                        }).catch(error => {
+                            console.error(error);
+                        });
+                    }
                 }
             }
         }
