@@ -7,3 +7,7 @@ GinkgoNut是基于Ginkgo基础上开发的一套类似于Extjs的前端UI框架
 <img src="https://raw.githubusercontent.com/jianzixing/ginkgonut/master/demo.png" width="100%" align="center"/>
 
 以上是jianzixing-wechat项目的截图
+
+作者：杨安康
+
+邮箱：yak1992@foxmail.com
